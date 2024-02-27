@@ -4,7 +4,7 @@ The Wind Waker Archipelago modifies the base randomizer created by LagoLunatic t
 Dev5ter started the original project and has been maintained by the community since.
 
 ## Installation & Usage
-See the [setup guide](https://github.com/tanjo3/tww_apworld/blob/main/docs/setup_en.md) for instructions.
+See the [setup guide](https://github.com/tanjo3/tww_apworld/blob/master/docs/setup_en.md) for instructions.
 
 ## How does The Wind Waker get randomized?
 Items get shuffled between the different locations in the game, so each playthrough is unique. Randomized locations
