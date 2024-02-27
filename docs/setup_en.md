@@ -11,11 +11,11 @@ Unfortunately, only Windows is supported at this time.
 If you're generating or hosting a room that has The Wind Waker, you'll need:
 * Install [Archipelago](https://github.com/ArchipelagoMW/Archipelago/releases) v0.4.4 or higher. Make sure to install
 the Generator.
-* The last version of the [TWW apworld](https://github.com/Dev5ter/ww-apworld/releases/tag/ww.apworld_v1.0.0).
+* The last version of the [TWW apworld](https://github.com/tanjo3/tww_apworld/releases/tag/v2.0.0).
 
 If you're playing The Wind Waker, you'll also need:
 * Install [Dolphin Emulator](https://dolphin-emu.org/download/). We recommend using the latest development version.
-* The latest version of the [TWW AP Client]().
+* The latest version of the [TWW AP Client](https://github.com/tanjo3/wwrando/releases/tag/ap_2.0.0).
 * A The Wind Waker ISO (North American version), probably named "Legend of Zelda, The - The Wind Waker (USA).iso".
 
 ## Installation
