@@ -46,7 +46,7 @@ Feel free to report any other issues in the Wind Waker thread in the Archipelago
 can do. Suggestions for improvements are also welcome.
 
 ## Planned Features
-* Support more Tingle statues and locations
+* Support more locations
 * More robust logic for entrance randomization
 * Support for remaining randomization options (such as required bosses mode)
 * In-game item models
