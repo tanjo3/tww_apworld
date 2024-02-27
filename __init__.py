@@ -161,7 +161,9 @@ class TWWWorld(World):
             self.multiworld.random.shuffle(all_exits)
 
             for entrance, exit in zip(all_entrances, all_exits):
-                entrance_exit_pairs.append((self.get_region(entrance), self.get_region(exit)))
+                entrance_region = self.multiworld.get_region(entrance, self.player)
+                exit_region = self.multiworld.get_region(exit, self.player)
+                entrance_exit_pairs.append((entrance_region, exit_region))
         else:
             # Connect entrances to exits of the same type
             for option, entrance_group, exit_group in zip(options, entrances, exits):
@@ -171,7 +173,9 @@ class TWWWorld(World):
                     self.multiworld.random.shuffle(exit_group)
 
                 for entrance, exit in zip(entrance_group, exit_group):
-                    entrance_exit_pairs.append((self.get_region(entrance), self.get_region(exit)))
+                    entrance_region = self.multiworld.get_region(entrance, self.player)
+                    exit_region = self.multiworld.get_region(exit, self.player)
+                    entrance_exit_pairs.append((entrance_region, exit_region))
 
         # TODO: verify that entrance randomization resulted in a valid world
 
@@ -262,7 +266,7 @@ class TWWWorld(World):
 
         # Assign each location to their region
         for location, data in LOCATION_TABLE.items():
-            region = self.get_region(data.region)
+            region = self.multiworld.get_region(data.region, self.player)
             region.locations.append(TWWLocation(self.player, location, region, data))
 
         # Connect the "Menu" region to the "The Great Sea" region
@@ -271,7 +275,8 @@ class TWWWorld(World):
         # Connect the dungeon, secret caves, and fairy fountain regions to the "The Great Sea" region
         for entrance in DUNGEON_ENTRANCES + SECRET_CAVES_ENTRANCES + FAIRY_FOUNTAIN_ENTRANCES:
             rule = lambda state, entrance=entrance: getattr(Macros, self._get_access_rule(entrance))(state, self.player)
-            great_sea_region.connect(self.get_region(entrance), rule=rule)
+            connecting_region = self.multiworld.get_region(entrance, self.player)
+            great_sea_region.connect(connecting_region, rule=rule)
 
         # Connect nested regions with their parent region
         for entrance in MINIBOSS_ENTRANCES + BOSS_ENTRANCES + SECRET_CAVES_INNER_ENTRANCES:
@@ -280,7 +285,9 @@ class TWWWorld(World):
             if parent_region_name in ["Hyrule Castle", "Forsaken Fortress"]:
                 parent_region_name = "The Great Sea"
             rule = lambda state, entrance=entrance: getattr(Macros, self._get_access_rule(entrance))(state, self.player)
-            self.get_region(parent_region_name).connect(self.get_region(entrance), rule=rule)
+            parent_region = self.multiworld.get_region(parent_region_name, self.player)
+            connecting_region = self.multiworld.get_region(entrance, self.player)
+            parent_region.connect(connecting_region, rule=rule)
 
         # Randomize entrances to exits, if the option is set
         entrance_exit_pairs = self._randomize_entrances()
@@ -339,7 +346,7 @@ class TWWWorld(World):
         exclude = [item.name for item in self.multiworld.precollected_items[self.player]]
         for item, data in ITEM_TABLE.items():
             if item == "Victory":
-                self.get_location("Defeat Ganondorf").place_locked_item(self.create_item(item))
+                self.multiworld.get_location("Defeat Ganondorf", self.player).place_locked_item(self.create_item(item))
             else:
                 copies_to_place = data.quantity - exclude.count(item)
                 for _ in range(copies_to_place):
