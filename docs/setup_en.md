@@ -15,7 +15,7 @@ the Generator.
 
 If you're playing The Wind Waker, you'll also need:
 * Install [Dolphin Emulator](https://dolphin-emu.org/download/). We recommend using the latest development version.
-* The latest version of the [TWW AP Client](https://github.com/tanjo3/wwrando/releases/tag/latest).
+* The latest version of the [TWW AP Client](https://github.com/tanjo3/wwrando/releases/latest).
 * A The Wind Waker ISO (North American version), probably named "Legend of Zelda, The - The Wind Waker (USA).iso".
 
 ## Installation
