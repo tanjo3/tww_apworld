@@ -63,8 +63,8 @@ Follow the instructions for hosting on the website from a locally generated game
 ## Connecting to a Room
 You should have the `aptww` file provided to you by the multiworld generator. You should also have the room's
 server name and port number from the room's host. Once you do, follow these steps to connect to the room:
-1. Run the TWW AP Randomizer. If this is the first time you've opened the randomizer, you'll need to specify the path to your
-The Wind Waker ISO and the output folder for the randomized ISO. These will be saved for the next time you open the
+1. Run the TWW AP Randomizer. If this is the first time you've opened the randomizer, you'll need to specify the path to
+your The Wind Waker ISO and the output folder for the randomized ISO. These will be saved for the next time you open the
 client.
 2. Modify any cosmetic convenience tweaks and player customization options as desired.
 [This repository](https://github.com/Sage-of-Mirrors/Custom-Wind-Waker-Player-Models) contains a collection of custom
