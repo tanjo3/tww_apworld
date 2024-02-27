@@ -11,11 +11,11 @@ Unfortunately, only Windows is supported at this time.
 If you're generating or hosting a room that has The Wind Waker, you'll need:
 * Install [Archipelago](https://github.com/ArchipelagoMW/Archipelago/releases) v0.4.4 or higher. Make sure to install
 the Generator.
-* The last version of the [TWW apworld](https://github.com/tanjo3/tww_apworld/releases/tag/v2.0.0).
+* The latest version of the [TWW apworld](https://github.com/tanjo3/tww_apworld/releases/latest).
 
 If you're playing The Wind Waker, you'll also need:
 * Install [Dolphin Emulator](https://dolphin-emu.org/download/). We recommend using the latest development version.
-* The latest version of the [TWW AP Client](https://github.com/tanjo3/wwrando/releases/tag/ap_2.0.0).
+* The latest version of the [TWW AP Client](https://github.com/tanjo3/wwrando/releases/tag/latest).
 * A The Wind Waker ISO (North American version), probably named "Legend of Zelda, The - The Wind Waker (USA).iso".
 
 ## Installation
@@ -83,4 +83,5 @@ the `ArchipelagoServer.exe`, this will default to `38281` but may be changed in 
 8. Once connected, you will be prompted to enter your slot name. Note that this is *not* your slot number. Instead, it's
 the name of your player slot that you are connecting to. This is the same as the name that was set when creating your
 YAML file. If the game is hosted on the website, this is also displayed on the room page. The name is case-sensitive.
-    * If you are getting an error message, check to ensure that `Enable Emulated Memory Size Override` in Dolphin (under `Options` > `Configuration` > `Advanced`) is **disabled**.
+    * If you are getting an error message, check to ensure that `Enable Emulated Memory Size Override` in Dolphin (under
+    `Options` > `Configuration` > `Advanced`) is **disabled**.
