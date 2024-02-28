@@ -242,7 +242,7 @@ class TWWWorld(World):
         # Collect dungeon items to place later in their own dungeons, if key-lunacy is off
         if not self.options.keylunacy:
             for item, data in ITEM_TABLE.items():
-                if data.type in ["SmallKey", "BigKey", "DungeonMap", "Compass"]:
+                if data.type in ["SKey", "BKey", "Map", "Compass"]:
                     self.dungeon_local_item_names.add(item)
 
         # If sword mode is Start with Hero's Sword, then send the player a starting sword
@@ -380,7 +380,7 @@ class TWWWorld(World):
         locations = self.multiworld.get_locations(self.player)
         for location in locations:
             if location.name != "Defeat Ganondorf":
-                output_file += f"    {location.name}: \"{location.item.name}\"\n"
+                output_file += f'    {location.name}: "{location.item.name}"\n'
         output_file += "\n\n"
 
         # Output the mapping of entrances to exits

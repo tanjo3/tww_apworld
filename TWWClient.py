@@ -9,7 +9,7 @@ from CommonClient import ClientCommandProcessor, CommonContext, get_base_parser,
 from NetUtils import ClientStatus, NetworkItem
 
 from .inc.packages import dolphin_memory_engine
-from .Items import DUNGEON_SMALL_KEY_COUNTS, ITEM_TABLE, LOOKUP_ID_TO_NAME
+from .Items import ITEM_TABLE, LOOKUP_ID_TO_NAME
 from .Locations import LOCATION_TABLE, TWWLocationType
 
 CONNECTION_REFUSED_GAME_STATUS = (
@@ -41,36 +41,25 @@ WALLET_ADDR = 0x803C4C1A
 MAGIC_METER_ADDR_1 = 0x803C4C1B
 MAGIC_METER_ADDR_2 = 0x803C4C1C
 
+GIVE_HEALTH_ADDR = 0x803CA764
 GIVE_RUPEE_ADDR = 0x803CA768
+GIVE_SKS_ADDR = 0x803CA77D
+
 MAX_HEALTH_ADDR = 0x803C4C09
 CURR_HEALTH_ADDR = 0x803C4C0B
-GIVE_HEALTH_ADDR = 0x803CA764
 
-DUNGEON_OTHER_ITEM_ADDRS = {
-    "DRC": 0x803C4FF4,
-    "FW": 0x803C5018,
-    "TotG": 0x803C503C,
-    "FF": 0x803C4FD0,
-    "ET": 0x803C5060,
-    "WT": 0x803C5084,
-}
-DUNGEON_SMALL_KEY_ADDRS = {
-    "DRC": 0x803C5014,
-    "FW": 0x803C5038,
-    "TotG": 0x803C505C,
-    "ET": 0x803C5080,
-    "WT": 0x803C50A4,
-}
-OTHER_SK_ADDR = 0x803C50B8
-DUNGEON_FLAGS_ADDR = 0x803C53A1
+STAGE_INFO_ADDR = 0x803C4F88
+CURR_STAGE_INFO_ADDR = 0x803C5380
 CURR_STAGE_ID_ADDR = 0x803C53A4
-GIVE_SMALL_KEY_ADDR = 0x803CA77D
 
 CHARTS_BITFLD_ADDR = 0x803C4CFC
 SEA_ALT_BITFLD_ADDR = 0x803C4FAC
+
 CHESTS_BITFLD_ADDR = 0x803C5380
 SWITCHES_BITFLD_ADDR = 0x803C5384
 PICKUPS_BITFLD_ADDR = 0x803C5394
+CURR_STAGE_SKS_ADDR = 0x803C53A0
+CURR_STAGE_DUNGEON_FLAGS_ADDR = 0x803C53A1
 
 PLAYER_X_POS = 0x803E440C
 
@@ -224,37 +213,31 @@ def _give_pearl(address: int, value: int, owned_address: int, bit_to_set: int):
         dolphin_memory_engine.write_byte(TOTG_RAISED_ADDR, 0x40)
 
 
-def _give_other_dungeon_item(dungeon_name: str, id: int):
-    assert dungeon_name in DUNGEON_OTHER_ITEM_ADDRS, f"Invalid dungeon name: {dungeon_name}"
+def _give_other_dungeon_item(stage_id: int, item_bit: int):
+    stage_info_addr = STAGE_INFO_ADDR + 0x24 * stage_id
 
+    # address + 0x21 is the bitfield of dungeon-specific flags for this dungeon
+    current_value = dolphin_memory_engine.read_byte(stage_info_addr + 0x21)
+    dolphin_memory_engine.write_byte(stage_info_addr + 0x21, current_value | 1 << item_bit)
+
+    # If the player is currently in that dungeon, update current stage bits as well
     curr_stage_id = dolphin_memory_engine.read_byte(CURR_STAGE_ID_ADDR)
-    if curr_stage_id != 0x3:
-        value = dolphin_memory_engine.read_byte(DUNGEON_OTHER_ITEM_ADDRS[dungeon_name] + 0x21)
-        if not (value >> id) & 1:
-            dolphin_memory_engine.write_byte(DUNGEON_OTHER_ITEM_ADDRS[dungeon_name] + 0x21, value | (1 << id))
-    else:
-        value2 = dolphin_memory_engine.read_byte(DUNGEON_FLAGS_ADDR)
-        dolphin_memory_engine.write_byte(DUNGEON_FLAGS_ADDR, value2 | (1 << id))
+    if curr_stage_id == stage_id:
+        current_value = dolphin_memory_engine.read_byte(CURR_STAGE_INFO_ADDR + 0x21)
+        dolphin_memory_engine.write_byte(CURR_STAGE_INFO_ADDR + 0x21, current_value | 1 << item_bit)
 
 
-def _give_small_key(dungeon_name: str, offset: int):
-    assert (
-        dungeon_name in DUNGEON_SMALL_KEY_ADDRS and dungeon_name in DUNGEON_SMALL_KEY_COUNTS
-    ), f"Invalid dungeon name: {dungeon_name}"
-
+def _give_small_key(stage_id: int):
+    stage_info_addr = STAGE_INFO_ADDR + 0x24 * stage_id
     curr_stage_id = dolphin_memory_engine.read_byte(CURR_STAGE_ID_ADDR)
-    if curr_stage_id != 0x3:
-        curr_keys = dolphin_memory_engine.read_byte(DUNGEON_SMALL_KEY_ADDRS[dungeon_name])
-        dolphin_memory_engine.write_byte(DUNGEON_SMALL_KEY_ADDRS[dungeon_name], curr_keys + 1)
-    else:
-        dolphin_memory_engine.write_byte(GIVE_SMALL_KEY_ADDR, 1)
 
-    for i in range(DUNGEON_SMALL_KEY_COUNTS[dungeon_name]):
-        if not (dolphin_memory_engine.read_word(OTHER_SK_ADDR) >> (offset + i)) & 1:
-            dolphin_memory_engine.write_word(
-                OTHER_SK_ADDR, dolphin_memory_engine.read_word(OTHER_SK_ADDR) | (1 << (offset + i))
-            )
-            break
+    if curr_stage_id == stage_id:
+        # If the player is currently in that dungeon, increment current stage key counter as well
+        dolphin_memory_engine.write_byte(GIVE_SKS_ADDR, 1)
+    else:
+        # address + 0x20 is the current number of small keys the dungeon
+        current_value = dolphin_memory_engine.read_byte(stage_info_addr + 0x20)
+        dolphin_memory_engine.write_byte(stage_info_addr + 0x20, current_value + 1)
 
 
 def _give_chart(owned_address: int, bit_to_set: int):
@@ -313,7 +296,7 @@ def _give_bottle_progressive(amount: int):
             _give_item(addr, 0x50, None, None)
 
 
-def _give_item_by_name(ctx: TWWContext, item: str):
+def _give_item_by_name(ctx: TWWContext, item: str, replenish_counter: bool):
     assert item in ITEM_TABLE, f"Unknown item: {item}"
 
     if check_ingame():
@@ -372,19 +355,13 @@ def _give_item_by_name(ctx: TWWContext, item: str):
                 _give_rupees(data.value)
 
             case "Heart":
-                _give_heart_pieces(_count_expected_heart_pieces(ctx), True)
+                _give_heart_pieces(_count_expected_heart_pieces(ctx), replenish_counter)
 
-            case "DungeonMap":
-                _give_other_dungeon_item(item.split(" ", 1)[0], 0)
+            case "BKey" | "Map" | "Compass":
+                _give_other_dungeon_item(data.value, data.bit_to_set)
 
-            case "Compass":
-                _give_other_dungeon_item(item.split(" ", 1)[0], 1)
-
-            case "BigKey":
-                _give_other_dungeon_item(item.split(" ", 1)[0], 2)
-
-            case "SmallKey":
-                _give_small_key(item.split(" ", 1)[0], data.value)
+            case "SKey":
+                _give_small_key(data.value)
 
             case _:
                 raise Exception(f"Unknown item type: {data.type}")
@@ -393,7 +370,7 @@ def _give_item_by_name(ctx: TWWContext, item: str):
 async def give_items(ctx: TWWContext):
     while ctx.recv_items_queue:
         item_name = LOOKUP_ID_TO_NAME[ctx.recv_items_queue.popleft().item]
-        _give_item_by_name(ctx, item_name)
+        _give_item_by_name(ctx, item_name, True)
         await asyncio.sleep(0.01)
 
 
@@ -405,14 +382,11 @@ async def check_items(ctx: TWWContext):
             data = ITEM_TABLE[item_name]
 
             match data.type:
-                case "Item" | "Letter" | "Pearl" | "Prog" | "Chart" | "DungeonMap" | "Compass" | "BigKey":
-                    _give_item_by_name(ctx, item_name)
+                case "Item" | "Letter" | "Pearl" | "Prog" | "Chart" | "Heart" | "BKey" | "Map" | "Compass":
+                    # Note: Current will not be replenished. However, max health will be set correctly
+                    _give_item_by_name(ctx, item_name, False)
 
-                case "Heart":
-                    # Set the player's max health, but don't heal them. Otherwise, they wouldn't ever take damage
-                    _give_heart_pieces(_count_expected_heart_pieces(ctx), False)
-
-                case "Spoil" | "Bait" | "Rupee" | "SmallKey":
+                case "Spoil" | "Bait" | "Rupee" | "SKey":
                     # Unfortunately, no good way at the moment to check these
                     pass
 
