@@ -232,7 +232,7 @@ def _give_small_key(stage_id: int):
     curr_stage_id = dolphin_memory_engine.read_byte(CURR_STAGE_ID_ADDR)
 
     if curr_stage_id == stage_id:
-        # If the player is currently in that dungeon, increment current stage key counter as well
+        # If the player is currently in that dungeon, give the player a small key for that dungeon
         dolphin_memory_engine.write_byte(GIVE_SKS_ADDR, 1)
     else:
         # address + 0x20 is the current number of small keys the dungeon
