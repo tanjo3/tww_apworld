@@ -380,7 +380,7 @@ class TWWWorld(World):
         locations = self.multiworld.get_locations(self.player)
         for location in locations:
             if location.name != "Defeat Ganondorf":
-                output_file += f"    {location.name}: {location.item.name}\n"
+                output_file += f"    {location.name}: \"{location.item.name}\"\n"
         output_file += "\n\n"
 
         # Output the mapping of entrances to exits
