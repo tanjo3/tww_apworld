@@ -508,10 +508,14 @@ def can_access_boss_entrance_in_tower_of_the_gods(state: CollectionState, player
 
 
 def can_access_boss_entrance_in_forsaken_fortress(state: CollectionState, player: int):
-    can_get_inside_forsaken_fortress(state, player) and state.has("Skull Hammer", player) and (
-        can_fly_with_deku_leaf_indoors(state, player)
-        or state.has("Hookshot", player)
-        or (state._tww_obscure_2(player) and state._tww_precise_2(player))
+    return (
+        can_get_inside_forsaken_fortress(state, player)
+        and state.has("Skull Hammer", player)
+        and (
+            can_fly_with_deku_leaf_indoors(state, player)
+            or state.has("Hookshot", player)
+            or (state._tww_obscure_2(player) and state._tww_precise_2(player))
+        )
     )
 
 
