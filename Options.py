@@ -360,7 +360,7 @@ class RandomizeStartingIsland(Toggle):
 class RandomizeCharts(Toggle):
     """Randomizes which sector is drawn on each Triforce/Treasure Chart."""
 
-    display_name = "RandomizeCharts"
+    display_name = "Randomize Charts"
 
 
 class HoHoHints(DefaultOnToggle):
