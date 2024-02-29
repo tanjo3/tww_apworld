@@ -247,7 +247,7 @@ class ChestTypeMatchesContents(Toggle):
     """Changes the chest type to reflect its contents. A metal chest has a progress item, a wooden chest has a
     non-progress item or a consumable, and a green chest has a potentially required dungeon key."""
 
-    display_name = "Chest type Matches Contents"
+    display_name = "Chest Type Matches Contents"
 
 
 class TrapChests(Toggle):
