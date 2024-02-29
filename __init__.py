@@ -378,26 +378,7 @@ class TWWWorld(World):
             self.collect(all_state_base, item)
         all_state_base.sweep_for_events()
 
-        # Place big keys in their own dungeon first
-        for dungeon in ["DRC", "FW", "TotG", "FF", "ET", "WT"]:
-            own_dungeon_big_keys = [
-                item
-                for item in self.pre_fill_items
-                if item.type == "BKey" and item.name in self.own_dungeon_item_names and item.name.startswith(dungeon)
-            ]
-            dungeon_locations = self._get_unfilled_locations_in_dungeon(dungeon)
-            self.multiworld.random.shuffle(dungeon_locations)
-            fill_restrictive(
-                self.multiworld,
-                all_state_base,
-                dungeon_locations,
-                own_dungeon_big_keys,
-                single_player_placement=True,
-                lock=True,
-                allow_excluded=True,
-            )
-
-        # Next, place small keys in their own dungeon
+        # First, place small keys in their own dungeon
         for dungeon in ["DRC", "FW", "TotG", "FF", "ET", "WT"]:
             own_dungeon_small_keys = [
                 item
@@ -416,21 +397,24 @@ class TWWWorld(World):
                 allow_excluded=True,
             )
 
-        # Next, place big keys in any dungeon
-        any_dungeon_big_keys = [
-            item for item in self.pre_fill_items if item.type == "BKey" and item.name in self.any_dungeon_item_names
-        ]
-        all_dungeon_locations = self._get_unfilled_dungeon_locations()
-        self.multiworld.random.shuffle(all_dungeon_locations)
-        fill_restrictive(
-            self.multiworld,
-            all_state_base,
-            all_dungeon_locations,
-            any_dungeon_big_keys,
-            single_player_placement=True,
-            lock=True,
-            allow_excluded=True,
-        )
+        # Next, place big keys in their own dungeon
+        for dungeon in ["DRC", "FW", "TotG", "FF", "ET", "WT"]:
+            own_dungeon_big_keys = [
+                item
+                for item in self.pre_fill_items
+                if item.type == "BKey" and item.name in self.own_dungeon_item_names and item.name.startswith(dungeon)
+            ]
+            dungeon_locations = self._get_unfilled_locations_in_dungeon(dungeon)
+            self.multiworld.random.shuffle(dungeon_locations)
+            fill_restrictive(
+                self.multiworld,
+                all_state_base,
+                dungeon_locations,
+                own_dungeon_big_keys,
+                single_player_placement=True,
+                lock=True,
+                allow_excluded=True,
+            )
 
         # Next, place small keys in any dungeon
         any_dungeon_small_keys = [
@@ -443,6 +427,22 @@ class TWWWorld(World):
             all_state_base,
             all_dungeon_locations,
             any_dungeon_small_keys,
+            single_player_placement=True,
+            lock=True,
+            allow_excluded=True,
+        )
+
+        # Next, place big keys in any dungeon
+        any_dungeon_big_keys = [
+            item for item in self.pre_fill_items if item.type == "BKey" and item.name in self.any_dungeon_item_names
+        ]
+        all_dungeon_locations = self._get_unfilled_dungeon_locations()
+        self.multiworld.random.shuffle(all_dungeon_locations)
+        fill_restrictive(
+            self.multiworld,
+            all_state_base,
+            all_dungeon_locations,
+            any_dungeon_big_keys,
             single_player_placement=True,
             lock=True,
             allow_excluded=True,
