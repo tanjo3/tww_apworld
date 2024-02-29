@@ -182,7 +182,7 @@ ITEM_TABLE: dict[str, TWWItemData] = {
     "TotG Small Key":          TWWItemData("SKey",   IC.progression, base_id + 136,  2, None,       0x5, None,    None),
     "ET Big Key":              TWWItemData("BKey",   IC.progression, base_id + 138,  1, None,       0x6, None,       2),
     "ET Small Key":            TWWItemData("SKey",   IC.progression, base_id + 139,  3, None,       0x6, None,    None),
-    "WT Big Key":              TWWItemData("BKey",   IC.progression, base_id + 140,  1, None,       0x7, None,    None),
+    "WT Big Key":              TWWItemData("BKey",   IC.progression, base_id + 140,  1, None,       0x7, None,       2),
     "WT Small Key":            TWWItemData("SKey",   IC.progression, base_id + 141,  2, None,       0x7, None,    None),
     "DRC Dungeon Map":         TWWItemData("Map",    IC.useful,      base_id + 142,  1, None,       0x3, None,       0),
     "DRC Compass":             TWWItemData("Compass",IC.useful,      base_id + 143,  1, None,       0x3, None,       1),

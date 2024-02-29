@@ -10,7 +10,7 @@ from worlds.generic.Rules import add_item_rule
 from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess
 
 from .Items import ITEM_TABLE, TWWItem
-from .Locations import LOCATION_TABLE, TWWFlag, TWWLocation
+from .Locations import LOCATION_TABLE, VANILLA_DUNGEON_ITEM_LOCATIONS, TWWFlag, TWWLocation
 from .Macros import *
 from .Options import TWWOptions
 from .Regions import *
@@ -91,28 +91,10 @@ class TWWWorld(World):
 
         self.itempool: list[TWWItem] = []
         self.pre_fill_items: list[TWWItem] = []
-        self.dungeon_local_item_names: set[str] = set()
 
-    def _gather_dungeon_locations(self, dungeon: str):
-        dungeon_regions: dict[str, list[str]] = {
-            "DRC": ["Dragon Roost Cavern"],
-            "FW": ["Forbidden Woods"],
-            "TotG": ["Tower of the Gods"],
-            "FF": ["Forsaken Fortress"],
-            "ET": ["Earth Temple"],
-            "WT": ["Wind Temple"],
-        }
-
-        # If miniboss entrances are not shuffled, include the miniboss arena as a dungeon location (for key placement)
-        if not self.options.randomize_miniboss_entrances:
-            dungeon_regions["FW"].append(f"Forbidden Woods Miniboss Arena")
-            dungeon_regions["TotG"].append(f"Tower of the Gods Miniboss Arena")
-            dungeon_regions["ET"].append(f"Earth Temple Miniboss Arena")
-            dungeon_regions["WT"].append(f"Wind Temple Miniboss Arena")
-
-        unfilled_locations = self.multiworld.get_unfilled_locations(self.player)
-        is_dungeon_location = lambda location: location.region in dungeon_regions[dungeon]
-        return [location for location in unfilled_locations if is_dungeon_location(location)]
+        self.vanilla_dungeon_item_names: set[str] = set()
+        self.own_dungeon_item_names: set[str] = set()
+        self.any_dungeon_item_names: set[str] = set()
 
     def _get_access_rule(self, region):
         snake_case_region = region.lower().replace("'", "").replace(" ", "_")
@@ -120,6 +102,48 @@ class TWWWorld(World):
 
     def _get_locations(self):
         return self.multiworld.get_locations(self.player)
+
+    def _get_unfilled_dungeon_locations(self):
+        dungeon_regions = ["Dragon Roost Cavern", "Forbidden Woods", "Tower of the Gods", "Earth Temple", "Wind Temple"]
+
+        # If miniboss entrances are not shuffled, include miniboss arenas as a dungeon regions
+        if not self.options.randomize_miniboss_entrances:
+            dungeon_regions += [
+                "Forbidden Woods Miniboss Arena",
+                "Tower of the Gods Miniboss Arena",
+                "Earth Temple Miniboss Arena",
+                "Wind Temple Miniboss Arena",
+            ]
+
+        # Forsaken Fortress is an odd dungeon as it exists on the Great Sea
+        # Simply keep a list of all locations in the dungeon, except the boss Heart Container
+        ff_dungeon_locations = [
+            "Forsaken Fortress - Phantom Ganon",
+            "Forsaken Fortress - Chest Outside Upper Jail Cell",
+            "Forsaken Fortress - Chest Inside Lower Jail Cell",
+            "Forsaken Fortress - Chest Guarded By Bokoblin",
+            "Forsaken Fortress - Chest on Bed",
+        ]
+
+        unfilled_locations = self.multiworld.get_unfilled_locations(self.player)
+        is_dungeon_location = (
+            lambda location: location.name in ff_dungeon_locations or location.region in dungeon_regions
+        )
+        return [location for location in unfilled_locations if is_dungeon_location(location)]
+
+    def _get_unfilled_locations_in_dungeon(self, dungeon: str):
+        dungeon_regions: dict[str, str] = {
+            "DRC": "Dragon Roost Cavern",
+            "FW": "Forbidden Woods",
+            "TotG": "Tower of the Gods",
+            "FF": "Forsaken Fortress",
+            "ET": "Earth Temple",
+            "WT": "Wind Temple",
+        }
+
+        unfilled_locations = self._get_unfilled_dungeon_locations()
+        is_dungeon_location = lambda location: location.name.startswith(dungeon_regions[dungeon])
+        return [location for location in unfilled_locations if is_dungeon_location(location)]
 
     def _randomize_entrances(self):
         # Copy over the lists of entrances by type
@@ -239,11 +263,44 @@ class TWWWorld(World):
                 )
 
     def generate_early(self):
-        # Collect dungeon items to place later in their own dungeons, if key-lunacy is off
-        if not self.options.keylunacy:
-            for item, data in ITEM_TABLE.items():
-                if data.type in ["SKey", "BKey", "Map", "Compass"]:
-                    self.dungeon_local_item_names.add(item)
+        # Handle randomization options for dungeon items
+        for item, data in ITEM_TABLE.items():
+            match data.type:
+                case "Map" | "Compass":
+                    if self.options.randomize_mapcompass == "startwith":
+                        self.options.start_inventory.value[item] = data.quantity
+                    elif self.options.randomize_mapcompass == "vanilla":
+                        self.vanilla_dungeon_item_names.add(item)
+                    elif self.options.randomize_mapcompass == "dungeon":
+                        self.own_dungeon_item_names.add(item)
+                    elif self.options.randomize_mapcompass == "any_dungeon":
+                        self.any_dungeon_item_names.add(item)
+                    elif self.options.randomize_mapcompass == "local":
+                        self.options.local_items.value.add(item)
+
+                case "SKey":
+                    if self.options.randomize_smallkeys == "startwith":
+                        self.options.start_inventory.value[item] = data.quantity
+                    elif self.options.randomize_smallkeys == "vanilla":
+                        self.vanilla_dungeon_item_names.add(item)
+                    elif self.options.randomize_smallkeys == "dungeon":
+                        self.own_dungeon_item_names.add(item)
+                    elif self.options.randomize_smallkeys == "any_dungeon":
+                        self.any_dungeon_item_names.add(item)
+                    elif self.options.randomize_smallkeys == "local":
+                        self.options.local_items.value.add(item)
+
+                case "BKey":
+                    if self.options.randomize_bigkeys == "startwith":
+                        self.options.start_inventory.value[item] = data.quantity
+                    elif self.options.randomize_bigkeys == "vanilla":
+                        self.vanilla_dungeon_item_names.add(item)
+                    elif self.options.randomize_bigkeys == "dungeon":
+                        self.own_dungeon_item_names.add(item)
+                    elif self.options.randomize_bigkeys == "any_dungeon":
+                        self.any_dungeon_item_names.add(item)
+                    elif self.options.randomize_bigkeys == "local":
+                        self.options.local_items.value.add(item)
 
         # If sword mode is Start with Hero's Sword, then send the player a starting sword
         if self.options.sword_mode == "start_with_sword":
@@ -310,47 +367,140 @@ class TWWWorld(World):
         raise Exception(f"Invalid item name: {item}")
 
     def pre_fill(self):
-        def prefill_state(base_state):
-            state = base_state.copy()
-            for item in self.get_pre_fill_items():
-                self.collect(state, item)
-            return state
-
+        # Set nonprogress location from options
         self._set_nonprogress_locations()
 
-        # Pre-fill dungeon items
-        locations = list(self.multiworld.get_unfilled_locations(self.player))
-        self.multiworld.random.shuffle(locations)
-
-        # Set up initial state
-        state = CollectionState(self.multiworld)
+        # Set up initial all_state
+        all_state_base = CollectionState(self.multiworld)
         for item in self.itempool:
-            self.collect(state, item)
+            self.collect(all_state_base, item)
+        for item in self.get_pre_fill_items():
+            self.collect(all_state_base, item)
+        all_state_base.sweep_for_events()
 
-        # Place the dungeon items in their own dungeons, if key-lunacy is not enabled
+        # Place big keys in their own dungeon first
         for dungeon in ["DRC", "FW", "TotG", "FF", "ET", "WT"]:
-            dungeon_items = [item for item in self.pre_fill_items if item.name.startswith(dungeon)]
-            dungeon_locations = self._gather_dungeon_locations(dungeon)
+            own_dungeon_big_keys = [
+                item
+                for item in self.pre_fill_items
+                if item.type == "BKey" and item.name in self.own_dungeon_item_names and item.name.startswith(dungeon)
+            ]
+            dungeon_locations = self._get_unfilled_locations_in_dungeon(dungeon)
             self.multiworld.random.shuffle(dungeon_locations)
             fill_restrictive(
                 self.multiworld,
-                prefill_state(state),
+                all_state_base,
                 dungeon_locations,
-                dungeon_items,
+                own_dungeon_big_keys,
                 single_player_placement=True,
                 lock=True,
                 allow_excluded=True,
             )
 
+        # Next, place small keys in their own dungeon
+        for dungeon in ["DRC", "FW", "TotG", "FF", "ET", "WT"]:
+            own_dungeon_small_keys = [
+                item
+                for item in self.pre_fill_items
+                if item.type == "SKey" and item.name in self.own_dungeon_item_names and item.name.startswith(dungeon)
+            ]
+            dungeon_locations = self._get_unfilled_locations_in_dungeon(dungeon)
+            self.multiworld.random.shuffle(dungeon_locations)
+            fill_restrictive(
+                self.multiworld,
+                all_state_base,
+                dungeon_locations,
+                own_dungeon_small_keys,
+                single_player_placement=True,
+                lock=True,
+                allow_excluded=True,
+            )
+
+        # Next, place big keys in any dungeon
+        any_dungeon_big_keys = [
+            item for item in self.pre_fill_items if item.type == "BKey" and item.name in self.any_dungeon_item_names
+        ]
+        all_dungeon_locations = self._get_unfilled_dungeon_locations()
+        self.multiworld.random.shuffle(all_dungeon_locations)
+        fill_restrictive(
+            self.multiworld,
+            all_state_base,
+            all_dungeon_locations,
+            any_dungeon_big_keys,
+            single_player_placement=True,
+            lock=True,
+            allow_excluded=True,
+        )
+
+        # Next, place small keys in any dungeon
+        any_dungeon_small_keys = [
+            item for item in self.pre_fill_items if item.type == "SKey" and item.name in self.any_dungeon_item_names
+        ]
+        all_dungeon_locations = self._get_unfilled_dungeon_locations()
+        self.multiworld.random.shuffle(all_dungeon_locations)
+        fill_restrictive(
+            self.multiworld,
+            all_state_base,
+            all_dungeon_locations,
+            any_dungeon_small_keys,
+            single_player_placement=True,
+            lock=True,
+            allow_excluded=True,
+        )
+
+        # Now, place dungeon maps and compasses in their own dungeons
+        for dungeon in ["DRC", "FW", "TotG", "FF", "ET", "WT"]:
+            own_dungeon_mapcompass = [
+                item
+                for item in self.pre_fill_items
+                if item.type in ["Map", "Compass"]
+                and item.name in self.own_dungeon_item_names
+                and item.name.startswith(dungeon)
+            ]
+            dungeon_locations = self._get_unfilled_locations_in_dungeon(dungeon)
+            self.multiworld.random.shuffle(dungeon_locations)
+            fill_restrictive(
+                self.multiworld,
+                all_state_base,
+                dungeon_locations,
+                own_dungeon_mapcompass,
+                single_player_placement=True,
+                lock=True,
+                allow_excluded=True,
+            )
+
+        # Finally, place dungeon maps and compasses in any dungeon
+        any_dungeon_mapcompass = [
+            item
+            for item in self.pre_fill_items
+            if item.type in ["Map", "Compass"] and item.name in self.any_dungeon_item_names
+        ]
+        all_dungeon_locations = self._get_unfilled_dungeon_locations()
+        self.multiworld.random.shuffle(all_dungeon_locations)
+        fill_restrictive(
+            self.multiworld,
+            all_state_base,
+            all_dungeon_locations,
+            any_dungeon_mapcompass,
+            single_player_placement=True,
+            lock=True,
+            allow_excluded=True,
+        )
+
     def create_items(self):
         exclude = [item.name for item in self.multiworld.precollected_items[self.player]]
         for item, data in ITEM_TABLE.items():
             if item == "Victory":
+                # Victory item is always on Defeat Ganondorf location
                 self.multiworld.get_location("Defeat Ganondorf", self.player).place_locked_item(self.create_item(item))
+            elif item in self.vanilla_dungeon_item_names:
+                # Place desired vanilla dungeon item in their vanilla locations
+                for location in VANILLA_DUNGEON_ITEM_LOCATIONS[item]:
+                    self.multiworld.get_location(location, self.player).place_locked_item(self.create_item(item))
             else:
                 copies_to_place = data.quantity - exclude.count(item)
                 for _ in range(copies_to_place):
-                    if item in self.dungeon_local_item_names:
+                    if item in self.own_dungeon_item_names or item in self.any_dungeon_item_names:
                         self.pre_fill_items.append(self.create_item(item))
                     else:
                         self.itempool.append(self.create_item(item))

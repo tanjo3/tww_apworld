@@ -150,11 +150,61 @@ class Misc(Toggle):
     display_name = "Miscellaneous"
 
 
-class KeyLunacy(Toggle):
-    """Allows dungeon keys (as well as maps and compasses) to appear anywhere in the game, not just in the dungeon
-    they're for."""
+class RandomizeMapCompass(Choice):
+    """Controls how dungeon maps and compasses are randomized.
+    Start With Maps & Compasses: You will start the game with the dungeon maps and compasses for all dungeons.
+    Vanilla Maps & Compasses: Dungeon maps and compasses will be kept in their vanilla location (non-randomized).
+    Own Dungeon Maps & Compasses: Dungeon maps and compasses will be randomized locally within their own dungeon.
+    Any Dungeon Maps & Compasses: Dungeon maps and compasses will be randomized locally within any dungeon.
+    Local Maps & Compasses: Dungeon maps and compasses will be randomized locally anywhere.
+    Key-Lunacy: Dungeon maps and compasses can be found anywhere, without restriction."""
 
-    display_name = "Key-Lunacy"
+    display_name = "Randomize Maps & Compasses"
+    option_startwith = 0
+    option_vanilla = 1
+    option_dungeon = 2
+    option_any_dungeon = 3
+    option_local = 4
+    option_keylunacy = 5
+    default = 2
+
+
+class RandomizeSmallKeys(Choice):
+    """Controls how small keys are randomized.
+    Start With Small Keys: You will start the game with the small keys for all dungeons.
+    Vanilla Small Keys: Small keys will be kept in their vanilla location (non-randomized).
+    Own Dungeon Small Keys: Small keys will be randomized locally within their own dungeon.
+    Any Dungeon Small Keys: Small keys will be randomized locally within any dungeon.
+    Local Small Keys: Small keys will be randomized locally anywhere.
+    Key-Lunacy: Small keys can be found in any progression location, if dungeons are randomized."""
+
+    display_name = "Randomize Small Keys"
+    option_startwith = 0
+    option_vanilla = 1
+    option_dungeon = 2
+    option_any_dungeon = 3
+    option_local = 4
+    option_keylunacy = 5
+    default = 2
+
+
+class RandomizeBigKeys(Choice):
+    """Controls how big keys are randomized.
+    Start With Big Keys: You will start the game with the big keys for all dungeons.
+    Vanilla Big Keys: Big keys will be kept in their vanilla location (non-randomized).
+    Own Dungeon Big Keys: Big keys will be randomized locally within their own dungeon.
+    Any Dungeon Big Keys: Big keys will be randomized locally within any dungeon.
+    Local Big Keys: Big keys will be randomized locally anywhere.
+    Key-Lunacy: Big keys can be found in any progression location, if dungeons are randomized."""
+
+    display_name = "Randomize Big Keys"
+    option_startwith = 0
+    option_vanilla = 1
+    option_dungeon = 2
+    option_any_dungeon = 3
+    option_local = 4
+    option_keylunacy = 5
+    default = 2
 
 
 class SwordMode(Choice):
@@ -456,7 +506,9 @@ class TWWOptions(PerGameCommonOptions):
     progression_expensive_purchases: ExpensivePurchases
     progression_island_puzzles: IslandPuzzles
     progression_misc: Misc
-    keylunacy: KeyLunacy
+    randomize_mapcompass: RandomizeMapCompass
+    randomize_smallkeys: RandomizeSmallKeys
+    randomize_bigkeys: RandomizeBigKeys
     sword_mode: SwordMode
     required_bosses: RequiredBosses
     num_required_bosses: NumRequiredBosses
