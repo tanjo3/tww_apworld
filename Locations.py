@@ -147,9 +147,9 @@ LOCATION_TABLE: dict[str, TWWLocationData] = {
     # "Windfall Island - Maggie's Father - Give 20 Skull Necklaces": TWWLocationData(
     #     base_id + 24, TWWFlag.SPOILS, "The Great Sea"
     # ),
-    # "Windfall Island - Maggie - Free Item": TWWLocationData(
-    #     base_id + 25, TWWFlag.FREE_GF, "The Great Sea"
-    # ),
+    "Windfall Island - Maggie - Free Item": TWWLocationData(
+        base_id + 25, TWWFlag.FREE_GF, "The Great Sea", 0xB, TWWLocationType.EVENT, 0, 0x803C5296
+    ),
     # "Windfall Island - Maggie - Delivery Reward": TWWLocationData(
     #     base_id + 26, TWWFlag.SHRT_SQ, "The Great Sea"
     # ),
@@ -163,9 +163,9 @@ LOCATION_TABLE: dict[str, TWWLocationData] = {
     "Windfall Island - Transparent Chest": TWWLocationData(
         base_id + 29, TWWFlag.SHRT_SQ, "The Great Sea", 0x0, TWWLocationType.CHEST, 10
     ),
-    # "Windfall Island - Tott - Teach Rhythm": TWWLocationData(
-    #     base_id + 30, TWWFlag.FREE_GF, "The Great Sea"
-    # ),
+    "Windfall Island - Tott - Teach Rhythm": TWWLocationData(
+        base_id + 30, TWWFlag.FREE_GF, "The Great Sea", 0x0, TWWLocationType.EVENT, 6, 0x803C5238
+    ),
     "Windfall Island - Pirate Ship": TWWLocationData(
         base_id + 31, TWWFlag.MINIGME, "The Great Sea", 0xD, TWWLocationType.CHEST, 5
     ),
@@ -642,9 +642,9 @@ LOCATION_TABLE: dict[str, TWWLocationData] = {
     # "The Great Sea - Beedle's Shop Ship - 20 Rupee Item": TWWLocationData(
     #     base_id + 177, TWWFlag.MISCELL, "The Great Sea"
     # ),
-    # "The Great Sea - Salvage Corp Gift": TWWLocationData(
-    #     base_id + 178, TWWFlag.FREE_GF, "The Great Sea"
-    # ),
+    "The Great Sea - Salvage Corp Gift": TWWLocationData(
+        base_id + 178, TWWFlag.FREE_GF, "The Great Sea", 0x0, TWWLocationType.EVENT, 7, 0x803C5295
+    ),
     "The Great Sea - Cyclos": TWWLocationData(
         base_id + 179, TWWFlag.MISCELL, "The Great Sea", 0x0, TWWLocationType.EVENT, 4, 0x803C5253
     ),
