@@ -166,9 +166,9 @@ def set_rules(world: MultiWorld, player: int):
     #     and state.has("Spoils Bag", player)
     #     and can_farm_skull_necklaces(state, player),
     # )
-    # set_rule(
-    #     world.get_location("Windfall Island - Maggie - Free Item", player), lambda state: rescued_aryll(state, player)
-    # )
+    set_rule(
+        world.get_location("Windfall Island - Maggie - Free Item", player), lambda state: rescued_aryll(state, player)
+    )
     # set_rule(
     #     world.get_location("Windfall Island - Maggie - Delivery Reward", player),
     #     lambda state: rescued_aryll(state, player)
@@ -191,10 +191,10 @@ def set_rules(world: MultiWorld, player: int):
         and has_fire_arrows(state, player)
         and (can_fly_with_deku_leaf_outdoors(state, player) or state.has("Hookshot", player)),
     )
-    # set_rule(
-    #     world.get_location("Windfall Island - Tott - Teach Rhythm", player),
-    #     lambda state: state.has("Wind Waker", player),
-    # )
+    set_rule(
+        world.get_location("Windfall Island - Tott - Teach Rhythm", player),
+        lambda state: state.has("Wind Waker", player),
+    )
     set_rule(world.get_location("Windfall Island - Pirate Ship", player), lambda state: True)
     # set_rule(world.get_location("Windfall Island - 5 Rupee Auction", player), lambda state: True)
     # set_rule(world.get_location("Windfall Island - 40 Rupee Auction", player), lambda state: True)
@@ -671,10 +671,10 @@ def set_rules(world: MultiWorld, player: int):
         world.get_location("Fire Mountain - Lookout Platform - Destroy the Cannons", player),
         lambda state: can_destroy_cannons(state, player),
     )
-    # set_rule(
-    #     world.get_location("Fire Mountain - Big Octo", player),
-    #     lambda state: can_defeat_big_octos(state, player) and state.has("Grappling Hook", player),
-    # )
+    set_rule(
+        world.get_location("Fire Mountain - Big Octo", player),
+        lambda state: can_defeat_big_octos(state, player) and state.has("Grappling Hook", player),
+    )
 
     # Ice Ring Isle
     set_rule(world.get_location("Ice Ring Isle - Frozen Chest", player), lambda state: has_fire_arrows(state, player))
@@ -993,7 +993,7 @@ def set_rules(world: MultiWorld, player: int):
 
     # The Great Sea
     # set_rule(world.get_location("The Great Sea - Beedle's Shop Ship - 20 Rupee Item", player), lambda state: True)
-    # set_rule(world.get_location("The Great Sea - Salvage Corp Gift", player), lambda state: True)
+    set_rule(world.get_location("The Great Sea - Salvage Corp Gift", player), lambda state: True)
     set_rule(world.get_location("The Great Sea - Cyclos", player), lambda state: has_heros_bow(state, player))
     # set_rule(
     #     world.get_location("The Great Sea - Goron Trading Reward", player),
@@ -1031,10 +1031,10 @@ def set_rules(world: MultiWorld, player: int):
         and state.has("Skull Hammer", player)
         and can_play_winds_requiem(state, player),
     )
-    # set_rule(
-    #     world.get_location("Private Oasis - Big Octo", player),
-    #     lambda state: can_defeat_big_octos(state, player) and state.has("Grappling Hook", player),
-    # )
+    set_rule(
+        world.get_location("Private Oasis - Big Octo", player),
+        lambda state: can_defeat_big_octos(state, player) and state.has("Grappling Hook", player),
+    )
 
     # Spectacle Island
     # set_rule(world.get_location("Spectacle Island - Barrel Shooting - First Prize", player), lambda state: True)
@@ -1049,10 +1049,10 @@ def set_rules(world: MultiWorld, player: int):
         world.get_location("Needle Rock Isle - Cave", player),
         lambda state: can_access_needle_rock_isle_secret_cave(state, player) and has_fire_arrows(state, player),
     )
-    # set_rule(
-    #     world.get_location("Needle Rock Isle - Golden Gunboat", player),
-    #     lambda state: state.has("Bombs", player) and state.has("Grappling Hook", player),
-    # )
+    set_rule(
+        world.get_location("Needle Rock Isle - Golden Gunboat", player),
+        lambda state: state.has("Bombs", player) and state.has("Grappling Hook", player),
+    )
 
     # Angular Isles
     set_rule(world.get_location("Angular Isles - Peak", player), lambda state: True)
@@ -1207,10 +1207,10 @@ def set_rules(world: MultiWorld, player: int):
     #     world.get_location("Tingle Island - Ankle - Reward for All Tingle Statues", player),
     #     lambda state: state.has_group("tingle_statues", player, 5),
     # )
-    # set_rule(
-    #     world.get_location("Tingle Island - Big Octo", player),
-    #     lambda state: can_defeat_12_eye_big_octos(state, player) and state.has("Grappling Hook", player),
-    # )
+    set_rule(
+        world.get_location("Tingle Island - Big Octo", player),
+        lambda state: can_defeat_12_eye_big_octos(state, player) and state.has("Grappling Hook", player),
+    )
 
     # Diamond Steppe Island
     set_rule(
@@ -1221,10 +1221,10 @@ def set_rules(world: MultiWorld, player: int):
         world.get_location("Diamond Steppe Island - Warp Maze Cave - Second Chest", player),
         lambda state: can_access_diamond_steppe_island_warp_maze_cave(state, player),
     )
-    # set_rule(
-    #     world.get_location("Diamond Steppe Island - Big Octo", player),
-    #     lambda state: can_defeat_big_octos(state, player) and state.has("Grappling Hook", player),
-    # )
+    set_rule(
+        world.get_location("Diamond Steppe Island - Big Octo", player),
+        lambda state: can_defeat_big_octos(state, player) and state.has("Grappling Hook", player),
+    )
 
     # Bomb Island
     set_rule(
@@ -1260,10 +1260,10 @@ def set_rules(world: MultiWorld, player: int):
         lambda state: can_destroy_cannons(state, player) and can_fly_with_deku_leaf_outdoors(state, player),
     )
     set_rule(world.get_location("Rock Spire Isle - Center Lookout Platform", player), lambda state: True)
-    # set_rule(
-    #     world.get_location("Rock Spire Isle - Southeast Gunboat", player),
-    #     lambda state: state.has("Bombs", player) and state.has("Grappling Hook", player),
-    # )
+    set_rule(
+        world.get_location("Rock Spire Isle - Southeast Gunboat", player),
+        lambda state: state.has("Bombs", player) and state.has("Grappling Hook", player),
+    )
 
     # Shark Island
     set_rule(
@@ -1347,10 +1347,10 @@ def set_rules(world: MultiWorld, player: int):
         world.get_location("Seven-Star Isles - Southern Lookout Platform", player),
         lambda state: can_defeat_wizzrobes_at_range(state, player),
     )
-    # set_rule(
-    #     world.get_location("Seven-Star Isles - Big Octo", player),
-    #     lambda state: can_defeat_12_eye_big_octos(state, player) and state.has("Grappling Hook", player),
-    # )
+    set_rule(
+        world.get_location("Seven-Star Isles - Big Octo", player),
+        lambda state: can_defeat_12_eye_big_octos(state, player) and state.has("Grappling Hook", player),
+    )
 
     # Cyclops Reef
     set_rule(
