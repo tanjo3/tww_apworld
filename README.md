@@ -34,13 +34,8 @@ Refer to the [FAQ](https://lagolunatic.github.io/wwrando/faq/) first. If you are
 Waker thread (under `future-game-design`) in the Archipelago server.
 
 ## Known issues
-* If you reset the game without saving, or disconnect then reconnect, the server will attempt to send you the items you
-should have. However, you will lose the following types of items. Fortunately, most of these items are filler and
-unnecessary to beat the game:
-  * Spoils
-  * Bait
-  * Rupees
-  * Small Keys in dungeons
+* When randomizing entrances, some regions may not be reachable. While this is acceptable for certain accessibility
+settings, the randomizer will fail to generate these seeds. A temporary workaround could be to change the accessibility option to `locations`. 
 
 Feel free to report any other issues in the Wind Waker thread in the Archipelago server! I'll take a look and see what I
 can do. Suggestions for improvements are also welcome.

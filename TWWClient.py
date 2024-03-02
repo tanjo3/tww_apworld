@@ -1,7 +1,6 @@
 import asyncio
 import time
 import traceback
-from collections import deque
 from typing import Any
 
 import Utils
@@ -22,6 +21,9 @@ CONNECTION_LOST_STATUS = "Dolphin connection was lost. Please restart your emula
 CONNECTION_CONNECTED_STATUS = "Dolphin connected successfully."
 CONNECTION_INITIAL_STATUS = "Dolphin connection has not been initiated."
 
+# We re-purpose the small key counter and dungeon flag bytes for Ganon's Tower for this
+EXPECTED_INDEX_ADDR = 0x803C50C8
+
 SPOILS_BASE_ADDR = 0x803C4C7E
 BAIT_BASE_ADDR = 0x803C4C86
 BAIT_COUNT_BASE_ADDR = 0x803C4CAC
@@ -31,10 +33,10 @@ CHARTS_BASE_ADDR = 0x803C4CDC
 
 TOTG_RAISED_ADDR = 0x803C524A
 
-PICTO_BOX_IDS = [0xFF, 0x23, 0x26]
-BOW_IDS = [0xFF, 0x27, 0x35, 0x36]
-SWORD_IDS = [0xFF, 0x38, 0x39, 0x3A, 0x3E]
-SHIELD_IDS = [0xFF, 0x3B, 0x3C]
+PICTO_BOX_IDS = [0x23, 0x26]
+BOW_IDS = [0x27, 0x35, 0x36]
+SWORD_IDS = [0x38, 0x39, 0x3A, 0x3E]
+SHIELD_IDS = [0x3B, 0x3C]
 BOTTLE_ADDRS = [0x803C4C52, 0x803C4C53, 0x803C4C54, 0x803C4C55]
 
 WALLET_ADDR = 0x803C4C1A
@@ -45,8 +47,8 @@ GIVE_HEALTH_ADDR = 0x803CA764
 GIVE_RUPEE_ADDR = 0x803CA768
 GIVE_SKS_ADDR = 0x803CA77D
 
-MAX_HEALTH_ADDR = 0x803C4C09
-CURR_HEALTH_ADDR = 0x803C4C0B
+MAX_HEALTH_ADDR = 0x803C4C08
+CURR_HEALTH_ADDR = 0x803C4C0A
 
 STAGE_INFO_ADDR = 0x803C4F88
 CURR_STAGE_INFO_ADDR = 0x803C5380
@@ -82,9 +84,10 @@ class TWWContext(CommonContext):
     def __init__(self, server_address, password):
         super().__init__(server_address, password)
         self.awaiting_auth = False
-        self.recv_items_queue: deque[NetworkItem] = deque()
+        self.items_received_2: list[tuple[NetworkItem, int]] = []
         self.dolphin_sync_task = None
         self.dolphin_status = CONNECTION_INITIAL_STATUS
+        self.last_rcvd_index = -1
         self.has_send_death = False
         self.last_death_link_send = time.time()
 
@@ -94,12 +97,17 @@ class TWWContext(CommonContext):
 
     def on_package(self, cmd: str, args: dict):
         if cmd == "Connected":
-            self.recv_items_queue = deque()
+            self.items_received_2 = []
+            self.last_rcvd_index = -1
             if "death_link" in args["slot_data"]:
                 Utils.async_start(self.update_death_link(bool(args["slot_data"]["death_link"])))
         if cmd == "ReceivedItems":
-            if args["index"] != 0:
-                self.recv_items_queue.extend(args["items"])
+            if args["index"] >= self.last_rcvd_index:
+                self.last_rcvd_index = args["index"]
+                for item in args["items"]:
+                    self.items_received_2.append((item, self.last_rcvd_index))
+                    self.last_rcvd_index += 1
+            self.items_received_2.sort(key=lambda v: v[1])
 
     def on_deathlink(self, data: dict[str, Any]):
         super().on_deathlink(data)
@@ -120,6 +128,14 @@ class TWWContext(CommonContext):
 
         self.ui = TWWManager(self)
         self.ui_task = asyncio.create_task(self.ui.async_run(), name="UI")
+
+
+def read_short(console_address: int):
+    return int.from_bytes(dolphin_memory_engine.read_bytes(console_address, 2))
+
+
+def write_short(console_address: int, value: int):
+    dolphin_memory_engine.write_bytes(console_address, value.to_bytes(2))
 
 
 def _count_expected_heart_pieces(ctx: TWWContext):
@@ -143,7 +159,7 @@ def _give_death(ctx: TWWContext):
         and ctx.dolphin_status == CONNECTION_CONNECTED_STATUS
         and check_ingame()
     ):
-        dolphin_memory_engine.write_byte(CURR_HEALTH_ADDR, 0)
+        write_short(CURR_HEALTH_ADDR, 0)
 
 
 def _give_item(address: int | None, value: int | None, owned_address: int | None, bit_to_set: int | None):
@@ -253,50 +269,49 @@ def _give_heart_pieces(max_hp: int, heal_player: bool):
     # Ensure max HP is valid
     max_hp = min(max_hp, 20 * 4)
 
-    dolphin_memory_engine.write_byte(MAX_HEALTH_ADDR, max_hp)
+    write_short(MAX_HEALTH_ADDR, max_hp)
 
     # Full heal the player when they receive a Piece of Heart or Heart Container
     if heal_player:
         dolphin_memory_engine.write_float(GIVE_HEALTH_ADDR, float(20 * 4))
 
 
-def _give_item_progressive(address: int, owned_bitfield: int, item_ids: list[int], amount: int):
-    # Ensure amount is valid
-    amount = min(amount, len(item_ids) - 1)
+def _give_item_progressive(address: int, owned_bitfield: int, item_ids: list[int]):
+    # Calculate the next amount of the progressive item
+    next_amount = dolphin_memory_engine.read_byte(owned_bitfield).bit_length()
+    next_amount = min(next_amount, len(item_ids) - 1)
 
-    dolphin_memory_engine.write_byte(address, item_ids[amount])
-    current_value = dolphin_memory_engine.read_byte(owned_bitfield)
-    dolphin_memory_engine.write_byte(owned_bitfield, 0 if amount == 0 else current_value | 1 << (amount - 1))
+    dolphin_memory_engine.write_byte(address, item_ids[next_amount])
+    dolphin_memory_engine.write_byte(owned_bitfield, 1 << next_amount)
 
 
-def _give_capacities_progressive(maximum_address: int, count_address: int, capacities: list[int], amount: int):
-    # Ensure amount is valid
-    amount = min(amount, len(capacities) - 1)
-
+def _give_capacities_progressive(maximum_address: int, count_address: int, capacities: list[int]):
     current_max = dolphin_memory_engine.read_byte(maximum_address)
-    if current_max != capacities[amount]:
-        dolphin_memory_engine.write_byte(maximum_address, capacities[amount])
-        dolphin_memory_engine.write_byte(count_address, capacities[amount])
+    if current_max == capacities[-1]:
+        return
+
+    next_max = capacities[capacities.index(current_max) + 1]
+    dolphin_memory_engine.write_byte(maximum_address, next_max)
+    dolphin_memory_engine.write_byte(count_address, next_max)
 
 
-def _give_wallet_progressive(amount: int):
-    # Ensure amount is valid
-    amount = min(amount, 2)
+def _give_wallet_progressive():
+    # Calculate the next amount of the progressive wallet
+    next_amount = dolphin_memory_engine.read_byte(WALLET_ADDR).bit_length()
+    next_amount = min(next_amount, 2)
 
-    dolphin_memory_engine.write_byte(WALLET_ADDR, amount)
+    dolphin_memory_engine.write_byte(WALLET_ADDR, 1 << next_amount)
 
 
-def _give_bottle_progressive(amount: int):
-    # Ensure amount is valid
-    amount = min(amount, len(BOTTLE_ADDRS))
-
-    for addr in BOTTLE_ADDRS[:amount]:
+def _give_bottle_progressive():
+    for addr in BOTTLE_ADDRS:
         if dolphin_memory_engine.read_byte(addr) == 0xFF:
             # 0x50 is empty bottle contents
             _give_item(addr, 0x50, None, None)
+            break
 
 
-def _give_item_by_name(ctx: TWWContext, item: str, replenish_counter: bool):
+def _give_item_by_name(ctx: TWWContext, item: str):
     assert item in ITEM_TABLE, f"Unknown item: {item}"
 
     if check_ingame():
@@ -318,35 +333,30 @@ def _give_item_by_name(ctx: TWWContext, item: str, replenish_counter: bool):
                 _give_pearl(data.address, data.value, data.owned_bitfield, data.bit_to_set)
 
             case "Prog":
-                amt_received = sum(1 for item in ctx.items_received if item.item == data.code)
                 match item:
                     case "Progressive Sword":
-                        if amt_received > 0:
-                            _give_item_progressive(data.address, data.owned_bitfield, SWORD_IDS, amt_received)
+                        _give_item_progressive(data.address, data.owned_bitfield, SWORD_IDS)
 
                     case "Progressive Shield":
-                        if amt_received > 0:
-                            _give_item_progressive(data.address, data.owned_bitfield, SHIELD_IDS, amt_received)
+                        _give_item_progressive(data.address, data.owned_bitfield, SHIELD_IDS)
 
                     case "Progressive Picto Box":
-                        if amt_received > 0:
-                            _give_item_progressive(data.address, data.owned_bitfield, PICTO_BOX_IDS, amt_received)
+                        _give_item_progressive(data.address, data.owned_bitfield, PICTO_BOX_IDS)
 
                     case "Progressive Bow":
-                        if amt_received > 0:
-                            _give_item_progressive(data.address, data.owned_bitfield, BOW_IDS, amt_received)
+                        _give_item_progressive(data.address, data.owned_bitfield, BOW_IDS)
 
                     case "Progressive Magic Meter":
-                        _give_capacities_progressive(data.address, data.owned_bitfield, [0, 16, 32], amt_received)
+                        _give_capacities_progressive(data.address, data.owned_bitfield, [0, 16, 32])
 
                     case "Progressive Quiver" | "Progressive Bomb Bag":
-                        _give_capacities_progressive(data.address, data.owned_bitfield, [30, 60, 99], amt_received)
+                        _give_capacities_progressive(data.address, data.owned_bitfield, [30, 60, 99])
 
                     case "Progressive Wallet":
-                        _give_wallet_progressive(amt_received)
+                        _give_wallet_progressive()
 
                     case "Empty Bottle":
-                        _give_bottle_progressive(amt_received)
+                        _give_bottle_progressive()
 
             case "Chart":
                 _give_chart(data.owned_bitfield, data.bit_to_set)
@@ -355,7 +365,7 @@ def _give_item_by_name(ctx: TWWContext, item: str, replenish_counter: bool):
                 _give_rupees(data.value)
 
             case "Heart":
-                _give_heart_pieces(_count_expected_heart_pieces(ctx), replenish_counter)
+                _give_heart_pieces(_count_expected_heart_pieces(ctx))
 
             case "BKey" | "Map" | "Compass":
                 _give_other_dungeon_item(data.value, data.bit_to_set)
@@ -368,32 +378,14 @@ def _give_item_by_name(ctx: TWWContext, item: str, replenish_counter: bool):
 
 
 async def give_items(ctx: TWWContext):
-    while ctx.recv_items_queue:
-        item_name = LOOKUP_ID_TO_NAME[ctx.recv_items_queue.popleft().item]
-        _give_item_by_name(ctx, item_name, True)
-        await asyncio.sleep(0.01)
-
-
-async def check_items(ctx: TWWContext):
-    # We try, as best we can, to give the player the items they should have but are missing
-    for network_item in ctx.items_received:
-        if check_ingame():
-            item_name = LOOKUP_ID_TO_NAME[network_item.item]
-            data = ITEM_TABLE[item_name]
-
-            match data.type:
-                case "Item" | "Letter" | "Pearl" | "Prog" | "Chart" | "Heart" | "BKey" | "Map" | "Compass":
-                    # Note: Current will not be replenished. However, max health will be set correctly
-                    _give_item_by_name(ctx, item_name, False)
-
-                case "Spoil" | "Bait" | "Rupee" | "SKey":
-                    # Unfortunately, no good way at the moment to check these
-                    pass
-
-                case _:
-                    raise Exception(f"Unknown item type: {data.type}")
-
-            await asyncio.sleep(0.01)
+    if check_ingame():
+        expected_idx = read_short(EXPECTED_INDEX_ADDR)
+        for item, idx in ctx.items_received_2:
+            if expected_idx <= idx:
+                item_name = LOOKUP_ID_TO_NAME[item.item]
+                _give_item_by_name(ctx, item_name)
+                write_short(EXPECTED_INDEX_ADDR, idx + 1)
+                # await asyncio.sleep(0.01)  # wait a bit for values to update
 
 
 async def check_locations(ctx: TWWContext):
@@ -469,12 +461,12 @@ async def check_locations(ctx: TWWContext):
 
 
 async def check_alive():
-    cur_health = dolphin_memory_engine.read_byte(CURR_HEALTH_ADDR)
+    cur_health = read_short(CURR_HEALTH_ADDR)
     return cur_health > 0
 
 
 async def check_death(ctx: TWWContext):
-    cur_health = dolphin_memory_engine.read_byte(CURR_HEALTH_ADDR)
+    cur_health = read_short(CURR_HEALTH_ADDR)
     if cur_health <= 0:
         if not ctx.has_send_death and time.time() >= ctx.last_death_link + 3:
             ctx.has_send_death = True
@@ -493,13 +485,11 @@ async def dolphin_sync_task(ctx: TWWContext):
     while not ctx.exit_event.is_set():
         try:
             if dolphin_memory_engine.is_hooked() and ctx.dolphin_status == CONNECTION_CONNECTED_STATUS:
-                if ctx.server:
-                    if ctx.slot:
-                        if "DeathLink" in ctx.tags:
-                            await check_death(ctx)
-                        await give_items(ctx)
-                        await check_items(ctx)
-                        await check_locations(ctx)
+                if ctx.server and ctx.slot:
+                    if "DeathLink" in ctx.tags:
+                        await check_death(ctx)
+                    await give_items(ctx)
+                    await check_locations(ctx)
                 await asyncio.sleep(0.5)
             else:
                 if ctx.dolphin_status == CONNECTION_CONNECTED_STATUS:
