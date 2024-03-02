@@ -433,6 +433,8 @@ async def check_locations(ctx: TWWContext):
             match data.type:
                 case TWWLocationType.CHART:
                     checked = (charts_bitfield >> data.bit) & 1
+                case TWWLocationType.BOCTO:
+                    checked = (read_short(data.address) >> data.bit) & 1
                 case TWWLocationType.CHEST:
                     checked = (chests_bitfield >> data.bit) & 1
                 case TWWLocationType.SWTCH:

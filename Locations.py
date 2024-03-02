@@ -34,6 +34,7 @@ class TWWFlag(Flag):
 
 class TWWLocationType(Enum):
     CHART = auto()
+    BOCTO = auto()
     CHEST = auto()
     SWTCH = auto()
     PCKUP = auto()
@@ -47,6 +48,7 @@ class TWWLocationData(NamedTuple):
     stage_id: int
     type: TWWLocationType
     bit: int
+    address: int | None = None
 
 
 class TWWLocation(Location):
@@ -60,6 +62,7 @@ class TWWLocation(Location):
         self.stage_id = data.stage_id
         self.type = data.type
         self.bit = data.bit
+        self.address = self.address
 
 
 base_id = 2326528
@@ -462,9 +465,9 @@ LOCATION_TABLE: dict[str, TWWLocationData] = {
     "Fire Mountain - Lookout Platform - Destroy the Cannons": TWWLocationData(
         base_id + 123, TWWFlag.PLTFRMS, "The Great Sea", 0x1, TWWLocationType.CHEST, 0
     ),
-    # "Fire Mountain - Big Octo": TWWLocationData(
-    #     base_id + 124, TWWFlag.BG_OCTO, "The Great Sea", 0x0, TWWLocationType.SWTCH, 63
-    # ),
+    "Fire Mountain - Big Octo": TWWLocationData(
+        base_id + 124, TWWFlag.BG_OCTO, "The Great Sea", 0x0, TWWLocationType.BOCTO, 0, 0x803C51F0
+    ),
 
     # Ice Ring Isle
     "Ice Ring Isle - Frozen Chest": TWWLocationData(
@@ -664,9 +667,9 @@ LOCATION_TABLE: dict[str, TWWLocationData] = {
     "Private Oasis - Cabana Labyrinth - Upper Floor Chest": TWWLocationData(
         base_id + 185, TWWFlag.PZL_CVE, "Cabana Labyrinth", 0xC, TWWLocationType.CHEST, 17
     ),
-    # "Private Oasis - Big Octo": TWWLocationData(
-    #     base_id + 186, TWWFlag.BG_OCTO, "The Great Sea", 0x0, TWWLocationType.SWTCH, 64
-    # ),
+    "Private Oasis - Big Octo": TWWLocationData(
+        base_id + 186, TWWFlag.BG_OCTO, "The Great Sea", 0x0, TWWLocationType.BOCTO, 0, 0x803C520A
+    ),
 
     # Spectacle Island
     # "Spectacle Island - Barrel Shooting - First Prize": TWWLocationData(
@@ -683,9 +686,9 @@ LOCATION_TABLE: dict[str, TWWLocationData] = {
     "Needle Rock Isle - Cave": TWWLocationData(
         base_id + 190, TWWFlag.PZL_CVE, "Needle Rock Isle Secret Cave", 0xD, TWWLocationType.CHEST, 9
     ),
-    # "Needle Rock Isle - Golden Gunboat": TWWLocationData(
-    #     base_id + 191, TWWFlag.BG_OCTO, "The Great Sea", 0x0, TWWLocationType.SWTCH, 71
-    # ),
+    "Needle Rock Isle - Golden Gunboat": TWWLocationData(
+        base_id + 191, TWWFlag.BG_OCTO, "The Great Sea", 0x0, TWWLocationType.BOCTO, 2, 0x803C5202
+    ),
 
     # Angular Isles
     "Angular Isles - Peak": TWWLocationData(
@@ -802,9 +805,9 @@ LOCATION_TABLE: dict[str, TWWLocationData] = {
     # "Tingle Island - Ankle - Reward for All Tingle Statues": TWWLocationData(
     #     base_id + 221, TWWFlag.MISCELL, "The Great Sea"
     # ),
-    # "Tingle Island - Big Octo": TWWLocationData(
-    #     base_id + 222, TWWFlag.BG_OCTO, "The Great Sea", 0x0, TWWLocationType.SWTCH, 62
-    # ),
+    "Tingle Island - Big Octo": TWWLocationData(
+        base_id + 222, TWWFlag.BG_OCTO, "The Great Sea", 0x0, TWWLocationType.BOCTO, 0, 0x803C51EA
+    ),
 
     # Diamond Steppe Island
     "Diamond Steppe Island - Warp Maze Cave - First Chest": TWWLocationData(
@@ -813,9 +816,9 @@ LOCATION_TABLE: dict[str, TWWLocationData] = {
     "Diamond Steppe Island - Warp Maze Cave - Second Chest": TWWLocationData(
         base_id + 224, TWWFlag.PZL_CVE, "Diamond Steppe Island Warp Maze Cave", 0xC, TWWLocationType.CHEST, 3
     ),
-    # "Diamond Steppe Island - Big Octo": TWWLocationData(
-    #     base_id + 225, TWWFlag.BG_OCTO, "The Great Sea", 0x0, TWWLocationType.SWTCH, 65
-    # ),
+    "Diamond Steppe Island - Big Octo": TWWLocationData(
+        base_id + 225, TWWFlag.BG_OCTO, "The Great Sea", 0x0, TWWLocationType.BOCTO, 0, 0x803C5210
+    ),
 
     # Bomb Island
     "Bomb Island - Cave": TWWLocationData(
@@ -850,9 +853,9 @@ LOCATION_TABLE: dict[str, TWWLocationData] = {
     "Rock Spire Isle - Center Lookout Platform": TWWLocationData(
         base_id + 235, TWWFlag.PLTFRMS, "The Great Sea", 0x1, TWWLocationType.CHEST, 25
     ),
-    # "Rock Spire Isle - Southeast Gunboat": TWWLocationData(
-    #     base_id + 236, TWWFlag.BG_OCTO, "The Great Sea", 0x0, TWWLocationType.SWTCH, 68
-    # ),
+    "Rock Spire Isle - Southeast Gunboat": TWWLocationData(
+        base_id + 236, TWWFlag.BG_OCTO, "The Great Sea", 0x0, TWWLocationType.BOCTO, 0, 0x803C51E8
+    ),
 
     # Shark Island
     "Shark Island - Cave": TWWLocationData(
@@ -934,9 +937,9 @@ LOCATION_TABLE: dict[str, TWWLocationData] = {
     "Seven-Star Isles - Southern Lookout Platform": TWWLocationData(
         base_id + 257, TWWFlag.PLTFRMS, "The Great Sea", 0x0, TWWLocationType.CHEST, 22
     ),
-    # "Seven-Star Isles - Big Octo": TWWLocationData(
-    #     base_id + 258, TWWFlag.BG_OCTO, "The Great Sea", 0x0, TWWLocationType.SWTCH, 61
-    # ),
+    "Seven-Star Isles - Big Octo": TWWLocationData(
+        base_id + 258, TWWFlag.BG_OCTO, "The Great Sea", 0x0, TWWLocationType.BOCTO, 0, 0x803C51D4
+    ),
 
     # Cyclops Reef
     "Cyclops Reef - Destroy the Cannons and Gunboats": TWWLocationData(
