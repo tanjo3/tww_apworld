@@ -992,7 +992,7 @@ def set_rules(world: MultiWorld, player: int):
     # )
 
     # The Great Sea
-    # set_rule(world.get_location("The Great Sea - Beedle's Shop Ship - 20 Rupee Item", player), lambda state: True)
+    set_rule(world.get_location("The Great Sea - Beedle's Shop Ship - 20 Rupee Item", player), lambda state: True)
     set_rule(world.get_location("The Great Sea - Salvage Corp Gift", player), lambda state: True)
     set_rule(world.get_location("The Great Sea - Cyclos", player), lambda state: has_heros_bow(state, player))
     # set_rule(
@@ -1203,10 +1203,10 @@ def set_rules(world: MultiWorld, player: int):
     set_rule(world.get_location("Northern Fairy Island - Submarine", player), lambda state: True)
 
     # Tingle Island
-    # set_rule(
-    #     world.get_location("Tingle Island - Ankle - Reward for All Tingle Statues", player),
-    #     lambda state: state.has_group("tingle_statues", player, 5),
-    # )
+    set_rule(
+        world.get_location("Tingle Island - Ankle - Reward for All Tingle Statues", player),
+        lambda state: state.has_group("tingle_statues", player, 5),
+    )
     set_rule(
         world.get_location("Tingle Island - Big Octo", player),
         lambda state: can_defeat_12_eye_big_octos(state, player) and state.has("Grappling Hook", player),

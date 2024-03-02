@@ -639,9 +639,9 @@ LOCATION_TABLE: dict[str, TWWLocationData] = {
     # ),
 
     # The Great Sea
-    # "The Great Sea - Beedle's Shop Ship - 20 Rupee Item": TWWLocationData(
-    #     base_id + 177, TWWFlag.MISCELL, "The Great Sea"
-    # ),
+    "The Great Sea - Beedle's Shop Ship - 20 Rupee Item": TWWLocationData(
+        base_id + 177, TWWFlag.MISCELL, "The Great Sea",  0xA, TWWLocationType.EVENT, 1, 0x803C5295
+    ),
     "The Great Sea - Salvage Corp Gift": TWWLocationData(
         base_id + 178, TWWFlag.FREE_GF, "The Great Sea", 0x0, TWWLocationType.EVENT, 7, 0x803C5295
     ),
@@ -803,9 +803,9 @@ LOCATION_TABLE: dict[str, TWWLocationData] = {
     ),
 
     # Tingle Island
-    # "Tingle Island - Ankle - Reward for All Tingle Statues": TWWLocationData(
-    #     base_id + 221, TWWFlag.MISCELL, "The Great Sea"
-    # ),
+    "Tingle Island - Ankle - Reward for All Tingle Statues": TWWLocationData(
+        base_id + 221, TWWFlag.MISCELL, "The Great Sea", 0x0, TWWLocationType.EVENT, 1, 0x803C5249
+    ),
     "Tingle Island - Big Octo": TWWLocationData(
         base_id + 222, TWWFlag.BG_OCTO, "The Great Sea", 0x0, TWWLocationType.BOCTO, 0, 0x803C51EA
     ),
