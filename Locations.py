@@ -38,6 +38,7 @@ class TWWLocationType(Enum):
     CHEST = auto()
     SWTCH = auto()
     PCKUP = auto()
+    EVENT = auto()
     SPECL = auto()
 
 
@@ -76,7 +77,7 @@ LOCATION_TABLE: dict[str, TWWLocationData] = {
         base_id + 1, TWWFlag.MISCELL, "The Great Sea", 0xB, TWWLocationType.CHEST, 4
     ),
     "Outset Island - Orca - Give 10 Knight's Crests": TWWLocationData(
-        base_id + 2, TWWFlag.SPOILS, "The Great Sea", 0xB, TWWLocationType.SPECL, 0
+        base_id + 2, TWWFlag.SPOILS, "The Great Sea", 0xB, TWWLocationType.EVENT, 5, 0x803C5237
     ),
     # "Outset Island - Orca - Hit 500 Times": TWWLocationData(
     #     base_id + 3, TWWFlag.OTHER, "The Great Sea"
@@ -108,10 +109,10 @@ LOCATION_TABLE: dict[str, TWWLocationData] = {
         base_id + 11, TWWFlag.ISLND_P, "The Great Sea", 0xB, TWWLocationType.CHEST, 0
     ),
     "Windfall Island - Chu Jelly Juice Shop - Give 15 Green Chu Jelly": TWWLocationData(
-        base_id + 12, TWWFlag.SPOILS, "The Great Sea", 0xB, TWWLocationType.SPECL, 0
+        base_id + 12, TWWFlag.SPOILS, "The Great Sea", 0xB, TWWLocationType.EVENT, 2, 0x803C5239
     ),
     "Windfall Island - Chu Jelly Juice Shop - Give 15 Blue Chu Jelly": TWWLocationData(
-        base_id + 13, TWWFlag.SPOILS | TWWFlag.LONG_SQ, "The Great Sea", 0xB, TWWLocationType.SPECL, 0
+        base_id + 13, TWWFlag.SPOILS | TWWFlag.LONG_SQ, "The Great Sea", 0xB, TWWLocationType.EVENT, 1, 0x803C5239
     ),
     # "Windfall Island - Ivan - Catch Killer Bees": TWWLocationData(
     #     base_id + 14, TWWFlag.SHRT_SQ, "The Great Sea"
@@ -202,13 +203,13 @@ LOCATION_TABLE: dict[str, TWWLocationData] = {
     #     base_id + 42, TWWFlag.SHRT_SQ, "The Great Sea"
     # ),
     "Windfall Island - Battlesquid - First Prize": TWWLocationData(
-        base_id + 43, TWWFlag.SPLOOSH, "The Great Sea", 0xB, TWWLocationType.SPECL, 0
+        base_id + 43, TWWFlag.SPLOOSH, "The Great Sea", 0xB, TWWLocationType.EVENT, 0, 0x803C532A
     ),
     "Windfall Island - Battlesquid - Second Prize": TWWLocationData(
-        base_id + 44, TWWFlag.SPLOOSH, "The Great Sea", 0xB, TWWLocationType.SPECL, 0
+        base_id + 44, TWWFlag.SPLOOSH, "The Great Sea", 0xB, TWWLocationType.EVENT, 1, 0x803C532A
     ),
     "Windfall Island - Battlesquid - Under 20 Shots Prize": TWWLocationData(
-        base_id + 45, TWWFlag.SPLOOSH, "The Great Sea", 0xB, TWWLocationType.SPECL, 0
+        base_id + 45, TWWFlag.SPLOOSH, "The Great Sea", 0xB, TWWLocationType.EVENT, 0, 0x803C532B
     ),
     # "Windfall Island - Pompie and Vera - Secret Meeting Photo": TWWLocationData(
     #     base_id + 46, TWWFlag.SHRT_SQ, "The Great Sea"
@@ -645,13 +646,13 @@ LOCATION_TABLE: dict[str, TWWLocationData] = {
     #     base_id + 178, TWWFlag.FREE_GF, "The Great Sea"
     # ),
     "The Great Sea - Cyclos": TWWLocationData(
-        base_id + 179, TWWFlag.MISCELL, "The Great Sea", 0x0, TWWLocationType.SPECL, 0
+        base_id + 179, TWWFlag.MISCELL, "The Great Sea", 0x0, TWWLocationType.EVENT, 4, 0x803C5253
     ),
     # "The Great Sea - Goron Trading Reward": TWWLocationData(
     #     base_id + 180, TWWFlag.LONG_SQ | TWWFlag.XPENSVE, "The Great Sea"
     # ),
     "The Great Sea - Withered Trees": TWWLocationData(
-        base_id + 181, TWWFlag.LONG_SQ, "The Great Sea", 0x0, TWWLocationType.SPECL, 0
+        base_id + 181, TWWFlag.LONG_SQ, "The Great Sea", 0x0, TWWLocationType.EVENT, 5, 0x803C525A
     ),
     "The Great Sea - Ghost Ship": TWWLocationData(
         base_id + 182, TWWFlag.MISCELL, "The Great Sea", 0xA, TWWLocationType.CHEST, 23
@@ -836,13 +837,13 @@ LOCATION_TABLE: dict[str, TWWLocationData] = {
         base_id + 229, TWWFlag.CBT_CVE, "Rock Spire Isle Secret Cave", 0xC, TWWLocationType.CHEST, 8
     ),
     "Rock Spire Isle - Beedle's Special Shop Ship - 500 Rupee Item": TWWLocationData(
-        base_id + 230, TWWFlag.XPENSVE, "The Great Sea", 0xA, TWWLocationType.SPECL, 0
+        base_id + 230, TWWFlag.XPENSVE, "The Great Sea", 0xA, TWWLocationType.EVENT, 5, 0x803C524C
     ),
     "Rock Spire Isle - Beedle's Special Shop Ship - 950 Rupee Item": TWWLocationData(
-        base_id + 231, TWWFlag.XPENSVE, "The Great Sea", 0xA, TWWLocationType.SPECL, 0
+        base_id + 231, TWWFlag.XPENSVE, "The Great Sea", 0xA, TWWLocationType.EVENT, 4, 0x803C524C
     ),
     "Rock Spire Isle - Beedle's Special Shop Ship - 900 Rupee Item": TWWLocationData(
-        base_id + 232, TWWFlag.XPENSVE, "The Great Sea", 0xA, TWWLocationType.SPECL, 0
+        base_id + 232, TWWFlag.XPENSVE, "The Great Sea", 0xA, TWWLocationType.EVENT, 3, 0x803C524C
     ),
     "Rock Spire Isle - Western Lookout Platform - Destroy the Cannons": TWWLocationData(
         base_id + 233, TWWFlag.PLTFRMS, "The Great Sea", 0x1, TWWLocationType.CHEST, 23

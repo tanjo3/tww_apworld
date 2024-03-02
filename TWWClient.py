@@ -403,30 +403,8 @@ async def check_locations(ctx: TWWContext):
 
         # Special-case checks
         if data.type == TWWLocationType.SPECL:
-            if location == "Outset Island - Orca - Give 10 Knight's Crests":
-                checked = (dolphin_memory_engine.read_byte(0x803C5237) >> 5) & 1
-            if location == "Windfall Island - Chu Jelly Juice Shop - Give 15 Green Chu Jelly":
-                checked = (dolphin_memory_engine.read_byte(0x803C5239) >> 2) & 1
-            if location == "Windfall Island - Chu Jelly Juice Shop - Give 15 Blue Chu Jelly":
-                checked = (dolphin_memory_engine.read_byte(0x803C5239) >> 1) & 1
-            if location == "Windfall Island - Battlesquid - First Prize":
-                checked = (dolphin_memory_engine.read_byte(0x803C532A) >> 0) & 1
-            if location == "Windfall Island - Battlesquid - Second Prize":
-                checked = (dolphin_memory_engine.read_byte(0x803C532A) >> 1) & 1
-            if location == "Windfall Island - Battlesquid - Under 20 Shots Prize":
-                checked = (dolphin_memory_engine.read_byte(0x803C532B) >> 0) & 1
             if location == "Dragon Roost Island - Rito Aerie - Mail Sorting":
                 checked = dolphin_memory_engine.read_byte(0x803C52EE) == 0x3
-            if location == "The Great Sea - Cyclos":
-                checked = (dolphin_memory_engine.read_byte(0x803C5253) >> 4) & 1
-            if location == "The Great Sea - Withered Trees":
-                checked = (dolphin_memory_engine.read_byte(0x803C525A) >> 5) & 1
-            if location == "Rock Spire Isle - Beedle's Special Shop Ship - 500 Rupee Item":
-                checked = (dolphin_memory_engine.read_byte(0x803C524C) >> 5) & 1
-            if location == "Rock Spire Isle - Beedle's Special Shop Ship - 950 Rupee Item":
-                checked = (dolphin_memory_engine.read_byte(0x803C524C) >> 4) & 1
-            if location == "Rock Spire Isle - Beedle's Special Shop Ship - 900 Rupee Item":
-                checked = (dolphin_memory_engine.read_byte(0x803C524C) >> 3) & 1
 
         # Regular checks
         elif data.stage_id == curr_stage_id:
@@ -441,6 +419,8 @@ async def check_locations(ctx: TWWContext):
                     checked = (switches_bitfield >> data.bit) & 1
                 case TWWLocationType.PCKUP:
                     checked = (pickups_bitfield >> data.bit) & 1
+                case TWWLocationType.EVENT:
+                    checked = (dolphin_memory_engine.read_byte(data.address) >> data.bit) & 1
 
         # Sea (Alt) chests
         elif curr_stage_id == 0x0 and data.stage_id == 0x1:
