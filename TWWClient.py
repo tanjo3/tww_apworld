@@ -265,15 +265,14 @@ def _give_rupees(amount: int):
     dolphin_memory_engine.write_word(GIVE_RUPEE_ADDR, amount)
 
 
-def _give_heart_pieces(max_hp: int, heal_player: bool):
+def _give_heart_pieces(max_hp: int):
     # Ensure max HP is valid
     max_hp = min(max_hp, 20 * 4)
 
     write_short(MAX_HEALTH_ADDR, max_hp)
 
     # Full heal the player when they receive a Piece of Heart or Heart Container
-    if heal_player:
-        dolphin_memory_engine.write_float(GIVE_HEALTH_ADDR, float(20 * 4))
+    dolphin_memory_engine.write_float(GIVE_HEALTH_ADDR, float(20 * 4))
 
 
 def _give_item_progressive(address: int, owned_bitfield: int, item_ids: list[int]):
