@@ -35,7 +35,10 @@ Waker thread (under `future-game-design`) in the Archipelago server.
 
 ## Known issues
 * When randomizing entrances, some regions may not be reachable. While this is acceptable for certain accessibility
-settings, the randomizer will fail to generate these seeds. A temporary workaround could be to change the accessibility option to `locations`. 
+settings, the randomizer will fail to generate these seeds. A temporary workaround could be to change the accessibility
+option to `locations`.
+* When randomizing with different key shuffle options, generation may fail. Try again several times, and if it still
+fails, try a different key shuffle option.
 
 Feel free to report any other issues in the Wind Waker thread in the Archipelago server! I'll take a look and see what I
 can do. Suggestions for improvements are also welcome.
