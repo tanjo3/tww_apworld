@@ -327,15 +327,13 @@ class RandomizeFairyFountainEntrances(Toggle):
 
 
 class MixEntrances(Choice):
-    """Controls whether dungeons should be separated from other randomized entrances, or if all types of randomized
-    entrances can lead into each other.
-    Separate Dungeons From Caves & Fountains: Dungeon entrances will only be randomized to lead into other dungeons.
-    Mix Dungeons & Caves & Fountains: Dungeon entrances may be randomized to lead into areas that are not dungeons
-    too."""
+    """Controls how different types (pools) of entrances should be randomized.
+    Separate Pools: Each pool of randomized entrances with shuffle into itself (e.g., dungeons into dungeons).
+    Mix Pools: Combine all pools of randomized entrances into one big pool and shuffle all entrances together."""
 
     display_name = "Mix Entrances"
-    option_separate_dungeons = 0
-    option_mix_dungeons = 1
+    option_separate_pools = 0
+    option_mix_pools = 1
     default = 0
 
 

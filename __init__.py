@@ -175,7 +175,7 @@ class TWWWorld(World):
         ]
 
         entrance_exit_pairs: list[tuple[Region, Region]] = []
-        if self.options.mix_entrances == "mix_dungeons":
+        if self.options.mix_entrances == "mix_pools":
             # Flatten the lists of entrances/exits into two lists
             all_entrances = list(chain.from_iterable(entrances))
             all_exits = list(chain.from_iterable(exits))
