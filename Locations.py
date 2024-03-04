@@ -118,7 +118,7 @@ LOCATION_TABLE: dict[str, TWWLocationData] = {
         base_id + 14, TWWFlag.SHRT_SQ, "The Great Sea", 0x0, TWWLocationType.EVENT, 6, 0x803C523F
     ),
     "Windfall Island - Mrs. Marie - Catch Killer Bees": TWWLocationData(
-        base_id + 15, TWWFlag.SHRT_SQ, "The Great Sea", 0x0, TWWLocationType.EVENT, 7, 0x803C524B
+        base_id + 15, TWWFlag.SHRT_SQ, "The Great Sea", 0xB, TWWLocationType.EVENT, 7, 0x803C524B
     ),
     # "Windfall Island - Mrs. Marie - Give 1 Joy Pendant": TWWLocationData(
     #     base_id + 16, TWWFlag.SPOILS, "The Great Sea"
@@ -154,7 +154,7 @@ LOCATION_TABLE: dict[str, TWWLocationData] = {
     #     base_id + 26, TWWFlag.SHRT_SQ, "The Great Sea"
     # ),
     "Windfall Island - Cafe Bar - Postman": TWWLocationData(
-        base_id + 27, TWWFlag.SHRT_SQ, "The Great Sea", 0x0, TWWLocationType.EVENT, 1, 0x803C5296
+        base_id + 27, TWWFlag.SHRT_SQ, "The Great Sea", 0xB, TWWLocationType.EVENT, 1, 0x803C5296
     ),
     "Windfall Island - Kreeb - Light Up Lighthouse": TWWLocationData(
         base_id + 28, TWWFlag.SHRT_SQ, "The Great Sea", 0x0, TWWLocationType.EVENT, 5, 0x803C5247
