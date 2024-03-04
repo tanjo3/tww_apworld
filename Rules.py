@@ -127,8 +127,8 @@ def set_rules(world: MultiWorld, player: int):
         world.get_location("Windfall Island - Chu Jelly Juice Shop - Give 15 Blue Chu Jelly", player),
         lambda state: can_obtain_15_blue_chu_jelly(state, player),
     )
-    # set_rule(world.get_location("Windfall Island - Ivan - Catch Killer Bees", player), lambda state: True)
-    # set_rule(world.get_location("Windfall Island - Mrs. Marie - Catch Killer Bees", player), lambda state: True)
+    set_rule(world.get_location("Windfall Island - Ivan - Catch Killer Bees", player), lambda state: True)
+    set_rule(world.get_location("Windfall Island - Mrs. Marie - Catch Killer Bees", player), lambda state: True)
     # set_rule(
     #     world.get_location("Windfall Island - Mrs. Marie - Give 1 Joy Pendant", player),
     #     lambda state: state.has("Spoils Bag", player),
@@ -175,12 +175,12 @@ def set_rules(world: MultiWorld, player: int):
     #     and state.has("Delivery Bag", player)
     #     and state.has("Moblin's Letter", player),
     # )
-    # set_rule(
-    #     world.get_location("Windfall Island - Cafe Bar - Postman", player),
-    #     lambda state: rescued_aryll(state, player)
-    #     and state.has("Delivery Bag", player)
-    #     and state.has("Maggie's Letter", player),
-    # )
+    set_rule(
+        world.get_location("Windfall Island - Cafe Bar - Postman", player),
+        lambda state: rescued_aryll(state, player)
+        and state.has("Delivery Bag", player)
+        and state.has("Maggie's Letter", player),
+    )
     set_rule(
         world.get_location("Windfall Island - Kreeb - Light Up Lighthouse", player),
         lambda state: can_play_winds_requiem(state, player) and has_fire_arrows(state, player),
@@ -200,10 +200,10 @@ def set_rules(world: MultiWorld, player: int):
     # set_rule(world.get_location("Windfall Island - 40 Rupee Auction", player), lambda state: True)
     # set_rule(world.get_location("Windfall Island - 60 Rupee Auction", player), lambda state: True)
     # set_rule(world.get_location("Windfall Island - 80 Rupee Auction", player), lambda state: True)
-    # set_rule(
-    #     world.get_location("Windfall Island - Zunari - Stock Exotic Flower in Zunari's Shop", player),
-    #     lambda state: rescued_aryll(state, player) and state.has("Delivery Bag", player),
-    # )
+    set_rule(
+        world.get_location("Windfall Island - Zunari - Stock Exotic Flower in Zunari's Shop", player),
+        lambda state: rescued_aryll(state, player) and state.has("Delivery Bag", player),
+    )
     # set_rule(
     #     world.get_location("Windfall Island - Sam - Decorate the Town", player),
     #     lambda state: rescued_aryll(state, player) and state.has("Delivery Bag", player),
@@ -224,25 +224,25 @@ def set_rules(world: MultiWorld, player: int):
     #     world.get_location("Windfall Island - Kane - Place Six Idols on Gate", player),
     #     lambda state: rescued_aryll(state, player) and state.has("Delivery Bag", player),
     # )
-    # set_rule(
-    #     world.get_location("Windfall Island - Mila - Follow the Thief", player),
-    #     lambda state: rescued_aryll(state, player),
-    # )
+    set_rule(
+        world.get_location("Windfall Island - Mila - Follow the Thief", player),
+        lambda state: rescued_aryll(state, player),
+    )
     set_rule(world.get_location("Windfall Island - Battlesquid - First Prize", player), lambda state: True)
     set_rule(world.get_location("Windfall Island - Battlesquid - Second Prize", player), lambda state: True)
     set_rule(world.get_location("Windfall Island - Battlesquid - Under 20 Shots Prize", player), lambda state: True)
-    # set_rule(
-    #     world.get_location("Windfall Island - Pompie and Vera - Secret Meeting Photo", player),
-    #     lambda state: can_play_winds_requiem(state, player) and has_picto_box(state, player),
-    # )
+    set_rule(
+        world.get_location("Windfall Island - Pompie and Vera - Secret Meeting Photo", player),
+        lambda state: can_play_winds_requiem(state, player) and has_picto_box(state, player),
+    )
     # set_rule(
     #     world.get_location("Windfall Island - Kamo - Full Moon Photo", player),
     #     lambda state: has_deluxe_picto_box(state, player) and can_play_song_of_passing(state, player),
     # )
-    # set_rule(
-    #     world.get_location("Windfall Island - Minenco - Miss Windfall Photo", player),
-    #     lambda state: has_deluxe_picto_box(state, player),
-    # )
+    set_rule(
+        world.get_location("Windfall Island - Minenco - Miss Windfall Photo", player),
+        lambda state: has_deluxe_picto_box(state, player),
+    )
     # set_rule(
     #     world.get_location("Windfall Island - Linda and Anton", player),
     #     lambda state: has_deluxe_picto_box(state, player) and can_play_song_of_passing(state, player),

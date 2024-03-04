@@ -114,12 +114,12 @@ LOCATION_TABLE: dict[str, TWWLocationData] = {
     "Windfall Island - Chu Jelly Juice Shop - Give 15 Blue Chu Jelly": TWWLocationData(
         base_id + 13, TWWFlag.SPOILS | TWWFlag.LONG_SQ, "The Great Sea", 0xB, TWWLocationType.EVENT, 1, 0x803C5239
     ),
-    # "Windfall Island - Ivan - Catch Killer Bees": TWWLocationData(
-    #     base_id + 14, TWWFlag.SHRT_SQ, "The Great Sea"
-    # ),
-    # "Windfall Island - Mrs. Marie - Catch Killer Bees": TWWLocationData(
-    #     base_id + 15, TWWFlag.SHRT_SQ, "The Great Sea"
-    # ),
+    "Windfall Island - Ivan - Catch Killer Bees": TWWLocationData(
+        base_id + 14, TWWFlag.SHRT_SQ, "The Great Sea", 0x0, TWWLocationType.EVENT, 6, 0x803C523F
+    ),
+    "Windfall Island - Mrs. Marie - Catch Killer Bees": TWWLocationData(
+        base_id + 15, TWWFlag.SHRT_SQ, "The Great Sea", 0x0, TWWLocationType.EVENT, 7, 0x803C524B
+    ),
     # "Windfall Island - Mrs. Marie - Give 1 Joy Pendant": TWWLocationData(
     #     base_id + 16, TWWFlag.SPOILS, "The Great Sea"
     # ),
@@ -153,12 +153,11 @@ LOCATION_TABLE: dict[str, TWWLocationData] = {
     # "Windfall Island - Maggie - Delivery Reward": TWWLocationData(
     #     base_id + 26, TWWFlag.SHRT_SQ, "The Great Sea"
     # ),
-    # "Windfall Island - Cafe Bar - Postman": TWWLocationData(
-    #     base_id + 27, TWWFlag.SHRT_SQ, "The Great Sea"
-    # ),
+    "Windfall Island - Cafe Bar - Postman": TWWLocationData(
+        base_id + 27, TWWFlag.SHRT_SQ, "The Great Sea", 0x0, TWWLocationType.EVENT, 1, 0x803C5296
+    ),
     "Windfall Island - Kreeb - Light Up Lighthouse": TWWLocationData(
-        # TODO: find the flag for the Kreeb item, currently using lit lighthouse flag
-        base_id + 28, TWWFlag.SHRT_SQ, "The Great Sea", 0x0, TWWLocationType.SWTCH, 13
+        base_id + 28, TWWFlag.SHRT_SQ, "The Great Sea", 0x0, TWWLocationType.EVENT, 5, 0x803C5247
     ),
     "Windfall Island - Transparent Chest": TWWLocationData(
         base_id + 29, TWWFlag.SHRT_SQ, "The Great Sea", 0x0, TWWLocationType.CHEST, 10
@@ -181,9 +180,9 @@ LOCATION_TABLE: dict[str, TWWLocationData] = {
     # "Windfall Island - 80 Rupee Auction": TWWLocationData(
     #     base_id + 35, TWWFlag.XPENSVE | TWWFlag.MINIGME, "The Great Sea"
     # ),
-    # "Windfall Island - Zunari - Stock Exotic Flower in Zunari's Shop": TWWLocationData(
-    #     base_id + 36, TWWFlag.SHRT_SQ, "The Great Sea"
-    # ),
+    "Windfall Island - Zunari - Stock Exotic Flower in Zunari's Shop": TWWLocationData(
+        base_id + 36, TWWFlag.SHRT_SQ, "The Great Sea", 0x0, TWWLocationType.EVENT, 6, 0x803C5295
+    ),
     # "Windfall Island - Sam - Decorate the Town": TWWLocationData(
     #     base_id + 37, TWWFlag.LONG_SQ, "The Great Sea"
     # ),
@@ -199,9 +198,9 @@ LOCATION_TABLE: dict[str, TWWLocationData] = {
     # "Windfall Island - Kane - Place Six Idols on Gate": TWWLocationData(
     #     base_id + 41, TWWFlag.OTHER, "The Great Sea"
     # ),
-    # "Windfall Island - Mila - Follow the Thief": TWWLocationData(
-    #     base_id + 42, TWWFlag.SHRT_SQ, "The Great Sea"
-    # ),
+    "Windfall Island - Mila - Follow the Thief": TWWLocationData(
+        base_id + 42, TWWFlag.SHRT_SQ, "The Great Sea", 0x0, TWWLocationType.EVENT, 3, 0x803C523A
+    ),
     "Windfall Island - Battlesquid - First Prize": TWWLocationData(
         base_id + 43, TWWFlag.SPLOOSH, "The Great Sea", 0xB, TWWLocationType.EVENT, 0, 0x803C532A
     ),
@@ -211,15 +210,15 @@ LOCATION_TABLE: dict[str, TWWLocationData] = {
     "Windfall Island - Battlesquid - Under 20 Shots Prize": TWWLocationData(
         base_id + 45, TWWFlag.SPLOOSH, "The Great Sea", 0xB, TWWLocationType.EVENT, 0, 0x803C532B
     ),
-    # "Windfall Island - Pompie and Vera - Secret Meeting Photo": TWWLocationData(
-    #     base_id + 46, TWWFlag.SHRT_SQ, "The Great Sea"
-    # ),
+    "Windfall Island - Pompie and Vera - Secret Meeting Photo": TWWLocationData(
+        base_id + 46, TWWFlag.SHRT_SQ, "The Great Sea", 0x0, TWWLocationType.EVENT, 2, 0x803C5295
+    ),
     # "Windfall Island - Kamo - Full Moon Photo": TWWLocationData(
     #     base_id + 47, TWWFlag.LONG_SQ, "The Great Sea"
     # ),
-    # "Windfall Island - Minenco - Miss Windfall Photo": TWWLocationData(
-    #     base_id + 48, TWWFlag.SHRT_SQ, "The Great Sea"
-    # ),
+    "Windfall Island - Minenco - Miss Windfall Photo": TWWLocationData(
+        base_id + 48, TWWFlag.SHRT_SQ, "The Great Sea", 0x0, TWWLocationType.EVENT, 3, 0x803C5295
+    ),
     # "Windfall Island - Linda and Anton": TWWLocationData(
     #     base_id + 49, TWWFlag.LONG_SQ, "The Great Sea"
     # ),
