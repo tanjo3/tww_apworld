@@ -403,8 +403,7 @@ async def check_locations(ctx: TWWContext):
 
         # Special-case checks
         if data.type == TWWLocationType.SPECL:
-            if location == "Dragon Roost Island - Rito Aerie - Mail Sorting":
-                checked = dolphin_memory_engine.read_byte(0x803C52EE) == 0x3
+            pass
 
         # Regular checks
         elif data.stage_id == curr_stage_id:

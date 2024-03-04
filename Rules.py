@@ -1037,8 +1037,8 @@ def set_rules(world: MultiWorld, player: int):
     )
 
     # Spectacle Island
-    # set_rule(world.get_location("Spectacle Island - Barrel Shooting - First Prize", player), lambda state: True)
-    # set_rule(world.get_location("Spectacle Island - Barrel Shooting - Second Prize", player), lambda state: True)
+    set_rule(world.get_location("Spectacle Island - Barrel Shooting - First Prize", player), lambda state: True)
+    set_rule(world.get_location("Spectacle Island - Barrel Shooting - Second Prize", player), lambda state: True)
 
     # Needle Rock Isle
     set_rule(
@@ -1309,10 +1309,10 @@ def set_rules(world: MultiWorld, player: int):
     set_rule(world.get_location("Horseshoe Island - Southeastern Lookout Platform", player), lambda state: True)
 
     # Flight Control Platform
-    # set_rule(
-    #     world.get_location("Flight Control Platform - Bird-Man Contest - First Prize", player),
-    #     lambda state: can_fly_with_deku_leaf_outdoors(state, player) and has_magic_meter_upgrade(state, player),
-    # )
+    set_rule(
+        world.get_location("Flight Control Platform - Bird-Man Contest - First Prize", player),
+        lambda state: can_fly_with_deku_leaf_outdoors(state, player) and has_magic_meter_upgrade(state, player),
+    )
     set_rule(
         world.get_location("Flight Control Platform - Submarine", player),
         lambda state: can_defeat_wizzrobes(state, player)

@@ -237,8 +237,7 @@ LOCATION_TABLE: dict[str, TWWLocationData] = {
         base_id + 53, TWWFlag.ISLND_P, "The Great Sea", 0x0, TWWLocationType.CHEST, 9
     ),
     "Dragon Roost Island - Rito Aerie - Mail Sorting": TWWLocationData(
-        # TODO: find the flag for the Baito item, currently using bits for mail sorting with Rito postman
-        base_id + 54, TWWFlag.MINIGME, "The Great Sea", 0xB, TWWLocationType.SPECL, 0
+        base_id + 54, TWWFlag.MINIGME, "The Great Sea", 0xB, TWWLocationType.EVENT, 0, 0x803C5253
     ),
     "Dragon Roost Island - Secret Cave": TWWLocationData(
         base_id + 55, TWWFlag.CBT_CVE, "Dragon Roost Island Secret Cave", 0xD, TWWLocationType.CHEST, 0
@@ -673,12 +672,12 @@ LOCATION_TABLE: dict[str, TWWLocationData] = {
     ),
 
     # Spectacle Island
-    # "Spectacle Island - Barrel Shooting - First Prize": TWWLocationData(
-    #     base_id + 187, TWWFlag.MINIGME, "The Great Sea"
-    # ),
-    # "Spectacle Island - Barrel Shooting - Second Prize": TWWLocationData(
-    #     base_id + 188, TWWFlag.MINIGME, "The Great Sea"
-    # ),
+    "Spectacle Island - Barrel Shooting - First Prize": TWWLocationData(
+        base_id + 187, TWWFlag.MINIGME, "The Great Sea", 0x0, TWWLocationType.EVENT, 0, 0x803C52E3
+    ),
+    "Spectacle Island - Barrel Shooting - Second Prize": TWWLocationData(
+        base_id + 188, TWWFlag.MINIGME, "The Great Sea", 0x0, TWWLocationType.EVENT, 1, 0x803C52E3
+    ),
 
     # Needle Rock Isle
     "Needle Rock Isle - Chest": TWWLocationData(
@@ -897,9 +896,9 @@ LOCATION_TABLE: dict[str, TWWLocationData] = {
     ),
 
     # Flight Control Platform
-    # "Flight Control Platform - Bird-Man Contest - First Prize": TWWLocationData(
-    #     base_id + 247, TWWFlag.MINIGME, "The Great Sea"
-    # ),
+    "Flight Control Platform - Bird-Man Contest - First Prize": TWWLocationData(
+        base_id + 247, TWWFlag.MINIGME, "The Great Sea", 0x0, TWWLocationType.EVENT, 0, 0x803C5255
+    ),
     "Flight Control Platform - Submarine": TWWLocationData(
         base_id + 248, TWWFlag.SUBMRIN, "The Great Sea", 0xA, TWWLocationType.CHEST, 3
     ),
