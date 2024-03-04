@@ -34,9 +34,9 @@ Refer to the [FAQ](https://lagolunatic.github.io/wwrando/faq/) first. If you are
 Waker thread (under `future-game-design`) in the Archipelago server.
 
 ## Known issues
-* When randomizing entrances, some regions may not be reachable. While this is acceptable for certain accessibility
-settings, the randomizer will fail to generate these seeds. A temporary workaround could be to change the accessibility
-option to `locations`.
+* When there are more progression items than progression locations, the randomizer will fail with a `FillError`. In this
+case, you should put more locations into logic to ensure there are enough progression locations to place progression
+items.
 * When randomizing with different key shuffle options, generation may fail. Try again several times, and if it still
 fails, try a different key shuffle option.
 
