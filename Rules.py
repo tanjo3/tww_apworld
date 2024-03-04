@@ -968,28 +968,28 @@ def set_rules(world: MultiWorld, player: int):
     #     )
     #     and can_play_song_of_passing(state, player),
     # )
-    # set_rule(
-    #     world.get_location("Mailbox - Letter from Orca", player),
-    #     lambda state: state.can_reach("Forbidden Woods - Kalle Demos Heart Container", "Location", player),
-    # )
-    # set_rule(
-    #     world.get_location("Mailbox - Letter from Grandma", player),
-    #     lambda state: state.has("Empty Bottle", player)
-    #     and can_get_fairies(state, player)
-    #     and can_play_song_of_passing(state, player),
-    # )
-    # set_rule(
-    #     world.get_location("Mailbox - Letter from Aryll", player),
-    #     lambda state: state.can_reach("Forsaken Fortress - Helmaroc King Heart Container", "Location", player)
-    #     and can_play_song_of_passing(state, player),
-    # )
-    # set_rule(
-    #     world.get_location("Mailbox - Letter from Tingle", player),
-    #     lambda state: rescued_tingle(state, player)
-    #     and has_any_wallet_upgrade(state, player)
-    #     and state.can_reach("Forsaken Fortress - Helmaroc King Heart Container", "Location", player)
-    #     and can_play_song_of_passing(state, player),
-    # )
+    set_rule(
+        world.get_location("Mailbox - Letter from Orca", player),
+        lambda state: state.can_reach("Forbidden Woods - Kalle Demos Heart Container", "Location", player),
+    )
+    set_rule(
+        world.get_location("Mailbox - Letter from Grandma", player),
+        lambda state: state.has("Empty Bottle", player)
+        and can_get_fairies(state, player)
+        and can_play_song_of_passing(state, player),
+    )
+    set_rule(
+        world.get_location("Mailbox - Letter from Aryll", player),
+        lambda state: state.can_reach("Forsaken Fortress - Helmaroc King Heart Container", "Location", player)
+        and can_play_song_of_passing(state, player),
+    )
+    set_rule(
+        world.get_location("Mailbox - Letter from Tingle", player),
+        lambda state: rescued_tingle(state, player)
+        and has_any_wallet_upgrade(state, player)
+        and state.can_reach("Forsaken Fortress - Helmaroc King Heart Container", "Location", player)
+        and can_play_song_of_passing(state, player),
+    )
 
     # The Great Sea
     set_rule(world.get_location("The Great Sea - Beedle's Shop Ship - 20 Rupee Item", player), lambda state: True)
