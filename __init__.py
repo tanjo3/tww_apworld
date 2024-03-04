@@ -3,7 +3,7 @@ from dataclasses import fields
 
 from BaseClasses import ItemClassification as IC
 from BaseClasses import Region, Tutorial
-from Fill import fill_restrictive
+from Fill import FillError, fill_restrictive
 from worlds.AutoWorld import WebWorld, World
 from worlds.generic.Rules import add_item_rule
 from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess
@@ -94,6 +94,9 @@ class TWWWorld(World):
         self.vanilla_dungeon_item_names: set[str] = set()
         self.own_dungeon_item_names: set[str] = set()
         self.any_dungeon_item_names: set[str] = set()
+
+        self.num_progression_items = 0
+        self.num_progression_locations = 0
 
     def _get_access_rule(self, region):
         snake_case_region = region.lower().replace("'", "").replace(" ", "_")
@@ -309,6 +312,7 @@ class TWWWorld(World):
         if self.options.progression_misc:
             enabled_flags |= TWWFlag.MISCELL
 
+        self.num_progression_locations = len(self.multiworld.get_locations(self.player))
         for location in self.multiworld.get_locations(self.player):
             # If not all the flags for a location are set, then force that location to have a non-progress item
             if location.flags & enabled_flags != location.flags:
@@ -316,6 +320,7 @@ class TWWWorld(World):
                     location,
                     lambda item: item.classification == IC.useful or item.classification == IC.filler,
                 )
+                self.num_progression_locations -= 1
 
     def generate_early(self):
         # Handle randomization options for dungeon items
@@ -424,6 +429,13 @@ class TWWWorld(World):
     def pre_fill(self):
         # Set nonprogress location from options
         self._set_nonprogress_locations()
+
+        # Validate that there are enough progression locations for the number of progression items
+        if self.num_progression_items > self.num_progression_locations:
+            raise FillError("There are more progression items than progression locations "
+                            f"({self.num_progression_items} > {self.num_progression_locations}). "
+                            "Ensure that the combination of options you have chosen allows for enough locations to "
+                            "place progression items and try again.")
 
         # Set up initial all_state
         all_state_base = CollectionState(self.multiworld)
@@ -561,6 +573,12 @@ class TWWWorld(World):
                         self.itempool.append(self.create_item(item))
 
         self.multiworld.itempool += self.itempool
+
+        # Count up the total number of progression items
+        self.num_progression_items = 0
+        for item in self.pre_fill_items + self.itempool:
+            if item.classification == IC.progression or item.classification == IC.progression_skip_balancing:
+                self.num_progression_items += 1
 
     def set_rules(self):
         set_rules(self.multiworld, self.player)
