@@ -506,6 +506,17 @@ class TWWWorld(World):
                     else:
                         self.itempool.append(self.create_item(item))
 
+        # Calculate the number of additional filler items to create to fill all locations
+        n_locations = len(self._get_locations()) - 1
+        n_items = len(self.pre_fill_items) + len(self.itempool)
+        n_filler_items = n_locations - n_items
+
+        # Add filler items to the item pool. Use the same weights that are used in the base rando.
+        filler_consumables = ["Yellow Rupee", "Red Rupee", "Purple Rupee", "Orange Rupee", "Joy Pendant"]
+        filler_weights = [3, 7, 10, 15, 3]
+        for filler_item in self.multiworld.random.choices(filler_consumables, weights=filler_weights, k=n_filler_items):
+            self.itempool.append(self.create_item(filler_item))
+
         self.multiworld.itempool += self.itempool
 
         # Count up the total number of progression items
