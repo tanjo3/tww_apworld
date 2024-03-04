@@ -196,10 +196,10 @@ def set_rules(world: MultiWorld, player: int):
         lambda state: state.has("Wind Waker", player),
     )
     set_rule(world.get_location("Windfall Island - Pirate Ship", player), lambda state: True)
-    # set_rule(world.get_location("Windfall Island - 5 Rupee Auction", player), lambda state: True)
-    # set_rule(world.get_location("Windfall Island - 40 Rupee Auction", player), lambda state: True)
-    # set_rule(world.get_location("Windfall Island - 60 Rupee Auction", player), lambda state: True)
-    # set_rule(world.get_location("Windfall Island - 80 Rupee Auction", player), lambda state: True)
+    set_rule(world.get_location("Windfall Island - 5 Rupee Auction", player), lambda state: True)
+    set_rule(world.get_location("Windfall Island - 40 Rupee Auction", player), lambda state: True)
+    set_rule(world.get_location("Windfall Island - 60 Rupee Auction", player), lambda state: True)
+    set_rule(world.get_location("Windfall Island - 80 Rupee Auction", player), lambda state: True)
     set_rule(
         world.get_location("Windfall Island - Zunari - Stock Exotic Flower in Zunari's Shop", player),
         lambda state: rescued_aryll(state, player) and state.has("Delivery Bag", player),

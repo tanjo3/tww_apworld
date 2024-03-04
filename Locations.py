@@ -168,18 +168,18 @@ LOCATION_TABLE: dict[str, TWWLocationData] = {
     "Windfall Island - Pirate Ship": TWWLocationData(
         base_id + 31, TWWFlag.MINIGME, "The Great Sea", 0xD, TWWLocationType.CHEST, 5
     ),
-    # "Windfall Island - 5 Rupee Auction": TWWLocationData(
-    #     base_id + 32, TWWFlag.XPENSVE | TWWFlag.MINIGME, "The Great Sea"
-    # ),
-    # "Windfall Island - 40 Rupee Auction": TWWLocationData(
-    #     base_id + 33, TWWFlag.XPENSVE | TWWFlag.MINIGME, "The Great Sea"
-    # ),
-    # "Windfall Island - 60 Rupee Auction": TWWLocationData(
-    #     base_id + 34, TWWFlag.XPENSVE | TWWFlag.MINIGME, "The Great Sea"
-    # ),
-    # "Windfall Island - 80 Rupee Auction": TWWLocationData(
-    #     base_id + 35, TWWFlag.XPENSVE | TWWFlag.MINIGME, "The Great Sea"
-    # ),
+    "Windfall Island - 5 Rupee Auction": TWWLocationData(
+        base_id + 32, TWWFlag.XPENSVE | TWWFlag.MINIGME, "The Great Sea", 0xB, TWWLocationType.EVENT, 7, 0x803C523C
+    ),
+    "Windfall Island - 40 Rupee Auction": TWWLocationData(
+        base_id + 33, TWWFlag.XPENSVE | TWWFlag.MINIGME, "The Great Sea", 0xB, TWWLocationType.EVENT, 0, 0x803C523B
+    ),
+    "Windfall Island - 60 Rupee Auction": TWWLocationData(
+        base_id + 34, TWWFlag.XPENSVE | TWWFlag.MINIGME, "The Great Sea", 0xB, TWWLocationType.EVENT, 6, 0x803C523C
+    ),
+    "Windfall Island - 80 Rupee Auction": TWWLocationData(
+        base_id + 35, TWWFlag.XPENSVE | TWWFlag.MINIGME, "The Great Sea", 0xB, TWWLocationType.EVENT, 5, 0x803C523C
+    ),
     "Windfall Island - Zunari - Stock Exotic Flower in Zunari's Shop": TWWLocationData(
         base_id + 36, TWWFlag.SHRT_SQ, "The Great Sea", 0x0, TWWLocationType.EVENT, 6, 0x803C5295
     ),
