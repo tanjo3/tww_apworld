@@ -1,6 +1,5 @@
 import os
 from dataclasses import fields
-from itertools import chain
 
 from BaseClasses import ItemClassification as IC
 from BaseClasses import Region, Tutorial
@@ -221,7 +220,7 @@ class TWWWorld(World):
             for exit, entrances in ENTRANCE_ACCESSIBILITY.items():
                 if exit == "The Great Sea":
                     continue
-                if any(entrance in randomized_entrances for entrance in entrances):
+                if exit in randomized_exits and any(entrance in randomized_entrances for entrance in entrances):
                     priority_exits.append(exit)
 
             # Assign each priority exit to an accessible entrance
