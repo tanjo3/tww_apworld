@@ -411,7 +411,9 @@ class TWWWorld(World):
 
         # Connect entrances to exits
         for entrance_region, exit_region in entrance_exit_pairs:
-            rule = lambda state, exit=exit_region.name: getattr(Macros, self._get_access_rule(exit))(state, self.player)
+            rule = lambda state, entrance=entrance_region.name: getattr(Macros, self._get_access_rule(entrance))(
+                state, self.player
+            )
             entrance_region.connect(exit_region, rule=rule)
 
     def create_item(self, item: str) -> TWWItem:
