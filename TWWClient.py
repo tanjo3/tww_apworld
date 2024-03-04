@@ -3,11 +3,12 @@ import time
 import traceback
 from typing import Any
 
+import dolphin_memory_engine
+
 import Utils
 from CommonClient import ClientCommandProcessor, CommonContext, get_base_parser, gui_enabled, logger, server_loop
 from NetUtils import ClientStatus, NetworkItem
 
-from .inc.packages import dolphin_memory_engine
 from .Items import ITEM_TABLE, LOOKUP_ID_TO_NAME
 from .Locations import LOCATION_TABLE, TWWLocationType
 
@@ -52,6 +53,7 @@ CURR_HEALTH_ADDR = 0x803C4C0A
 
 STAGE_INFO_ADDR = 0x803C4F88
 CURR_STAGE_INFO_ADDR = 0x803C5380
+CURR_STAGE_NAME_ADDR = 0x803C9D3C
 CURR_STAGE_ID_ADDR = 0x803C53A4
 
 CHARTS_BITFLD_ADDR = 0x803C4CFC
@@ -62,8 +64,6 @@ SWITCHES_BITFLD_ADDR = 0x803C5384
 PICKUPS_BITFLD_ADDR = 0x803C5394
 CURR_STAGE_SKS_ADDR = 0x803C53A0
 CURR_STAGE_DUNGEON_FLAGS_ADDR = 0x803C53A1
-
-PLAYER_X_POS = 0x803E440C
 
 
 class TWWCommandProcessor(ClientCommandProcessor):
@@ -462,8 +462,8 @@ async def check_death(ctx: TWWContext):
 
 
 def check_ingame():
-    player_x_pos = dolphin_memory_engine.read_word(PLAYER_X_POS)
-    return player_x_pos != 0xC83E0680 and player_x_pos != 0xC83C2F33 and player_x_pos != 0xC6C68C00
+    current_stage_name = dolphin_memory_engine.read_bytes(CURR_STAGE_NAME_ADDR, 8).decode("ascii")
+    return current_stage_name != "sea_T" and current_stage_name != "Name"
 
 
 async def dolphin_sync_task(ctx: TWWContext):
