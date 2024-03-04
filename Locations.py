@@ -135,12 +135,12 @@ LOCATION_TABLE: dict[str, TWWLocationData] = {
     "Windfall Island - Lenzo's House - Right Chest": TWWLocationData(
         base_id + 20, TWWFlag.SHRT_SQ, "The Great Sea", 0xB, TWWLocationType.CHEST, 2
     ),
-    # "Windfall Island - Lenzo's House - Become Lenzo's Assistant": TWWLocationData(
-    #     base_id + 21, TWWFlag.LONG_SQ, "The Great Sea"
-    # ),
-    # "Windfall Island - Lenzo's House - Bring Forest Firefly": TWWLocationData(
-    #     base_id + 22, TWWFlag.LONG_SQ, "The Great Sea"
-    # ),
+    "Windfall Island - Lenzo's House - Become Lenzo's Assistant": TWWLocationData(
+        base_id + 21, TWWFlag.LONG_SQ, "The Great Sea", 0xB, TWWLocationType.EVENT, 0, 0x803C52B5
+    ),
+    "Windfall Island - Lenzo's House - Bring Forest Firefly": TWWLocationData(
+        base_id + 22, TWWFlag.LONG_SQ, "The Great Sea", 0xB, TWWLocationType.EVENT, 5, 0x803C5295
+    ),
     "Windfall Island - House of Wealth Chest": TWWLocationData(
         base_id + 23, TWWFlag.MISCELL, "The Great Sea", 0xB, TWWLocationType.CHEST, 3
     ),
@@ -183,9 +183,9 @@ LOCATION_TABLE: dict[str, TWWLocationData] = {
     "Windfall Island - Zunari - Stock Exotic Flower in Zunari's Shop": TWWLocationData(
         base_id + 36, TWWFlag.SHRT_SQ, "The Great Sea", 0x0, TWWLocationType.EVENT, 6, 0x803C5295
     ),
-    # "Windfall Island - Sam - Decorate the Town": TWWLocationData(
-    #     base_id + 37, TWWFlag.LONG_SQ, "The Great Sea"
-    # ),
+    "Windfall Island - Sam - Decorate the Town": TWWLocationData(
+        base_id + 37, TWWFlag.LONG_SQ, "The Great Sea", 0x0, TWWLocationType.EVENT, 4, 0x803C5247
+    ),
     # "Windfall Island - Kane - Place Shop Guru Statue on Gate": TWWLocationData(
     #     base_id + 38, TWWFlag.OTHER, "The Great Sea"
     # ),
@@ -213,15 +213,15 @@ LOCATION_TABLE: dict[str, TWWLocationData] = {
     "Windfall Island - Pompie and Vera - Secret Meeting Photo": TWWLocationData(
         base_id + 46, TWWFlag.SHRT_SQ, "The Great Sea", 0x0, TWWLocationType.EVENT, 2, 0x803C5295
     ),
-    # "Windfall Island - Kamo - Full Moon Photo": TWWLocationData(
-    #     base_id + 47, TWWFlag.LONG_SQ, "The Great Sea"
-    # ),
+    "Windfall Island - Kamo - Full Moon Photo": TWWLocationData(
+        base_id + 47, TWWFlag.LONG_SQ, "The Great Sea", 0x0, TWWLocationType.EVENT, 4, 0x803C5295
+    ),
     "Windfall Island - Minenco - Miss Windfall Photo": TWWLocationData(
         base_id + 48, TWWFlag.SHRT_SQ, "The Great Sea", 0x0, TWWLocationType.EVENT, 3, 0x803C5295
     ),
-    # "Windfall Island - Linda and Anton": TWWLocationData(
-    #     base_id + 49, TWWFlag.LONG_SQ, "The Great Sea"
-    # ),
+    "Windfall Island - Linda and Anton": TWWLocationData(
+        base_id + 49, TWWFlag.LONG_SQ, "The Great Sea", 0xB, TWWLocationType.EVENT, 3, 0x803C52E5
+    ),
 
     # Dragon Roost Island
     "Dragon Roost Island - Wind Shrine": TWWLocationData(
@@ -648,9 +648,9 @@ LOCATION_TABLE: dict[str, TWWLocationData] = {
     "The Great Sea - Cyclos": TWWLocationData(
         base_id + 179, TWWFlag.MISCELL, "The Great Sea", 0x0, TWWLocationType.EVENT, 4, 0x803C5253
     ),
-    # "The Great Sea - Goron Trading Reward": TWWLocationData(
-    #     base_id + 180, TWWFlag.LONG_SQ | TWWFlag.XPENSVE, "The Great Sea"
-    # ),
+    "The Great Sea - Goron Trading Reward": TWWLocationData(
+        base_id + 180, TWWFlag.LONG_SQ | TWWFlag.XPENSVE, "The Great Sea", 0x0, TWWLocationType.EVENT, 2, 0x803C526A
+    ),
     "The Great Sea - Withered Trees": TWWLocationData(
         base_id + 181, TWWFlag.LONG_SQ, "The Great Sea", 0x0, TWWLocationType.EVENT, 5, 0x803C525A
     ),

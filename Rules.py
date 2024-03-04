@@ -149,16 +149,16 @@ def set_rules(world: MultiWorld, player: int):
         world.get_location("Windfall Island - Lenzo's House - Right Chest", player),
         lambda state: can_play_winds_requiem(state, player) and has_picto_box(state, player),
     )
-    # set_rule(
-    #     world.get_location("Windfall Island - Lenzo's House - Become Lenzo's Assistant", player),
-    #     lambda state: has_picto_box(state, player),
-    # )
-    # set_rule(
-    #     world.get_location("Windfall Island - Lenzo's House - Bring Forest Firefly", player),
-    #     lambda state: has_picto_box(state, player)
-    #     and state.has("Empty Bottle", player)
-    #     and can_access_forest_haven(state, player),
-    # )
+    set_rule(
+        world.get_location("Windfall Island - Lenzo's House - Become Lenzo's Assistant", player),
+        lambda state: has_picto_box(state, player),
+    )
+    set_rule(
+        world.get_location("Windfall Island - Lenzo's House - Bring Forest Firefly", player),
+        lambda state: has_picto_box(state, player)
+        and state.has("Empty Bottle", player)
+        and can_access_forest_haven(state, player),
+    )
     set_rule(world.get_location("Windfall Island - House of Wealth Chest", player), lambda state: True)
     set_rule(
         world.get_location("Windfall Island - Maggie's Father - Give 20 Skull Necklaces", player),
@@ -204,10 +204,10 @@ def set_rules(world: MultiWorld, player: int):
         world.get_location("Windfall Island - Zunari - Stock Exotic Flower in Zunari's Shop", player),
         lambda state: rescued_aryll(state, player) and state.has("Delivery Bag", player),
     )
-    # set_rule(
-    #     world.get_location("Windfall Island - Sam - Decorate the Town", player),
-    #     lambda state: rescued_aryll(state, player) and state.has("Delivery Bag", player),
-    # )
+    set_rule(
+        world.get_location("Windfall Island - Sam - Decorate the Town", player),
+        lambda state: rescued_aryll(state, player) and state.has("Delivery Bag", player),
+    )
     # set_rule(
     #     world.get_location("Windfall Island - Kane - Place Shop Guru Statue on Gate", player),
     #     lambda state: rescued_aryll(state, player) and state.has("Delivery Bag", player),
@@ -235,18 +235,18 @@ def set_rules(world: MultiWorld, player: int):
         world.get_location("Windfall Island - Pompie and Vera - Secret Meeting Photo", player),
         lambda state: can_play_winds_requiem(state, player) and has_picto_box(state, player),
     )
-    # set_rule(
-    #     world.get_location("Windfall Island - Kamo - Full Moon Photo", player),
-    #     lambda state: has_deluxe_picto_box(state, player) and can_play_song_of_passing(state, player),
-    # )
+    set_rule(
+        world.get_location("Windfall Island - Kamo - Full Moon Photo", player),
+        lambda state: has_deluxe_picto_box(state, player) and can_play_song_of_passing(state, player),
+    )
     set_rule(
         world.get_location("Windfall Island - Minenco - Miss Windfall Photo", player),
         lambda state: has_deluxe_picto_box(state, player),
     )
-    # set_rule(
-    #     world.get_location("Windfall Island - Linda and Anton", player),
-    #     lambda state: has_deluxe_picto_box(state, player) and can_play_song_of_passing(state, player),
-    # )
+    set_rule(
+        world.get_location("Windfall Island - Linda and Anton", player),
+        lambda state: has_deluxe_picto_box(state, player) and can_play_song_of_passing(state, player),
+    )
 
     # Dragon Roost Island
     set_rule(
@@ -995,10 +995,10 @@ def set_rules(world: MultiWorld, player: int):
     set_rule(world.get_location("The Great Sea - Beedle's Shop Ship - 20 Rupee Item", player), lambda state: True)
     set_rule(world.get_location("The Great Sea - Salvage Corp Gift", player), lambda state: True)
     set_rule(world.get_location("The Great Sea - Cyclos", player), lambda state: has_heros_bow(state, player))
-    # set_rule(
-    #     world.get_location("The Great Sea - Goron Trading Reward", player),
-    #     lambda state: rescued_aryll(state, player) and state.has("Delivery Bag", player),
-    # )
+    set_rule(
+        world.get_location("The Great Sea - Goron Trading Reward", player),
+        lambda state: rescued_aryll(state, player) and state.has("Delivery Bag", player),
+    )
     set_rule(
         world.get_location("The Great Sea - Withered Trees", player),
         lambda state: can_access_forest_haven(state, player)
