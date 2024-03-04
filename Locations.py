@@ -120,15 +120,15 @@ LOCATION_TABLE: dict[str, TWWLocationData] = {
     "Windfall Island - Mrs. Marie - Catch Killer Bees": TWWLocationData(
         base_id + 15, TWWFlag.SHRT_SQ, "The Great Sea", 0xB, TWWLocationType.EVENT, 7, 0x803C524B
     ),
-    # "Windfall Island - Mrs. Marie - Give 1 Joy Pendant": TWWLocationData(
-    #     base_id + 16, TWWFlag.SPOILS, "The Great Sea"
-    # ),
-    # "Windfall Island - Mrs. Marie - Give 21 Joy Pendants": TWWLocationData(
-    #     base_id + 17, TWWFlag.SPOILS, "The Great Sea"
-    # ),
-    # "Windfall Island - Mrs. Marie - Give 40 Joy Pendants": TWWLocationData(
-    #     base_id + 18, TWWFlag.SPOILS, "The Great Sea"
-    # ),
+    "Windfall Island - Mrs. Marie - Give 1 Joy Pendant": TWWLocationData(
+        base_id + 16, TWWFlag.SPOILS, "The Great Sea", 0xB, TWWLocationType.EVENT, 0, 0x803C52EC
+    ),
+    "Windfall Island - Mrs. Marie - Give 21 Joy Pendants": TWWLocationData(
+        base_id + 17, TWWFlag.SPOILS, "The Great Sea", 0xB, TWWLocationType.EVENT, 4, 0x803C52EC
+    ),
+    "Windfall Island - Mrs. Marie - Give 40 Joy Pendants": TWWLocationData(
+        base_id + 18, TWWFlag.SPOILS, "The Great Sea", 0xB, TWWLocationType.EVENT, 5, 0x803C52EC
+    ),
     "Windfall Island - Lenzo's House - Left Chest": TWWLocationData(
         base_id + 19, TWWFlag.SHRT_SQ, "The Great Sea", 0xB, TWWLocationType.CHEST, 1
     ),
@@ -144,9 +144,9 @@ LOCATION_TABLE: dict[str, TWWLocationData] = {
     "Windfall Island - House of Wealth Chest": TWWLocationData(
         base_id + 23, TWWFlag.MISCELL, "The Great Sea", 0xB, TWWLocationType.CHEST, 3
     ),
-    # "Windfall Island - Maggie's Father - Give 20 Skull Necklaces": TWWLocationData(
-    #     base_id + 24, TWWFlag.SPOILS, "The Great Sea"
-    # ),
+    "Windfall Island - Maggie's Father - Give 20 Skull Necklaces": TWWLocationData(
+        base_id + 24, TWWFlag.SPOILS, "The Great Sea", 0xB, TWWLocationType.EVENT, 4, 0x803C52F1
+    ),
     "Windfall Island - Maggie - Free Item": TWWLocationData(
         base_id + 25, TWWFlag.FREE_GF, "The Great Sea", 0xB, TWWLocationType.EVENT, 0, 0x803C5296
     ),
@@ -227,9 +227,9 @@ LOCATION_TABLE: dict[str, TWWLocationData] = {
     "Dragon Roost Island - Wind Shrine": TWWLocationData(
         base_id + 50, TWWFlag.MISCELL, "The Great Sea", 0x0, TWWLocationType.SWTCH, 32
     ),
-    # "Dragon Roost Island - Rito Aerie - Give Hoskit 20 Golden Feathers": TWWLocationData(
-    #     base_id + 51, TWWFlag.SPOILS, "The Great Sea"
-    # ),
+    "Dragon Roost Island - Rito Aerie - Give Hoskit 20 Golden Feathers": TWWLocationData(
+        base_id + 51, TWWFlag.SPOILS, "The Great Sea", 0xB, TWWLocationType.EVENT, 7, 0x803C524D
+    ),
     "Dragon Roost Island - Chest on Top of Boulder": TWWLocationData(
         base_id + 52, TWWFlag.ISLND_P, "The Great Sea", 0x0, TWWLocationType.CHEST, 8
     ),

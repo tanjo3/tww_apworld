@@ -129,18 +129,18 @@ def set_rules(world: MultiWorld, player: int):
     )
     set_rule(world.get_location("Windfall Island - Ivan - Catch Killer Bees", player), lambda state: True)
     set_rule(world.get_location("Windfall Island - Mrs. Marie - Catch Killer Bees", player), lambda state: True)
-    # set_rule(
-    #     world.get_location("Windfall Island - Mrs. Marie - Give 1 Joy Pendant", player),
-    #     lambda state: state.has("Spoils Bag", player),
-    # )
-    # set_rule(
-    #     world.get_location("Windfall Island - Mrs. Marie - Give 21 Joy Pendants", player),
-    #     lambda state: state.has("Spoils Bag", player) and can_farm_joy_pendants(state, player),
-    # )
-    # set_rule(
-    #     world.get_location("Windfall Island - Mrs. Marie - Give 40 Joy Pendants", player),
-    #     lambda state: state.has("Spoils Bag", player) and can_farm_joy_pendants(state, player),
-    # )
+    set_rule(
+        world.get_location("Windfall Island - Mrs. Marie - Give 1 Joy Pendant", player),
+        lambda state: state.has("Spoils Bag", player),
+    )
+    set_rule(
+        world.get_location("Windfall Island - Mrs. Marie - Give 21 Joy Pendants", player),
+        lambda state: state.has("Spoils Bag", player) and can_farm_joy_pendants(state, player),
+    )
+    set_rule(
+        world.get_location("Windfall Island - Mrs. Marie - Give 40 Joy Pendants", player),
+        lambda state: state.has("Spoils Bag", player) and can_farm_joy_pendants(state, player),
+    )
     set_rule(
         world.get_location("Windfall Island - Lenzo's House - Left Chest", player),
         lambda state: can_play_winds_requiem(state, player) and has_picto_box(state, player),
@@ -160,12 +160,12 @@ def set_rules(world: MultiWorld, player: int):
     #     and can_access_forest_haven(state, player),
     # )
     set_rule(world.get_location("Windfall Island - House of Wealth Chest", player), lambda state: True)
-    # set_rule(
-    #     world.get_location("Windfall Island - Maggie's Father - Give 20 Skull Necklaces", player),
-    #     lambda state: rescued_aryll(state, player)
-    #     and state.has("Spoils Bag", player)
-    #     and can_farm_skull_necklaces(state, player),
-    # )
+    set_rule(
+        world.get_location("Windfall Island - Maggie's Father - Give 20 Skull Necklaces", player),
+        lambda state: rescued_aryll(state, player)
+        and state.has("Spoils Bag", player)
+        and can_farm_skull_necklaces(state, player),
+    )
     set_rule(
         world.get_location("Windfall Island - Maggie - Free Item", player), lambda state: rescued_aryll(state, player)
     )
@@ -252,10 +252,10 @@ def set_rules(world: MultiWorld, player: int):
     set_rule(
         world.get_location("Dragon Roost Island - Wind Shrine", player), lambda state: state.has("Wind Waker", player)
     )
-    # set_rule(
-    #     world.get_location("Dragon Roost Island - Rito Aerie - Give Hoskit 20 Golden Feathers", player),
-    #     lambda state: state.has("Spoils Bag", player) and can_farm_golden_feathers(state, player),
-    # )
+    set_rule(
+        world.get_location("Dragon Roost Island - Rito Aerie - Give Hoskit 20 Golden Feathers", player),
+        lambda state: state.has("Spoils Bag", player) and can_farm_golden_feathers(state, player),
+    )
     set_rule(
         world.get_location("Dragon Roost Island - Chest on Top of Boulder", player),
         lambda state: has_heros_bow(state, player)
