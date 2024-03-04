@@ -167,28 +167,15 @@ class TWWWorld(World):
         # Retrieve the entrance randomization option
         options = [
             self.options.randomize_dungeon_entrances,
-            self.options.randomize_secret_cave_entrances,
             self.options.randomize_miniboss_entrances,
             self.options.randomize_boss_entrances,
+            self.options.randomize_secret_cave_entrances,
             self.options.randomize_secret_cave_inner_entrances,
             self.options.randomize_fairy_fountain_entrances,
         ]
 
         entrance_exit_pairs: list[tuple[Region, Region]] = []
-        if self.options.mix_entrances == "mix_pools":
-            # Flatten the lists of entrances/exits into two lists
-            all_entrances = list(chain.from_iterable(entrances))
-            all_exits = list(chain.from_iterable(exits))
-
-            # Shuffle both lists
-            self.multiworld.random.shuffle(all_entrances)
-            self.multiworld.random.shuffle(all_exits)
-
-            for entrance, exit in zip(all_entrances, all_exits):
-                entrance_region = self.multiworld.get_region(entrance, self.player)
-                exit_region = self.multiworld.get_region(exit, self.player)
-                entrance_exit_pairs.append((entrance_region, exit_region))
-        else:
+        if self.options.mix_entrances == "separate_pools":
             # Connect entrances to exits of the same type
             for option, entrance_group, exit_group in zip(options, entrances, exits):
                 # If the entrance group is randomized, shuffle their order
@@ -200,8 +187,77 @@ class TWWWorld(World):
                     entrance_region = self.multiworld.get_region(entrance, self.player)
                     exit_region = self.multiworld.get_region(exit, self.player)
                     entrance_exit_pairs.append((entrance_region, exit_region))
+        elif self.options.mix_entrances == "mix_pools":
+            # We do a bit of extra work here in order to prevent unreachable "islands" of regions.
+            # For example, DRC boss door leading to DRC. This will cause generation failures.
 
-        # TODO: verify that entrance randomization resulted in a valid world
+            # Gather all the entrances and exits for selected randomization pools
+            randomized_entrances: list[str] = []
+            randomized_exits: list[str] = []
+            non_randomized_exits: list[str] = ["The Great Sea"]
+            for option, entrance_group, exit_group in zip(options, entrances, exits):
+                if option:
+                    randomized_entrances += entrance_group
+                    randomized_exits += exit_group
+                else:
+                    # If not randomized, then just connect the entrance-exit pairs now
+                    for entrance, exit in zip(entrance_group, exit_group):
+                        non_randomized_exits.append(exit)
+                        entrance_region = self.multiworld.get_region(entrance, self.player)
+                        exit_region = self.multiworld.get_region(exit, self.player)
+                        entrance_exit_pairs.append((entrance_region, exit_region))
+
+            # Build a list of accessible randomized entrances, assuming the player has all items
+            accessible_entrances: list[str] = []
+            for exit, entrances in ENTRANCE_ACCESSIBILITY.items():
+                if exit in non_randomized_exits:
+                    accessible_entrances += [entrance for entrance in entrances if entrance in randomized_entrances]
+            non_accessible_entrances: list[str] = [
+                entrance for entrance in randomized_entrances if entrance not in accessible_entrances
+            ]
+
+            # Priotize exits that lead to more entrances first
+            priority_exits: list[str] = []
+            for exit, entrances in ENTRANCE_ACCESSIBILITY.items():
+                if exit == "The Great Sea":
+                    continue
+                if any(entrance in randomized_entrances for entrance in entrances):
+                    priority_exits.append(exit)
+
+            # Assign each priority exit to an accessible entrance
+            for exit in priority_exits:
+                # Choose an accessible entrance at random
+                self.multiworld.random.shuffle(accessible_entrances)
+                entrance = accessible_entrances.pop()
+
+                # Connect the pair
+                entrance_region = self.multiworld.get_region(entrance, self.player)
+                exit_region = self.multiworld.get_region(exit, self.player)
+                entrance_exit_pairs.append((entrance_region, exit_region))
+
+                # Remove the pair from the list of entrance/exits to be connected
+                randomized_entrances.remove(entrance)
+                randomized_exits.remove(exit)
+
+                # Consider entrances in that exit as accessible now
+                for newly_accessible_entrance in ENTRANCE_ACCESSIBILITY[exit]:
+                    if newly_accessible_entrance in non_accessible_entrances:
+                        accessible_entrances.append(newly_accessible_entrance)
+                        non_accessible_entrances.remove(newly_accessible_entrance)
+
+            # With all entrances either assigned or accessible, we should have an equal number of unassigned entrances
+            # and exits to pair
+            assert len(randomized_entrances) == len(randomized_exits)
+
+            # Join the remaining entrance/exits randomly
+            self.multiworld.random.shuffle(randomized_entrances)
+            self.multiworld.random.shuffle(randomized_exits)
+            for entrance, exit in zip(randomized_entrances, randomized_exits):
+                entrance_region = self.multiworld.get_region(entrance, self.player)
+                exit_region = self.multiworld.get_region(exit, self.player)
+                entrance_exit_pairs.append((entrance_region, exit_region))
+        else:
+            raise Exception(f"Invalid entrance randomization option: {self.options.mix_entrances}")
 
         return entrance_exit_pairs
 

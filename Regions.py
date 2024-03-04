@@ -116,6 +116,76 @@ FAIRY_FOUNTAIN_EXITS = [
     "Northern Fairy Fountain",
 ]
 
+# THis dict maps exits to entrances located in that exit
+ENTRANCE_ACCESSIBILITY: dict[str, str] = {
+    "The Great Sea": [
+        "Dungeon Entrance on Dragon Roost Island",
+        "Dungeon Entrance in Forest Haven Sector",
+        "Dungeon Entrance in Tower of the Gods Sector",
+        "Dungeon Entrance on Headstone Island",
+        "Dungeon Entrance on Gale Isle",
+
+        "Miniboss Entrance in Hyrule Castle",
+
+        "Boss Entrance in Forsaken Fortress",
+
+        "Secret Cave Entrance on Outset Island",
+        "Secret Cave Entrance on Dragon Roost Island",
+        "Secret Cave Entrance on Fire Mountain",
+        "Secret Cave Entrance on Ice Ring Isle",
+        "Secret Cave Entrance on Private Oasis",
+        "Secret Cave Entrance on Needle Rock Isle",
+        "Secret Cave Entrance on Angular Isles",
+        "Secret Cave Entrance on Boating Course",
+        "Secret Cave Entrance on Stone Watcher Island",
+        "Secret Cave Entrance on Overlook Island",
+        "Secret Cave Entrance on Bird's Peak Rock",
+        "Secret Cave Entrance on Pawprint Isle",
+        "Secret Cave Entrance on Pawprint Isle Side Isle",
+        "Secret Cave Entrance on Diamond Steppe Island",
+        "Secret Cave Entrance on Bomb Island",
+        "Secret Cave Entrance on Rock Spire Isle",
+        "Secret Cave Entrance on Shark Island",
+        "Secret Cave Entrance on Cliff Plateau Isles",
+        "Secret Cave Entrance on Horseshoe Island",
+        "Secret Cave Entrance on Star Island",
+
+        "Fairy Fountain Entrance on Outset Island",
+        "Fairy Fountain Entrance on Thorned Fairy Island",
+        "Fairy Fountain Entrance on Eastern Fairy Island",
+        "Fairy Fountain Entrance on Western Fairy Island",
+        "Fairy Fountain Entrance on Southern Fairy Island",
+        "Fairy Fountain Entrance on Northern Fairy Island",
+    ],
+
+    "Dragon Roost Cavern": [
+        "Boss Entrance in Dragon Roost Cavern",
+    ],
+    "Forbidden Woods": [
+        "Miniboss Entrance in Forbidden Woods",
+        "Boss Entrance in Forbidden Woods",
+    ],
+    "Tower of the Gods": [
+        "Miniboss Entrance in Tower of the Gods",
+        "Boss Entrance in Tower of the Gods",
+    ],
+    "Earth Temple": [
+        "Miniboss Entrance in Earth Temple",
+        "Boss Entrance in Earth Temple",
+    ],
+    "Wind Temple": [
+        "Miniboss Entrance in Wind Temple",
+        "Boss Entrance in Wind Temple",
+    ],
+
+    "Ice Ring Isle Secret Cave": [
+        "Inner Entrance in Ice Ring Isle Secret Cave",
+    ],
+    "Cliff Plateau Isles Secret Cave": [
+        "Inner Entrance in Cliff Plateau Isles Secret Cave",
+    ],
+}
+
 ALL_ENTRANCES = (
     DUNGEON_ENTRANCES
     + MINIBOSS_ENTRANCES
@@ -125,5 +195,10 @@ ALL_ENTRANCES = (
     + FAIRY_FOUNTAIN_ENTRANCES
 )
 ALL_EXITS = (
-    DUNGEON_EXITS + MINIBOSS_EXITS + BOSS_EXITS + SECRET_CAVES_EXITS + SECRET_CAVES_INNER_EXITS + FAIRY_FOUNTAIN_EXITS
+    DUNGEON_EXITS
+    + MINIBOSS_EXITS
+    + BOSS_EXITS
+    + SECRET_CAVES_EXITS
+    + SECRET_CAVES_INNER_EXITS
+    + FAIRY_FOUNTAIN_EXITS
 )
