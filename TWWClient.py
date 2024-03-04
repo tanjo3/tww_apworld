@@ -403,7 +403,13 @@ async def check_locations(ctx: TWWContext):
 
         # Special-case checks
         if data.type == TWWLocationType.SPECL:
-            pass
+            # The flag for "Windfall Island - Maggie - Delivery Reward" is still unknown.
+            # However, as a temporary workaround, we can just check if the player had Moblin's letter at some point,
+            # but it's no longer in their Delivery Bag
+            if location == "Windfall Island - Maggie - Delivery Reward":
+                was_moblins_owned = (dolphin_memory_engine.read_word(LETTER_OWND_ADDR) >> 15) & 1
+                dbag_contents = [dolphin_memory_engine.read_byte(LETTER_BASE_ADDR + offset) for offset in range(8)]
+                checked = was_moblins_owned and 0x9B not in dbag_contents
 
         # Regular checks
         elif data.stage_id == curr_stage_id:

@@ -169,12 +169,12 @@ def set_rules(world: MultiWorld, player: int):
     set_rule(
         world.get_location("Windfall Island - Maggie - Free Item", player), lambda state: rescued_aryll(state, player)
     )
-    # set_rule(
-    #     world.get_location("Windfall Island - Maggie - Delivery Reward", player),
-    #     lambda state: rescued_aryll(state, player)
-    #     and state.has("Delivery Bag", player)
-    #     and state.has("Moblin's Letter", player),
-    # )
+    set_rule(
+        world.get_location("Windfall Island - Maggie - Delivery Reward", player),
+        lambda state: rescued_aryll(state, player)
+        and state.has("Delivery Bag", player)
+        and state.has("Moblin's Letter", player),
+    )
     set_rule(
         world.get_location("Windfall Island - Cafe Bar - Postman", player),
         lambda state: rescued_aryll(state, player)

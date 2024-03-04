@@ -150,9 +150,10 @@ LOCATION_TABLE: dict[str, TWWLocationData] = {
     "Windfall Island - Maggie - Free Item": TWWLocationData(
         base_id + 25, TWWFlag.FREE_GF, "The Great Sea", 0xB, TWWLocationType.EVENT, 0, 0x803C5296
     ),
-    # "Windfall Island - Maggie - Delivery Reward": TWWLocationData(
-    #     base_id + 26, TWWFlag.SHRT_SQ, "The Great Sea"
-    # ),
+    "Windfall Island - Maggie - Delivery Reward": TWWLocationData(
+        # TODO: Where is the flag for this location. Using a temporary workaround for now.
+        base_id + 26, TWWFlag.SHRT_SQ, "The Great Sea", 0xB, TWWLocationType.SPECL, 0
+    ),
     "Windfall Island - Cafe Bar - Postman": TWWLocationData(
         base_id + 27, TWWFlag.SHRT_SQ, "The Great Sea", 0xB, TWWLocationType.EVENT, 1, 0x803C5296
     ),
