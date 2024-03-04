@@ -600,42 +600,43 @@ LOCATION_TABLE: dict[str, TWWLocationData] = {
     ),
 
     # Mailbox
-    # "Mailbox - Letter from Hoskit's Girlfriend": TWWLocationData(
-    #     base_id + 165, TWWFlag.MAILBOX | TWWFlag.SPOILS, "The Great Sea"
-    # ),
-    # "Mailbox - Letter from Baito's Mother": TWWLocationData(
-    #     base_id + 166, TWWFlag.MAILBOX, "The Great Sea"
-    # ),
-    # "Mailbox - Letter from Baito": TWWLocationData(
-    #     base_id + 167, TWWFlag.MAILBOX | TWWFlag.DUNGEON, "The Great Sea"
-    # ),
-    # "Mailbox - Letter from Komali's Father": TWWLocationData(
-    #     base_id + 168, TWWFlag.MAILBOX, "The Great Sea"
-    # ),
-    # "Mailbox - Letter Advertising Bombs in Beedle's Shop": TWWLocationData(
-    #     base_id + 169, TWWFlag.MAILBOX, "The Great Sea"
-    # ),
-    # "Mailbox - Letter Advertising Rock Spire Shop Ship": TWWLocationData(
-    #     base_id + 170, TWWFlag.MAILBOX, "The Great Sea"
-    # ),
+    "Mailbox - Letter from Hoskit's Girlfriend": TWWLocationData(
+        base_id + 165, TWWFlag.MAILBOX | TWWFlag.SPOILS, "The Great Sea", 0x0, TWWLocationType.EVENT, 0, 0x803C52DA
+    ),
+    "Mailbox - Letter from Baito's Mother": TWWLocationData(
+        base_id + 166, TWWFlag.MAILBOX, "The Great Sea", 0x0, TWWLocationType.EVENT, 0, 0x803C52D8
+    ),
+    "Mailbox - Letter from Baito": TWWLocationData(
+        base_id + 167, TWWFlag.MAILBOX | TWWFlag.DUNGEON, "The Great Sea", 0x0, TWWLocationType.EVENT, 0, 0x803C52A8
+    ),
+    "Mailbox - Letter from Komali's Father": TWWLocationData(
+        base_id + 168, TWWFlag.MAILBOX, "The Great Sea", 0x0, TWWLocationType.EVENT, 0, 0x803C52E1
+    ),
+    "Mailbox - Letter Advertising Bombs in Beedle's Shop": TWWLocationData(
+        base_id + 169, TWWFlag.MAILBOX, "The Great Sea", 0x0, TWWLocationType.EVENT, 0, 0x803C52A9
+    ),
+    "Mailbox - Letter Advertising Rock Spire Shop Ship": TWWLocationData(
+        base_id + 170, TWWFlag.MAILBOX, "The Great Sea", 0x0, TWWLocationType.EVENT, 0, 0x803C52A6
+    ),
     # "Mailbox - Beedle's Silver Membership Reward": TWWLocationData(
     #     base_id + 171, TWWFlag.OTHER, "The Great Sea"
     # ),
     # "Mailbox - Beedle's Gold Membership Reward": TWWLocationData(
     #     base_id + 172, TWWFlag.OTHER, "The Great Sea"
     # ),
-    # "Mailbox - Letter from Orca": TWWLocationData(
-    #     base_id + 173, TWWFlag.MAILBOX | TWWFlag.DUNGEON, "The Great Sea"
-    # ),
-    # "Mailbox - Letter from Grandma": TWWLocationData(
-    #     base_id + 174, TWWFlag.MAILBOX, "The Great Sea"
-    # ),
-    # "Mailbox - Letter from Aryll": TWWLocationData(
-    #     base_id + 175, TWWFlag.MAILBOX | TWWFlag.DUNGEON, "The Great Sea"
-    # ),
-    # "Mailbox - Letter from Tingle": TWWLocationData(
-    #     base_id + 176, TWWFlag.MAILBOX | TWWFlag.DUNGEON | TWWFlag.XPENSVE, "The Great Sea"
-    # ),
+    "Mailbox - Letter from Orca": TWWLocationData(
+        base_id + 173, TWWFlag.MAILBOX | TWWFlag.DUNGEON, "The Great Sea", 0x0, TWWLocationType.EVENT, 0, 0x803C52A7
+    ),
+    "Mailbox - Letter from Grandma": TWWLocationData(
+        base_id + 174, TWWFlag.MAILBOX, "The Great Sea", 0x0, TWWLocationType.EVENT, 0, 0x803C52C9
+    ),
+    "Mailbox - Letter from Aryll": TWWLocationData(
+        base_id + 175, TWWFlag.MAILBOX | TWWFlag.DUNGEON, "The Great Sea", 0x0, TWWLocationType.EVENT, 0, 0x803C52B7
+    ),
+    "Mailbox - Letter from Tingle": TWWLocationData(
+        base_id + 176,
+        TWWFlag.MAILBOX | TWWFlag.DUNGEON | TWWFlag.XPENSVE, "The Great Sea", 0x0, TWWLocationType.EVENT, 0, 0x803C52DE
+    ),
 
     # The Great Sea
     "The Great Sea - Beedle's Shop Ship - 20 Rupee Item": TWWLocationData(

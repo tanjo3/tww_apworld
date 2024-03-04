@@ -918,36 +918,36 @@ def set_rules(world: MultiWorld, player: int):
     )
 
     # Mailbox
-    # set_rule(
-    #     world.get_location("Mailbox - Letter from Hoskit's Girlfriend", player),
-    #     lambda state: state.has("Spoils Bag", player)
-    #     and can_farm_golden_feathers(state, player)
-    #     and can_play_song_of_passing(state, player),
-    # )
-    # set_rule(
-    #     world.get_location("Mailbox - Letter from Baito's Mother", player),
-    #     lambda state: state.has("Delivery Bag", player)
-    #     and state.has("Note to Mom", player)
-    #     and can_play_song_of_passing(state, player),
-    # )
-    # set_rule(
-    #     world.get_location("Mailbox - Letter from Baito", player),
-    #     lambda state: state.has("Delivery Bag", player)
-    #     and state.has("Note to Mom", player)
-    #     and state.can_reach("Earth Temple - Jalhalla Heart Container", "Location", player),
-    # )
-    # set_rule(
-    #     world.get_location("Mailbox - Letter from Komali's Father", player),
-    #     lambda state: state.has("Farore's Pearl", player),
-    # )
-    # set_rule(
-    #     world.get_location("Mailbox - Letter Advertising Bombs in Beedle's Shop", player),
-    #     lambda state: state.has("Bombs", player),
-    # )
-    # set_rule(
-    #     world.get_location("Mailbox - Letter Advertising Rock Spire Shop Ship", player),
-    #     lambda state: has_any_wallet_upgrade(state, player),
-    # )
+    set_rule(
+        world.get_location("Mailbox - Letter from Hoskit's Girlfriend", player),
+        lambda state: state.has("Spoils Bag", player)
+        and can_farm_golden_feathers(state, player)
+        and can_play_song_of_passing(state, player),
+    )
+    set_rule(
+        world.get_location("Mailbox - Letter from Baito's Mother", player),
+        lambda state: state.has("Delivery Bag", player)
+        and state.has("Note to Mom", player)
+        and can_play_song_of_passing(state, player),
+    )
+    set_rule(
+        world.get_location("Mailbox - Letter from Baito", player),
+        lambda state: state.has("Delivery Bag", player)
+        and state.has("Note to Mom", player)
+        and state.can_reach("Earth Temple - Jalhalla Heart Container", "Location", player),
+    )
+    set_rule(
+        world.get_location("Mailbox - Letter from Komali's Father", player),
+        lambda state: state.has("Farore's Pearl", player),
+    )
+    set_rule(
+        world.get_location("Mailbox - Letter Advertising Bombs in Beedle's Shop", player),
+        lambda state: state.has("Bombs", player),
+    )
+    set_rule(
+        world.get_location("Mailbox - Letter Advertising Rock Spire Shop Ship", player),
+        lambda state: has_any_wallet_upgrade(state, player),
+    )
     # set_rule(
     #     world.get_location("Mailbox - Beedle's Silver Membership Reward", player),
     #     lambda state: (
