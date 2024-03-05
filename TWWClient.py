@@ -411,6 +411,16 @@ async def check_locations(ctx: TWWContext):
                 dbag_contents = [dolphin_memory_engine.read_byte(LETTER_BASE_ADDR + offset) for offset in range(8)]
                 checked = was_moblins_owned and 0x9B not in dbag_contents
 
+            # For Letter from Baito's Mother, we need to check two bytes
+            # 0x1 = Note to Mom sent, 0x2 = Mail sent by Baito's Mother, 0x3 = Mail read by Link
+            if location == "Mailbox - Letter from Baito's Mother":
+                checked = dolphin_memory_engine.read_byte(data.address) & 0x3 == 0x3
+
+            # For Letter from Grandma, we need to check two bytes
+            # 0x1 = Grandma saved, 0x2 = Mail sent by Grandma, 0x3 = Mail read by Link
+            if location == "Mailbox - Letter from Grandma":
+                checked = dolphin_memory_engine.read_byte(data.address) & 0x3 == 0x3
+
         # Regular checks
         elif data.stage_id == curr_stage_id:
             match data.type:

@@ -604,7 +604,7 @@ LOCATION_TABLE: dict[str, TWWLocationData] = {
         base_id + 165, TWWFlag.MAILBOX | TWWFlag.SPOILS, "The Great Sea", 0x0, TWWLocationType.EVENT, 0, 0x803C52DA
     ),
     "Mailbox - Letter from Baito's Mother": TWWLocationData(
-        base_id + 166, TWWFlag.MAILBOX, "The Great Sea", 0x0, TWWLocationType.EVENT, 0, 0x803C52D8
+        base_id + 166, TWWFlag.MAILBOX, "The Great Sea", 0x0, TWWLocationType.SPECL, 0, 0x803C52D8
     ),
     "Mailbox - Letter from Baito": TWWLocationData(
         base_id + 167, TWWFlag.MAILBOX | TWWFlag.DUNGEON, "The Great Sea", 0x0, TWWLocationType.EVENT, 0, 0x803C52A8
@@ -628,7 +628,7 @@ LOCATION_TABLE: dict[str, TWWLocationData] = {
         base_id + 173, TWWFlag.MAILBOX | TWWFlag.DUNGEON, "The Great Sea", 0x0, TWWLocationType.EVENT, 0, 0x803C52A7
     ),
     "Mailbox - Letter from Grandma": TWWLocationData(
-        base_id + 174, TWWFlag.MAILBOX, "The Great Sea", 0x0, TWWLocationType.EVENT, 0, 0x803C52C9
+        base_id + 174, TWWFlag.MAILBOX, "The Great Sea", 0x0, TWWLocationType.SPECL, 0, 0x803C52C9
     ),
     "Mailbox - Letter from Aryll": TWWLocationData(
         base_id + 175, TWWFlag.MAILBOX | TWWFlag.DUNGEON, "The Great Sea", 0x0, TWWLocationType.EVENT, 0, 0x803C52B7
