@@ -188,16 +188,16 @@ LOCATION_TABLE: dict[str, TWWLocationData] = {
         base_id + 37, TWWFlag.LONG_SQ, "The Great Sea", 0x0, TWWLocationType.EVENT, 4, 0x803C5247
     ),
     # "Windfall Island - Kane - Place Shop Guru Statue on Gate": TWWLocationData(
-    #     base_id + 38, TWWFlag.OTHER, "The Great Sea"
+    #     base_id + 38, TWWFlag.OTHER, "The Great Sea", 0x0, TWWLocationType.EVENT, 4, 0x803C5250
     # ),
     # "Windfall Island - Kane - Place Postman Statue on Gate": TWWLocationData(
-    #     base_id + 39, TWWFlag.OTHER, "The Great Sea"
+    #     base_id + 39, TWWFlag.OTHER, "The Great Sea", 0x0, TWWLocationType.EVENT, 3, 0x803C5250
     # ),
     # "Windfall Island - Kane - Place Six Flags on Gate": TWWLocationData(
-    #     base_id + 40, TWWFlag.OTHER, "The Great Sea"
+    #     base_id + 40, TWWFlag.OTHER, "The Great Sea", 0x0, TWWLocationType.EVENT, 2, 0x803C5250
     # ),
     # "Windfall Island - Kane - Place Six Idols on Gate": TWWLocationData(
-    #     base_id + 41, TWWFlag.OTHER, "The Great Sea"
+    #     base_id + 41, TWWFlag.OTHER, "The Great Sea", 0x0, TWWLocationType.EVENT, 1, 0x803C5250
     # ),
     "Windfall Island - Mila - Follow the Thief": TWWLocationData(
         base_id + 42, TWWFlag.SHRT_SQ, "The Great Sea", 0x0, TWWLocationType.EVENT, 3, 0x803C523A
