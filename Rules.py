@@ -69,10 +69,10 @@ def set_rules(world: MultiWorld, player: int):
     #     world.get_location("Outset Island - Orca - Hit 500 Times", player),
     #     lambda state: can_sword_fight_with_orca(state, player),
     # )
-    # set_rule(
-    #     world.get_location("Outset Island - Great Fairy", player),
-    #     lambda state: can_access_outset_fairy_fountain(state, player),
-    # )
+    set_rule(
+        world.get_location("Outset Island - Great Fairy", player),
+        lambda state: can_access_outset_fairy_fountain(state, player),
+    )
     set_rule(world.get_location("Outset Island - Jabun's Cave", player), lambda state: state.has("Bombs", player))
     set_rule(
         world.get_location("Outset Island - Dig up Black Soil", player),
@@ -1151,10 +1151,10 @@ def set_rules(world: MultiWorld, player: int):
     set_rule(world.get_location("Pawprint Isle - Lookout Platform - Defeat the Enemies", player), lambda state: True)
 
     # Thorned Fairy Island
-    # set_rule(
-    #     world.get_location("Thorned Fairy Island - Great Fairy", player),
-    #     lambda state: can_access_thorned_fairy_fountain(state, player),
-    # )
+    set_rule(
+        world.get_location("Thorned Fairy Island - Great Fairy", player),
+        lambda state: can_access_thorned_fairy_fountain(state, player),
+    )
     set_rule(
         world.get_location("Thorned Fairy Island - Northeastern Lookout Platform - Destroy the Cannons", player),
         lambda state: can_destroy_cannons(state, player),
@@ -1165,27 +1165,27 @@ def set_rules(world: MultiWorld, player: int):
     )
 
     # Eastern Fairy Island
-    # set_rule(
-    #     world.get_location("Eastern Fairy Island - Great Fairy", player),
-    #     lambda state: can_access_eastern_fairy_fountain(state, player),
-    # )
+    set_rule(
+        world.get_location("Eastern Fairy Island - Great Fairy", player),
+        lambda state: can_access_eastern_fairy_fountain(state, player),
+    )
     set_rule(
         world.get_location("Eastern Fairy Island - Lookout Platform - Defeat the Cannons and Enemies", player),
         lambda state: can_destroy_cannons(state, player),
     )
 
     # Western Fairy Island
-    # set_rule(
-    #     world.get_location("Western Fairy Island - Great Fairy", player),
-    #     lambda state: can_access_western_fairy_fountain(state, player),
-    # )
+    set_rule(
+        world.get_location("Western Fairy Island - Great Fairy", player),
+        lambda state: can_access_western_fairy_fountain(state, player),
+    )
     set_rule(world.get_location("Western Fairy Island - Lookout Platform", player), lambda state: True)
 
     # Southern Fairy Island
-    # set_rule(
-    #     world.get_location("Southern Fairy Island - Great Fairy", player),
-    #     lambda state: can_access_southern_fairy_fountain(state, player),
-    # )
+    set_rule(
+        world.get_location("Southern Fairy Island - Great Fairy", player),
+        lambda state: can_access_southern_fairy_fountain(state, player),
+    )
     set_rule(
         world.get_location("Southern Fairy Island - Lookout Platform - Destroy the Northwest Cannons", player),
         lambda state: can_destroy_cannons(state, player) and can_fly_with_deku_leaf_outdoors(state, player),
@@ -1196,10 +1196,10 @@ def set_rules(world: MultiWorld, player: int):
     )
 
     # Northern Fairy Island
-    # set_rule(
-    #     world.get_location("Northern Fairy Island - Great Fairy", player),
-    #     lambda state: can_access_northern_fairy_fountain(state, player),
-    # )
+    set_rule(
+        world.get_location("Northern Fairy Island - Great Fairy", player),
+        lambda state: can_access_northern_fairy_fountain(state, player),
+    )
     set_rule(world.get_location("Northern Fairy Island - Submarine", player), lambda state: True)
 
     # Tingle Island

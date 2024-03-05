@@ -58,10 +58,11 @@ can do. Suggestions for improvements are also welcome.
 This randomizer would not be possible without the help from:
 * LagoLunatic: (base randomizer)
 * Dev5ter: (initial TWW AP implmentation)
-* CrainWWR: (multiworld and Dolphin memory assistance)
+* CrainWWR: (multiworld and Dolphin memory assistance, additional programming)
 * Celeste (Tia): (logic and typo fixes, additional programming)
 * DaemonHunter: (additional programming)
 * Ouro: (tracker support)
+* Tubamann: (additional programming)
 * Necrofitz: (additional documentation)
 * Gamma / SageOfMirrors: (additional programming)
 * Cyb3RGER: (reference for `TWWClient`)

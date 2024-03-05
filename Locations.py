@@ -82,9 +82,9 @@ LOCATION_TABLE: dict[str, TWWLocationData] = {
     # "Outset Island - Orca - Hit 500 Times": TWWLocationData(
     #     base_id + 3, TWWFlag.OTHER, "The Great Sea"
     # ),
-    # "Outset Island - Great Fairy": TWWLocationData(
-    #     base_id + 4, TWWFlag.GRT_FRY, "The Great Sea"
-    # ),
+    "Outset Island - Great Fairy": TWWLocationData(
+        base_id + 4, TWWFlag.GRT_FRY, "The Great Sea", 0xC, TWWLocationType.EVENT, 4, 0x803C525C
+    ),
     "Outset Island - Jabun's Cave": TWWLocationData(
         base_id + 5, TWWFlag.ISLND_P, "The Great Sea", 0xB, TWWLocationType.CHEST, 6
     ),
@@ -221,7 +221,7 @@ LOCATION_TABLE: dict[str, TWWLocationData] = {
         base_id + 48, TWWFlag.SHRT_SQ, "The Great Sea", 0x0, TWWLocationType.EVENT, 3, 0x803C5295
     ),
     "Windfall Island - Linda and Anton": TWWLocationData(
-        base_id + 49, TWWFlag.LONG_SQ, "The Great Sea", 0xB, TWWLocationType.EVENT, 3, 0x803C52E5
+        base_id + 49, TWWFlag.LONG_SQ, "The Great Sea", 0xB, TWWLocationType.EVENT, 7, 0x803C524E
     ),
 
     # Dragon Roost Island
@@ -757,9 +757,9 @@ LOCATION_TABLE: dict[str, TWWLocationData] = {
     ),
 
     # Thorned Fairy Island
-    # "Thorned Fairy Island - Great Fairy": TWWLocationData(
-    #     base_id + 209, TWWFlag.GRT_FRY, "Thorned Fairy Fountain"
-    # ),
+    "Thorned Fairy Island - Great Fairy": TWWLocationData(
+        base_id + 209, TWWFlag.GRT_FRY, "Thorned Fairy Fountain", 0xC, TWWLocationType.EVENT, 0, 0x803C525C
+    ),
     "Thorned Fairy Island - Northeastern Lookout Platform - Destroy the Cannons": TWWLocationData(
         base_id + 210, TWWFlag.PLTFRMS, "The Great Sea", 0x1, TWWLocationType.CHEST, 14
     ),
@@ -768,25 +768,25 @@ LOCATION_TABLE: dict[str, TWWLocationData] = {
     ),
 
     # Eastern Fairy Island
-    # "Eastern Fairy Island - Great Fairy": TWWLocationData(
-    #     base_id + 212, TWWFlag.GRT_FRY, "Eastern Fairy Fountain"
-    # ),
+    "Eastern Fairy Island - Great Fairy": TWWLocationData(
+        base_id + 212, TWWFlag.GRT_FRY, "Eastern Fairy Fountain", 0xC, TWWLocationType.EVENT, 3, 0x803C525C
+    ),
     "Eastern Fairy Island - Lookout Platform - Defeat the Cannons and Enemies": TWWLocationData(
         base_id + 213, TWWFlag.PLTFRMS, "The Great Sea", 0x1, TWWLocationType.CHEST, 10
     ),
 
     # Western Fairy Island
-    # "Western Fairy Island - Great Fairy": TWWLocationData(
-    #     base_id + 214, TWWFlag.GRT_FRY, "Western Fairy Fountain"
-    # ),
+    "Western Fairy Island - Great Fairy": TWWLocationData(
+        base_id + 214, TWWFlag.GRT_FRY, "Western Fairy Fountain", 0xC, TWWLocationType.EVENT, 1, 0x803C525C
+    ),
     "Western Fairy Island - Lookout Platform": TWWLocationData(
         base_id + 215, TWWFlag.PLTFRMS, "The Great Sea", 0x1, TWWLocationType.CHEST, 6
     ),
 
     # Southern Fairy Island
-    # "Southern Fairy Island - Great Fairy": TWWLocationData(
-    #     base_id + 216, TWWFlag.GRT_FRY, "Southern Fairy Fountain"
-    # ),
+    "Southern Fairy Island - Great Fairy": TWWLocationData(
+        base_id + 216, TWWFlag.GRT_FRY, "Southern Fairy Fountain", 0xC, TWWLocationType.EVENT, 2, 0x803C525C
+    ),
     "Southern Fairy Island - Lookout Platform - Destroy the Northwest Cannons": TWWLocationData(
         base_id + 217, TWWFlag.PLTFRMS, "The Great Sea", 0x0, TWWLocationType.CHEST, 23
     ),
@@ -795,9 +795,9 @@ LOCATION_TABLE: dict[str, TWWLocationData] = {
     ),
 
     # Northern Fairy Island
-    # "Northern Fairy Island - Great Fairy": TWWLocationData(
-    #     base_id + 219, TWWFlag.GRT_FRY, "Northern Fairy Fountain"
-    # ),
+    "Northern Fairy Island - Great Fairy": TWWLocationData(
+        base_id + 219, TWWFlag.GRT_FRY, "Northern Fairy Fountain", 0xC, TWWLocationType.EVENT, 5, 0x803C525C
+    ),
     "Northern Fairy Island - Submarine": TWWLocationData(
         base_id + 220, TWWFlag.SUBMRIN, "The Great Sea", 0xA, TWWLocationType.CHEST, 6
     ),
