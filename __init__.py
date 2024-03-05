@@ -2,7 +2,7 @@ import os
 from dataclasses import fields
 
 from BaseClasses import ItemClassification as IC
-from BaseClasses import Region, Tutorial
+from BaseClasses import MultiWorld, Region, Tutorial
 from Fill import FillError, fill_restrictive
 from worlds.AutoWorld import WebWorld, World
 from worlds.generic.Rules import add_item_rule
@@ -102,11 +102,8 @@ class TWWWorld(World):
         snake_case_region = region.lower().replace("'", "").replace(" ", "_")
         return f"can_access_{snake_case_region}"
 
-    def _get_locations(self):
-        return self.multiworld.get_locations(self.player)
-
     def _get_dungeon_locations(self):
-        dungeon_regions = ["Dragon Roost Cavern", "Forbidden Woods", "Tower of the Gods", "Earth Temple", "Wind Temple"]
+        dungeon_regions = DUNGEON_EXITS.copy()
 
         # If miniboss entrances are not shuffled, include miniboss arenas as a dungeon regions
         if not self.options.randomize_miniboss_entrances:
@@ -127,25 +124,11 @@ class TWWWorld(World):
             "Forsaken Fortress - Chest on Bed",
         ]
 
-        unfilled_locations = self.multiworld.get_locations(self.player)
-        is_dungeon_location = (
-            lambda location: location.name in ff_dungeon_locations or location.region in dungeon_regions
-        )
-        return [location for location in unfilled_locations if is_dungeon_location(location)]
-
-    def _get_locations_in_dungeon(self, dungeon: str):
-        dungeon_regions: dict[str, str] = {
-            "DRC": "Dragon Roost Cavern",
-            "FW": "Forbidden Woods",
-            "TotG": "Tower of the Gods",
-            "FF": "Forsaken Fortress",
-            "ET": "Earth Temple",
-            "WT": "Wind Temple",
-        }
-
-        unfilled_locations = self._get_dungeon_locations()
-        is_dungeon_location = lambda location: location.name.startswith(dungeon_regions[dungeon])
-        return [location for location in unfilled_locations if is_dungeon_location(location)]
+        return [
+            location
+            for location in self.multiworld.get_locations(self.player)
+            if location.name in ff_dungeon_locations or location.region in dungeon_regions
+        ]
 
     def _randomize_entrances(self):
         # Copy over the lists of entrances by type
@@ -443,52 +426,87 @@ class TWWWorld(World):
                 "place progression items and try again."
             )
 
-        # Set up all_state
-        all_state = CollectionState(self.multiworld)
-        for item in self.itempool:
-            self.collect(all_state, item)
-        for player in self.multiworld.player_ids:
-            subworld = self.multiworld.worlds[player]
-            for item in subworld.get_pre_fill_items():
-                subworld.collect(all_state, item)
-        all_state.sweep_for_events()
+    @classmethod
+    def stage_pre_fill(cls, multiworld: MultiWorld):
+        # Reference: `fill_dungeons_restrictive()` from ALTTP
+        dungeon_shortnames: dict[str, str] = {
+            "Dragon Roost Cavern": "DRC",
+            "Forbidden Woods": "FW",
+            "Tower of the Gods": "TotG",
+            "Forsaken Fortress": "FF",
+            "Earth Temple": "ET",
+            "Wind Temple": "WT",
+        }
 
-        # Place all dungeon items that should be placed locally within their own dungeon
-        dungeons = ["DRC", "FW", "TotG", "FF", "ET", "WT"]
-        self.multiworld.random.shuffle(dungeons)
-        for dungeon in dungeons:
-            own_dungeon_items = [
-                item
-                for item in self.pre_fill_items
-                if item.name in self.own_dungeon_item_names and item.name.startswith(dungeon)
+        in_dungeon_items: list[TWWItem] = []
+        own_dungeon_items: set[tuple[int, str]] = set()
+        for subworld in multiworld.get_game_worlds("The Wind Waker"):
+            player = subworld.player
+            if player not in multiworld.groups:
+                in_dungeon_items += [item for item in subworld.pre_fill_items]
+                own_dungeon_items |= {(player, item_name) for item_name in subworld.own_dungeon_item_names}
+
+        if in_dungeon_items:
+            locations: list[TWWLocation] = [
+                location
+                for world in multiworld.get_game_worlds("The Wind Waker")
+                for location in world._get_dungeon_locations()
+                if not location.item
             ]
-            dungeon_locations = self._get_locations_in_dungeon(dungeon)
-            self.multiworld.random.shuffle(dungeon_locations)
+
+            if own_dungeon_items:
+                for location in locations:
+                    dungeon = location.name.split(" - ")[0]
+                    orig_rule = location.item_rule
+                    location.item_rule = lambda item, dungeon=dungeon, orig_rule=orig_rule: (
+                        not (item.player, item.name) in own_dungeon_items
+                        or item.name.startswith(dungeon_shortnames[dungeon])
+                    ) and orig_rule(item)
+
+            multiworld.random.shuffle(locations)
+            # Dungeon-locked items have to be placed first, to not run out of spaces for dungeon-locked items
+            # subsort in the order Big Key, Small Key, Other before placing dungeon items
+
+            sort_order = {"BKey": 3, "SKey": 2}
+            in_dungeon_items.sort(
+                key=lambda item: sort_order.get(item.type, 1)
+                + (5 if (item.player, item.name) in own_dungeon_items else 0)
+            )
+
+            # Construct a partial all_state which contains only the items from get_pre_fill_items,
+            # which aren't in_dungeon
+            in_dungeon_player_ids = {item.player for item in in_dungeon_items}
+            all_state_base = CollectionState(multiworld)
+            for item in multiworld.itempool:
+                multiworld.worlds[item.player].collect(all_state_base, item)
+            pre_fill_items = []
+            for player in in_dungeon_player_ids:
+                pre_fill_items += multiworld.worlds[player].get_pre_fill_items()
+            for item in in_dungeon_items:
+                try:
+                    pre_fill_items.remove(item)
+                except ValueError:
+                    # pre_fill_items should be a subset of in_dungeon_items, but just in case
+                    pass
+            for item in pre_fill_items:
+                multiworld.worlds[item.player].collect(all_state_base, item)
+            all_state_base.sweep_for_events()
+
+            # Remove completion condition so that minimal-accessibility worlds place keys properly
+            for player in {item.player for item in in_dungeon_items}:
+                if all_state_base.has("Victory", player):
+                    all_state_base.remove(multiworld.worlds[player].create_item("Victory"))
+
             fill_restrictive(
-                self.multiworld,
-                all_state,
-                dungeon_locations,
-                own_dungeon_items,
+                multiworld,
+                all_state_base,
+                locations,
+                in_dungeon_items,
                 single_player_placement=True,
                 lock=True,
                 allow_excluded=True,
-                name="Local Own Dungeon Items",
+                name="TWW Dungeon Items",
             )
-
-        # Place all dungeon items that should be placed locally within any dungeon
-        any_dungeon_items = [item for item in self.pre_fill_items if item.name in self.any_dungeon_item_names]
-        all_dungeon_locations = self._get_dungeon_locations()
-        self.multiworld.random.shuffle(all_dungeon_locations)
-        fill_restrictive(
-            self.multiworld,
-            all_state,
-            all_dungeon_locations,
-            any_dungeon_items,
-            single_player_placement=True,
-            lock=True,
-            allow_excluded=True,
-            name="Local Any Dungeon Items",
-        )
 
     def create_items(self):
         exclude = [item.name for item in self.multiworld.precollected_items[self.player]]
@@ -509,7 +527,7 @@ class TWWWorld(World):
                         self.itempool.append(self.create_item(item))
 
         # Calculate the number of additional filler items to create to fill all locations
-        n_locations = len(self._get_locations()) - 1
+        n_locations = len(self.multiworld.get_unfilled_locations(self.player))
         n_items = len(self.pre_fill_items) + len(self.itempool)
         n_filler_items = n_locations - n_items
 
