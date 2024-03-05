@@ -85,3 +85,4 @@ the name of your player slot that you are connecting to. This is the same as the
 YAML file. If the game is hosted on the website, this is also displayed on the room page. The name is case-sensitive.
     * If you are getting an error message, check to ensure that `Enable Emulated Memory Size Override` in Dolphin (under
     `Options` > `Configuration` > `Advanced`) is **disabled**.
+    * If you run with a custom GC boot menu, you'll need to skip it by going to `Options` > `Configuration` > `GameCube` and checking `Skip Main Menu`.
