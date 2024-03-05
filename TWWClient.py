@@ -89,7 +89,6 @@ class TWWContext(CommonContext):
         self.dolphin_status = CONNECTION_INITIAL_STATUS
         self.last_rcvd_index = -1
         self.has_send_death = False
-        self.last_death_link_send = time.time()
 
     async def disconnect(self, allow_autoreconnect: bool = False):
         self.auth = None
