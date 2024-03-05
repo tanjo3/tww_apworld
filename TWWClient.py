@@ -462,13 +462,14 @@ async def check_alive():
 
 
 async def check_death(ctx: TWWContext):
-    cur_health = read_short(CURR_HEALTH_ADDR)
-    if cur_health <= 0:
-        if not ctx.has_send_death and time.time() >= ctx.last_death_link + 3:
-            ctx.has_send_death = True
-            await ctx.send_death(ctx.player_names[ctx.slot] + " ran out of hearts.")
-    else:
-        ctx.has_send_death = False
+    if check_ingame():
+        cur_health = read_short(CURR_HEALTH_ADDR)
+        if cur_health <= 0:
+            if not ctx.has_send_death and time.time() >= ctx.last_death_link + 3:
+                ctx.has_send_death = True
+                await ctx.send_death(ctx.player_names[ctx.slot] + " ran out of hearts.")
+        else:
+            ctx.has_send_death = False
 
 
 def check_ingame():
