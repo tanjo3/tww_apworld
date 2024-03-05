@@ -3,12 +3,11 @@ import time
 import traceback
 from typing import Any
 
-import dolphin_memory_engine
-
 import Utils
 from CommonClient import ClientCommandProcessor, CommonContext, get_base_parser, gui_enabled, logger, server_loop
 from NetUtils import ClientStatus, NetworkItem
 
+from .inc.packages import dolphin_memory_engine
 from .Items import ITEM_TABLE, LOOKUP_ID_TO_NAME
 from .Locations import LOCATION_TABLE, TWWLocationType
 
