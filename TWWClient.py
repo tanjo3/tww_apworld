@@ -158,6 +158,7 @@ def _give_death(ctx: TWWContext):
         and ctx.dolphin_status == CONNECTION_CONNECTED_STATUS
         and check_ingame()
     ):
+        ctx.has_send_death = True
         write_short(CURR_HEALTH_ADDR, 0)
 
 
