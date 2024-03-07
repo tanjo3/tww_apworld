@@ -42,16 +42,26 @@ can do. Suggestions for improvements are also welcome.
 * In-game item models
 
 ## Running from source
+### Installing Git
 Download and install git from here: https://git-scm.com/downloads  
 Then clone this repository with git by running this in a command prompt:  
-`git clone https://github.com/tanjo3/tww_apworld.git`  
+```
+git clone https://github.com/tanjo3/tww_apworld.git
+```
 
-If you're on Windows, download and install Python 3.11 from here: https://www.python.org/downloads/release/python-3118/  
-If you're on Linux, run this: `sudo apt-get install python3.11`  
+### Installing Python
+You will need to install Python 3.11. We recommend using `pyenv` to manage different Python versions:  
+- For Windows, install `pyenv-win` by following
+[these steps](https://github.com/pyenv-win/pyenv-win?tab=readme-ov-file#quick-start).  
+- For Linux, follow the instructions [here](https://github.com/pyenv/pyenv?tab=readme-ov-file#automatic-installer) to
+install `pyenv` and then follow the instructions
+[here](https://github.com/pyenv/pyenv?tab=readme-ov-file#set-up-your-shell-environment-for-pyenv) to set up your shell environment.  
 
-Open the `tww` folder in a command prompt and install dependencies by running:  
-`py -3.11 -m pip install -r requirements.txt` (on Windows)  
-`python3 -m pip install $(cat requirements.txt) --user` (on Linux)  
+After installing `pyenv`, install and switch to Python 3.11 by running:
+```sh
+pyenv install 3.11
+pyenv global 3.11
+```
 
 ## Credits
 This randomizer would not be possible without the help from:
