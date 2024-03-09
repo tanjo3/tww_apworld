@@ -8,8 +8,8 @@ from CommonClient import ClientCommandProcessor, CommonContext, get_base_parser,
 from NetUtils import ClientStatus, NetworkItem
 
 from .inc.packages import dolphin_memory_engine
-from .Items import ITEM_TABLE, LOOKUP_ID_TO_NAME
-from .Locations import LOCATION_TABLE, TWWLocationType
+from .Items import ITEM_TABLE, LOOKUP_ID_TO_NAME, TWWItem
+from .Locations import LOCATION_TABLE, TWWLocation, TWWLocationType
 
 CONNECTION_REFUSED_GAME_STATUS = (
     "Dolphin failed to connect. Please load a randomized ROM for TWW. Trying again in 5 seconds..."
@@ -139,9 +139,9 @@ def write_short(console_address: int, value: int):
 def _count_expected_heart_pieces(ctx: TWWContext):
     heart_pieces, heart_containers = 0, 0
     for item in ctx.items_received:
-        if item.item == ITEM_TABLE["Piece of Heart"].code:
+        if item.item == TWWItem.get_apid(ITEM_TABLE["Piece of Heart"].code):
             heart_pieces += 1
-        elif item.item == ITEM_TABLE["Heart Container"].code:
+        elif item.item == TWWItem.get_apid(ITEM_TABLE["Heart Container"].code):
             heart_containers += 1
 
     # Player starts with 12 heart pieces in the base randomizer
@@ -442,8 +442,9 @@ async def check_locations(ctx: TWWContext):
             checked = (sea_alt_bitfield >> data.bit) & 1
 
         if checked:
-            if data.code:
-                ctx.locations_checked.add(data.code)
+            location_id = TWWLocation.get_apid(data.code)
+            if location_id:
+                ctx.locations_checked.add(location_id)
             else:
                 if not ctx.finished_game:
                     await ctx.send_msgs([{"cmd": "StatusUpdate", "status": ClientStatus.CLIENT_GOAL}])
