@@ -55,8 +55,12 @@ class TWWWorld(World):
 
     topology_present: bool = True
 
-    item_name_to_id: dict[str, int] = {name: data.code for name, data in ITEM_TABLE.items() if data.code}
-    location_name_to_id: dict[str, int] = {name: data.code for name, data in LOCATION_TABLE.items() if data.code}
+    item_name_to_id: dict[str, int] = {
+        name: TWWItem.get_apid(data.code) for name, data in ITEM_TABLE.items() if data.code is not None
+    }
+    location_name_to_id: dict[str, int] = {
+        name: TWWLocation.get_apid(data.code) for name, data in LOCATION_TABLE.items() if data.code is not None
+    }
 
     item_name_groups = {
         "pearls": {
