@@ -136,7 +136,7 @@ def has_picto_box(state: CollectionState, player: int):
 
 
 def has_deluxe_picto_box(state: CollectionState, player: int):
-    return state.has("Progressive Picto Box", player, 1)
+    return state.has("Progressive Picto Box", player, 2)
 
 
 def has_60_bomb_bomb_bag(state: CollectionState, player: int):
