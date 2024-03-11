@@ -27,7 +27,7 @@ All users should follow these steps:
 1. Unzip the downloaded TWW apworld zip file.
 2. Place the `tww.apworld` file in your Archipelago installation's `lib/worlds` folder (windows default to:
 `%programdata%/Archipelago`).
-3. Place the `dolphin_memory_engine` folder in your Archipelago installation's `lib` folder.
+3. Place the content of the `lib` folder of the APWorld zip into Archipelago's `lib` folder.
 
 If you're playing The Wind Waker, you'll also need to unzip the TWW AP zip file downloaded from the release page.
 
