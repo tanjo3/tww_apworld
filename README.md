@@ -71,6 +71,7 @@ This randomizer would not be possible without the help from:
 * Celeste (Tia): (logic and typo fixes, additional programming)
 * DaemonHunter: (additional programming)
 * Ouro: (tracker support)
+* Lunix: (Linux support, additional programming)
 * Tubamann: (additional programming)
 * Necrofitz: (additional documentation)
 * Gamma / SageOfMirrors: (additional programming)
