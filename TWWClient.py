@@ -7,7 +7,7 @@ import Utils
 from CommonClient import ClientCommandProcessor, CommonContext, get_base_parser, gui_enabled, logger, server_loop
 from NetUtils import ClientStatus, NetworkItem
 
-from .inc.packages import dolphin_memory_engine
+import dolphin_memory_engine
 from .Items import ITEM_TABLE, LOOKUP_ID_TO_NAME, TWWItem
 from .Locations import LOCATION_TABLE, TWWLocation, TWWLocationType
 
