@@ -94,8 +94,8 @@ ITEM_TABLE: dict[str, TWWItemData] = {
     "Fill-Up Coupon":          TWWItemData("Letter", IC.useful,              50, 1, None,       0x9E, None,         18),
 
     "Nayru's Pearl":           TWWItemData("Pearl",  IC.progression,         51, 1, 0x803C5240, 0x10, 0x803C4CC7,    0),
-    "Din's Pearl":             TWWItemData("Pearl",  IC.progression,         52, 1, 0x803C5240, 0x40, 0x803C4CC7,    1),
-    "Farore's Pearl":          TWWItemData("Pearl",  IC.progression,         53, 1, 0x803C5240, 0x80, 0x803C4CC7,    2),
+    "Din's Pearl":             TWWItemData("Pearl",  IC.progression,         52, 1, 0x803C5240, 0x80, 0x803C4CC7,    1),
+    "Farore's Pearl":          TWWItemData("Pearl",  IC.progression,         53, 1, 0x803C5240, 0x40, 0x803C4CC7,    2),
 
     "Progressive Sword":       TWWItemData("Prog", IC.progression,           54, 4, 0x803C4C16, None, 0x803C4CBC, None),
     "Progressive Shield":      TWWItemData("Prog", IC.progression,           55, 2, 0x803C4C17, None, 0x803C4CBD, None),

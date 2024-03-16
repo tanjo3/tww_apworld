@@ -224,8 +224,8 @@ def _give_pearl(address: int, value: int, owned_address: int, bit_to_set: int):
     dolphin_memory_engine.write_byte(owned_address, current_value | 1 << bit_to_set)
 
     # Raise TotG if player has all three pearls
-    if dolphin_memory_engine.read_byte(address) == 0xD0:
-        dolphin_memory_engine.write_byte(TOTG_RAISED_ADDR, 0x40)
+    if dolphin_memory_engine.read_byte(address) & 0xD0 == 0xD0:
+        dolphin_memory_engine.write_byte(TOTG_RAISED_ADDR, dolphin_memory_engine.read_byte(TOTG_RAISED_ADDR) | 0x40)
 
 
 def _give_other_dungeon_item(stage_id: int, item_bit: int):
