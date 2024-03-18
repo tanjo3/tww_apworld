@@ -1,6 +1,8 @@
 import os
 from dataclasses import fields
 
+import yaml
+
 from BaseClasses import ItemClassification as IC
 from BaseClasses import MultiWorld, Region, Tutorial
 from Fill import FillError, fill_restrictive
@@ -553,42 +555,43 @@ class TWWWorld(World):
         set_rules(self.multiworld, self.player)
 
     def generate_output(self, output_directory: str):
-        # Output seed name to seed RNG in randomizer client
-        output_file = f"Seed: {self.multiworld.seed_name}\n"
-
-        # Include slot number as well in RNG seed
-        output_file += f"Slot: {self.player}\n"
-        output_file += "\n\n"
+        # Output seed name and slot number to seed RNG in randomizer client
+        output_data = {
+            "Seed": self.multiworld.seed_name,
+            "Slot": self.player,
+            "Options": {},
+            "Locations": {},
+            "Entrances": {},
+        }
 
         # Output relevant options to file
-        output_file += "Options:\n"
         for field in fields(self.options):
-            output_file += f"    {field.name}: {getattr(self.options, field.name).value}\n"
-        output_file += "\n\n"
+            output_data["Options"][field.name] = getattr(self.options, field.name).value
 
         # Output which item has been placed at each location
-        # TODO: revisit once item models are working
-        output_file += "Locations:\n"
         locations = self.multiworld.get_locations(self.player)
         for location in locations:
             if location.name != "Defeat Ganondorf":
                 if location.item:
-                    output_file += f'    {location.name}: "{location.item.name}"\n'
+                    item_info = {
+                        "name": location.item.name,
+                        "game": location.item.game,
+                        "classification": location.item.classification.name,
+                    }
                 else:
-                    output_file += f'    {location.name}: "Nothing"\n'
-        output_file += "\n\n"
+                    item_info = {"name": "Nothing", "game": "The Wind Waker", "classification": "None"}
+                output_data["Locations"][location.name] = item_info
 
         # Output the mapping of entrances to exits
-        output_file += "Entrances:\n"
         entrances = self.multiworld.get_entrances(self.player)
         for entrance in entrances:
             if entrance.parent_region.name in ALL_ENTRANCES:
-                output_file += f"    {entrance.parent_region.name}: {entrance.connected_region.name}\n"
+                output_data["Entrances"][entrance.parent_region.name] = entrance.connected_region.name
 
         # Output the plando details to file
         file_path = os.path.join(output_directory, f"{self.multiworld.get_out_file_name_base(self.player)}.aptww")
         with open(file_path, "w") as f:
-            f.write(output_file)
+            f.write(yaml.dump(output_data, sort_keys=False))
 
     def fill_slot_data(self):
         return {
