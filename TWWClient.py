@@ -9,7 +9,7 @@ import Utils
 from CommonClient import ClientCommandProcessor, CommonContext, get_base_parser, gui_enabled, logger, server_loop
 from NetUtils import ClientStatus, NetworkItem
 
-from .Items import ITEM_TABLE, LOOKUP_ID_TO_NAME, TWWItem
+from .Items import ITEM_TABLE, LOOKUP_ID_TO_NAME
 from .Locations import LOCATION_TABLE, TWWLocation, TWWLocationType
 
 CONNECTION_REFUSED_GAME_STATUS = (
@@ -22,25 +22,32 @@ CONNECTION_LOST_STATUS = "Dolphin connection was lost. Please restart your emula
 CONNECTION_CONNECTED_STATUS = "Dolphin connected successfully."
 CONNECTION_INITIAL_STATUS = "Dolphin connection has not been initiated."
 
-# We re-purpose the small key counter and dungeon flag bytes for Ganon's Tower for this
-EXPECTED_INDEX_ADDR = 0x803C50C8
 
+# This address is used to check/set the player's health for DeathLink.
+CURR_HEALTH_ADDR = 0x803C4C0A
+
+# These addresses are used for the Moblin's Letter check.
 LETTER_BASE_ADDR = 0x803C4C8E
 LETTER_OWND_ADDR = 0x803C4C98
 
-CURR_HEALTH_ADDR = 0x803C4C0A
-
-STAGE_INFO_ADDR = 0x803C4F88
-CURR_STAGE_NAME_ADDR = 0x803C9D3C
-CURR_STAGE_ID_ADDR = 0x803C53A4
-
+# These addresses are used to check flags for locations.
 CHARTS_BITFLD_ADDR = 0x803C4CFC
+CHESTS_BITFLD_ADDR = 0x803C4F88
+SWITCHES_BITFLD_ADDR = 0x803C4F8C
+PICKUPS_BITFLD_ADDR = 0x803C4F9C
 SEA_ALT_BITFLD_ADDR = 0x803C4FAC
 
-CHESTS_BITFLD_ADDR = 0x803C5380
-SWITCHES_BITFLD_ADDR = 0x803C5384
-PICKUPS_BITFLD_ADDR = 0x803C5394
+# We re-purpose the small key counter and dungeon flag bytes for Ganon's Tower for this
+EXPECTED_INDEX_ADDR = 0x803C50C8
 
+# This address contains the current stage ID.
+CURR_STAGE_ID_ADDR = 0x803C53A4
+
+# This address is used to check the stage name to verify the player is in-game before sending items.
+CURR_STAGE_NAME_ADDR = 0x803C9D3C
+
+# This is an array of length 0x10 where each element is a byte and contains item IDs for items to give the player.
+# 0xFF represents no item. The array is read and cleared every frame.
 GIVE_ITEM_ARRAY_ADDR = 0x803FE868
 
 
