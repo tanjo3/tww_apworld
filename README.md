@@ -41,8 +41,6 @@ Waker thread (under `future-game-design`) in the Archipelago server.
   - Tower of the Gods - Stone Tablet
   - Mailbox - Letter from Hoskit's Girlfriend
   - Mailbox - Letter from Baito's Mother
-  - Tingle Island - Ankle - Reward for All Tingle Statues
-  - Flight Control Platform - Bird-Man Contest - First Prize
 
 Feel free to report any other issues in the Wind Waker thread in the Archipelago server! I'll take a look and see what I
 can do. Suggestions for improvements are also welcome.
