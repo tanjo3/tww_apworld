@@ -579,7 +579,7 @@ class TWWWorld(World):
                         "classification": location.item.classification.name,
                     }
                 else:
-                    item_info = {"name": "Nothing", "game": "The Wind Waker", "classification": "None"}
+                    item_info = {"name": "Nothing", "game": "The Wind Waker", "classification": "filler"}
                 output_data["Locations"][location.name] = item_info
 
         # Output the mapping of entrances to exits
