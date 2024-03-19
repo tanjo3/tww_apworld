@@ -40,6 +40,11 @@ SEA_ALT_BITFLD_ADDR = 0x803C4FAC
 # We re-purpose the small key counter and dungeon flag bytes for Ganon's Tower for this
 EXPECTED_INDEX_ADDR = 0x803C50C8
 
+# These addresses contain the current high score for the Bird-Man Contest.
+# `FCP_SCORE_LO_ADDR` is are the lower eight bits of the score, `FCP_SCORE_HI_ADDR` are the higher eight bits
+FCP_SCORE_LO_ADDR = 0x803C52D3
+FCP_SCORE_HI_ADDR = 0x803C52D4
+
 # This address contains the current stage ID.
 CURR_STAGE_ID_ADDR = 0x803C53A4
 
@@ -199,6 +204,13 @@ async def check_locations(ctx: TWWContext):
             # 0x1 = Grandma saved, 0x2 = Mail sent by Grandma, 0x3 = Mail read by Link
             if location == "Mailbox - Letter from Grandma":
                 checked = dolphin_memory_engine.read_byte(data.address) & 0x3 == 0x3
+
+            # For the Bird-Man Contest, we check if the high score is greater than 250 yards
+            if location == "Flight Control Platform - Bird-Man Contest - First Prize":
+                high_score = dolphin_memory_engine.read_byte(0x803C52D3) + (
+                    dolphin_memory_engine.read_byte(0x803C52D4) << 8
+                )
+                checked = high_score > 250
 
         # Regular checks
         elif data.stage_id == curr_stage_id:
