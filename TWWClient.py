@@ -68,7 +68,7 @@ class TWWContext(CommonContext):
         self.last_rcvd_index = -1
         self.has_send_death = False
 
-        self.len_give_item_array = 4
+        self.len_give_item_array = 0x10
 
     async def disconnect(self, allow_autoreconnect: bool = False):
         self.auth = None
@@ -134,7 +134,7 @@ def _give_item(ctx: TWWContext, item_name: str):
     # Loop through the give item array, placing the item in an empty slot
     for idx in range(ctx.len_give_item_array):
         slot = dolphin_memory_engine.read_byte(GIVE_ITEM_ARRAY_ADDR + idx)
-        if not slot:
+        if slot == 0xFF:
             dolphin_memory_engine.write_byte(GIVE_ITEM_ARRAY_ADDR + idx, item_id)
             return True
 
