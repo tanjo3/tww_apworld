@@ -32,9 +32,9 @@ LETTER_OWND_ADDR = 0x803C4C98
 
 # These addresses are used to check flags for locations.
 CHARTS_BITFLD_ADDR = 0x803C4CFC
-CHESTS_BITFLD_ADDR = 0x803C4F88
-SWITCHES_BITFLD_ADDR = 0x803C4F8C
-PICKUPS_BITFLD_ADDR = 0x803C4F9C
+CHESTS_BITFLD_ADDR = 0x803C5380
+SWITCHES_BITFLD_ADDR = 0x803C5384
+PICKUPS_BITFLD_ADDR = 0x803C5394
 SEA_ALT_BITFLD_ADDR = 0x803C4FAC
 
 # We re-purpose the small key counter and dungeon flag bytes for Ganon's Tower for this
@@ -218,8 +218,8 @@ async def check_locations(ctx: TWWContext):
 
             # For the Bird-Man Contest, we check if the high score is greater than 250 yards
             if location == "Flight Control Platform - Bird-Man Contest - First Prize":
-                high_score = dolphin_memory_engine.read_byte(0x803C52D3) + (
-                    dolphin_memory_engine.read_byte(0x803C52D4) << 8
+                high_score = dolphin_memory_engine.read_byte(FCP_SCORE_LO_ADDR) + (
+                    dolphin_memory_engine.read_byte(FCP_SCORE_HI_ADDR) << 8
                 )
                 checked = high_score > 250
 
