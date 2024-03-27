@@ -174,9 +174,9 @@ class TWWWorld(World):
                     self.multiworld.random.shuffle(entrance_group)
                     self.multiworld.random.shuffle(exit_group)
 
-                for entrance, exit in zip(entrance_group, exit_group):
-                    entrance_region = self.multiworld.get_region(entrance, self.player)
-                    exit_region = self.multiworld.get_region(exit, self.player)
+                for entrance_name, exit_name in zip(entrance_group, exit_group):
+                    entrance_region = self.multiworld.get_region(entrance_name, self.player)
+                    exit_region = self.multiworld.get_region(exit_name, self.player)
                     entrance_exit_pairs.append((entrance_region, exit_region))
         elif self.options.mix_entrances == "mix_pools":
             # We do a bit of extra work here in order to prevent unreachable "islands" of regions.
@@ -192,46 +192,50 @@ class TWWWorld(World):
                     randomized_exits += exit_group
                 else:
                     # If not randomized, then just connect the entrance-exit pairs now
-                    for entrance, exit in zip(entrance_group, exit_group):
-                        non_randomized_exits.append(exit)
-                        entrance_region = self.multiworld.get_region(entrance, self.player)
-                        exit_region = self.multiworld.get_region(exit, self.player)
+                    for entrance_name, exit_name in zip(entrance_group, exit_group):
+                        non_randomized_exits.append(exit_name)
+                        entrance_region = self.multiworld.get_region(entrance_name, self.player)
+                        exit_region = self.multiworld.get_region(exit_name, self.player)
                         entrance_exit_pairs.append((entrance_region, exit_region))
 
             # Build a list of accessible randomized entrances, assuming the player has all items
             accessible_entrances: list[str] = []
-            for exit, entrances in ENTRANCE_ACCESSIBILITY.items():
-                if exit in non_randomized_exits:
-                    accessible_entrances += [entrance for entrance in entrances if entrance in randomized_entrances]
+            for exit_name, entrances in ENTRANCE_ACCESSIBILITY.items():
+                if exit_name in non_randomized_exits:
+                    accessible_entrances += [
+                        entrance_name for entrance_name in entrances if entrance_name in randomized_entrances
+                    ]
             non_accessible_entrances: list[str] = [
-                entrance for entrance in randomized_entrances if entrance not in accessible_entrances
+                entrance_name for entrance_name in randomized_entrances if entrance_name not in accessible_entrances
             ]
 
             # Priotize exits that lead to more entrances first
             priority_exits: list[str] = []
-            for exit, entrances in ENTRANCE_ACCESSIBILITY.items():
-                if exit == "The Great Sea":
+            for exit_name, entrances in ENTRANCE_ACCESSIBILITY.items():
+                if exit_name == "The Great Sea":
                     continue
-                if exit in randomized_exits and any(entrance in randomized_entrances for entrance in entrances):
-                    priority_exits.append(exit)
+                if exit_name in randomized_exits and any(
+                    entrance_name in randomized_entrances for entrance_name in entrances
+                ):
+                    priority_exits.append(exit_name)
 
             # Assign each priority exit to an accessible entrance
-            for exit in priority_exits:
+            for exit_name in priority_exits:
                 # Choose an accessible entrance at random
                 self.multiworld.random.shuffle(accessible_entrances)
-                entrance = accessible_entrances.pop()
+                entrance_name = accessible_entrances.pop()
 
                 # Connect the pair
-                entrance_region = self.multiworld.get_region(entrance, self.player)
-                exit_region = self.multiworld.get_region(exit, self.player)
+                entrance_region = self.multiworld.get_region(entrance_name, self.player)
+                exit_region = self.multiworld.get_region(exit_name, self.player)
                 entrance_exit_pairs.append((entrance_region, exit_region))
 
                 # Remove the pair from the list of entrance/exits to be connected
-                randomized_entrances.remove(entrance)
-                randomized_exits.remove(exit)
+                randomized_entrances.remove(entrance_name)
+                randomized_exits.remove(exit_name)
 
                 # Consider entrances in that exit as accessible now
-                for newly_accessible_entrance in ENTRANCE_ACCESSIBILITY[exit]:
+                for newly_accessible_entrance in ENTRANCE_ACCESSIBILITY[exit_name]:
                     if newly_accessible_entrance in non_accessible_entrances:
                         accessible_entrances.append(newly_accessible_entrance)
                         non_accessible_entrances.remove(newly_accessible_entrance)
@@ -243,9 +247,9 @@ class TWWWorld(World):
             # Join the remaining entrance/exits randomly
             self.multiworld.random.shuffle(randomized_entrances)
             self.multiworld.random.shuffle(randomized_exits)
-            for entrance, exit in zip(randomized_entrances, randomized_exits):
-                entrance_region = self.multiworld.get_region(entrance, self.player)
-                exit_region = self.multiworld.get_region(exit, self.player)
+            for entrance_name, exit_name in zip(randomized_entrances, randomized_exits):
+                entrance_region = self.multiworld.get_region(entrance_name, self.player)
+                exit_region = self.multiworld.get_region(exit_name, self.player)
                 entrance_exit_pairs.append((entrance_region, exit_region))
         else:
             raise Exception(f"Invalid entrance randomization option: {self.options.mix_entrances}")
@@ -437,18 +441,36 @@ class TWWWorld(World):
         beedle_900 = self.multiworld.get_location(
             "Rock Spire Isle - Beedle's Special Shop Ship - 900 Rupee Item", self.player
         )
-        add_item_rule(beedle_500, lambda item, locs=[beedle_950, beedle_900]: (
-            (item.game == "The Wind Waker" and all(l.item is None or item.name != l.item.name for l in locs)) or
-            (item.game != "The Wind Waker" and all(l.item is None or l.item.game == "The Wind Waker" for l in locs))
-        ))
-        add_item_rule(beedle_950, lambda item, locs=[beedle_500, beedle_900]: (
-            (item.game == "The Wind Waker" and all(l.item is None or item.name != l.item.name for l in locs)) or
-            (item.game != "The Wind Waker" and all(l.item is None or l.item.game == "The Wind Waker" for l in locs))
-        ))
-        add_item_rule(beedle_900, lambda item, locs=[beedle_500, beedle_950]: (
-            (item.game == "The Wind Waker" and all(l.item is None or item.name != l.item.name for l in locs)) or
-            (item.game != "The Wind Waker" and all(l.item is None or l.item.game == "The Wind Waker" for l in locs))
-        ))
+        add_item_rule(
+            beedle_500,
+            lambda item, locs=[beedle_950, beedle_900]: (
+                (item.game == "The Wind Waker" and all(l.item is None or item.name != l.item.name for l in locs))
+                or (
+                    item.game != "The Wind Waker"
+                    and all(l.item is None or l.item.game == "The Wind Waker" for l in locs)
+                )
+            ),
+        )
+        add_item_rule(
+            beedle_950,
+            lambda item, locs=[beedle_500, beedle_900]: (
+                (item.game == "The Wind Waker" and all(l.item is None or item.name != l.item.name for l in locs))
+                or (
+                    item.game != "The Wind Waker"
+                    and all(l.item is None or l.item.game == "The Wind Waker" for l in locs)
+                )
+            ),
+        )
+        add_item_rule(
+            beedle_900,
+            lambda item, locs=[beedle_500, beedle_950]: (
+                (item.game == "The Wind Waker" and all(l.item is None or item.name != l.item.name for l in locs))
+                or (
+                    item.game != "The Wind Waker"
+                    and all(l.item is None or l.item.game == "The Wind Waker" for l in locs)
+                )
+            ),
+        )
 
         # Validate that there are enough progression locations for the number of progression items
         if self.num_progression_items > self.num_progression_locations:
