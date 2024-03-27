@@ -423,6 +423,33 @@ class TWWWorld(World):
         # Set nonprogress location from options
         self._set_nonprogress_locations()
 
+        # Ban the Bait Bag slot from having bait
+        beedle_20 = self.multiworld.get_location("The Great Sea - Beedle's Shop Ship - 20 Rupee Item", self.player)
+        add_item_rule(beedle_20, lambda item: item.name not in ["All-Purpose Bait", "Hyoi Pear"])
+
+        # Also ban the same item from appearing more than once in the Rock Spire Isle shop ship
+        beedle_500 = self.multiworld.get_location(
+            "Rock Spire Isle - Beedle's Special Shop Ship - 500 Rupee Item", self.player
+        )
+        beedle_950 = self.multiworld.get_location(
+            "Rock Spire Isle - Beedle's Special Shop Ship - 950 Rupee Item", self.player
+        )
+        beedle_900 = self.multiworld.get_location(
+            "Rock Spire Isle - Beedle's Special Shop Ship - 900 Rupee Item", self.player
+        )
+        add_item_rule(beedle_500, lambda item, locs=[beedle_950, beedle_900]: (
+            (item.game == "The Wind Waker" and all(l.item is None or item.name != l.item.name for l in locs)) or
+            (item.game != "The Wind Waker" and all(l.item is None or l.item.game == "The Wind Waker" for l in locs))
+        ))
+        add_item_rule(beedle_950, lambda item, locs=[beedle_500, beedle_900]: (
+            (item.game == "The Wind Waker" and all(l.item is None or item.name != l.item.name for l in locs)) or
+            (item.game != "The Wind Waker" and all(l.item is None or l.item.game == "The Wind Waker" for l in locs))
+        ))
+        add_item_rule(beedle_900, lambda item, locs=[beedle_500, beedle_950]: (
+            (item.game == "The Wind Waker" and all(l.item is None or item.name != l.item.name for l in locs)) or
+            (item.game != "The Wind Waker" and all(l.item is None or l.item.game == "The Wind Waker" for l in locs))
+        ))
+
         # Validate that there are enough progression locations for the number of progression items
         if self.num_progression_items > self.num_progression_locations:
             raise FillError(
