@@ -1,7 +1,7 @@
 # The Wind Waker Archipelago
 
 The Wind Waker Archipelago modifies the base randomizer created by LagoLunatic to work with Archipelago multiworlds.
-Dev5ter started the original project and has been maintained by the community since.
+Dev5ter started the original project, which the community has maintained since then.
 
 ## Installation & Usage
 
@@ -41,6 +41,9 @@ Waker thread (under `future-game-design`) in the Archipelago server.
   - Tower of the Gods - Stone Tablet
   - Mailbox - Letter from Hoskit's Girlfriend
   - Mailbox - Letter from Baito's Mother
+- If the Beedle at Rock Spire is selling copies of the same items, or if the Beedle 20 item is bait (Hyoi Pear or
+  All-Purpose Bait), those locations will not send properly.
+- Salvages from random light rings (which are not randomized) will not work.
 
 Feel free to report any other issues in the Wind Waker thread in the Archipelago server! I'll take a look and see what I
 can do. Suggestions for improvements are also welcome.
