@@ -533,10 +533,10 @@ LOCATION_TABLE: dict[str, TWWLocationData] = {
         142, TWWFlag.DUNGEON, "Earth Temple", 0x6, TWWLocationType.CHEST, 5
     ),
     "Earth Temple - Many Mirrors Room Right Chest": TWWLocationData(
-        143, TWWFlag.DUNGEON, "Earth Temple", 0x6, TWWLocationType.CHEST, 10
+        143, TWWFlag.DUNGEON, "Earth Temple", 0x6, TWWLocationType.CHEST, 9
     ),
     "Earth Temple - Many Mirrors Room Left Chest": TWWLocationData(
-        144, TWWFlag.DUNGEON, "Earth Temple", 0x6, TWWLocationType.CHEST, 9
+        144, TWWFlag.DUNGEON, "Earth Temple", 0x6, TWWLocationType.CHEST, 10
     ),
     "Earth Temple - Stalfos Crypt Room": TWWLocationData(
         145, TWWFlag.DUNGEON, "Earth Temple", 0x6, TWWLocationType.CHEST, 14
