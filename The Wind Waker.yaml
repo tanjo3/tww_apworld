@@ -283,7 +283,6 @@ The Wind Waker:
     # Select the number of randomly-chosen bosses that are required in Required Bosses Mode.
     # The door to Puppet Ganon will not unlock until you've defeated all of these bosses. Nothing in dungeons for other
     # bosses will ever be required.
-    0: 0
     1: 0
     2: 0
     3: 0
