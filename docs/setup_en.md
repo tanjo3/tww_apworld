@@ -28,8 +28,9 @@ All users should follow these steps:
 1. Unzip the downloaded TWW apworld zip file.
 2. Place the `tww.apworld` file in your Archipelago installation's `lib/worlds` folder (Windows default to:
 `%programdata%/Archipelago`).
-    * If you have a `ww.apworld` file from a previous version of the apworld, it's highly recommended that you delete
-    it, as it is no longer supported.
+    * If you have a `ww.apworld` file from a previous version of the apworld, you **must** delete it, as it is no longer
+    supported. Additionally, if there is a `ww` or `tww` folder in that folder, you **must** delete it as well. Keeping
+    these around will cause issues, even if seeds successfully generate.
 3. Place the content of the `lib` folder of the downloaded TWW apworld zip file into your Archipelago installation's
 `lib` folder.
 
