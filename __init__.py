@@ -586,11 +586,9 @@ class TWWWorld(World):
         n_items = len(self.pre_fill_items) + len(self.itempool)
         n_filler_items = n_locations - n_items
 
-        # Add filler items to the item pool. Use the same weights that are used in the base rando.
-        filler_consumables = ["Yellow Rupee", "Red Rupee", "Purple Rupee", "Orange Rupee", "Joy Pendant"]
-        filler_weights = [3, 7, 10, 15, 3]
-        for filler_item in self.multiworld.random.choices(filler_consumables, weights=filler_weights, k=n_filler_items):
-            self.itempool.append(self.create_item(filler_item))
+        # Add filler items to the item pool.
+        for _ in range(n_filler_items):
+            self.itempool.append(self.create_item(self.get_filler_item_name()))
 
         self.multiworld.itempool += self.itempool
 
@@ -599,6 +597,12 @@ class TWWWorld(World):
         for item in self.pre_fill_items + self.itempool:
             if item.classification == IC.progression or item.classification == IC.progression_skip_balancing:
                 self.num_progression_items += 1
+
+    def get_filler_item_name(self) -> str:
+        # Use the same weights for filler items that are used in the base rando.
+        filler_consumables = ["Yellow Rupee", "Red Rupee", "Purple Rupee", "Orange Rupee", "Joy Pendant"]
+        filler_weights = [3, 7, 10, 15, 3]
+        return self.multiworld.random.choices(filler_consumables, weights=filler_weights, k=1)[0]
 
     def set_rules(self):
         set_rules(self.multiworld, self.player)
