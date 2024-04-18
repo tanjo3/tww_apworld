@@ -338,7 +338,8 @@ class MixEntrances(Choice):
 
 
 class RandomizeEnemies(Toggle):
-    """Randomizes the placement of non-boss enemies."""
+    """Randomizes the placement of non-boss enemies. This option is an incomplete option from the base randomizer and
+    may result in unbeatable seeds! Use at  your own risk!"""
 
     display_name = "Randomize Enemies"
 

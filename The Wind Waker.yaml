@@ -359,9 +359,8 @@ The Wind Waker:
     mix_pools: 0
 
   randomize_enemies:
-    # DEV NOTE: This option is an incomplete option from the base randomizer and may result in unbeatable seeds! Use at
-    # your own risk!
-    # Randomizes the placement of non-boss enemies.
+    # Randomizes the placement of non-boss enemies. This option is an incomplete option from the base randomizer and may
+    # result in unbeatable seeds! Use at your own risk!
     on: 0
     off: 50
   randomize_starting_island:
