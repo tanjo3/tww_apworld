@@ -101,9 +101,6 @@ class TWWWorld(World):
         self.own_dungeon_item_names: set[str] = set()
         self.any_dungeon_item_names: set[str] = set()
 
-        self.num_progression_items = 0
-        self.num_progression_locations = 0
-
     def _get_access_rule(self, region):
         snake_case_region = region.lower().replace("'", "").replace(" ", "_")
         return f"can_access_{snake_case_region}"
@@ -305,7 +302,6 @@ class TWWWorld(World):
         if self.options.progression_misc:
             enabled_flags |= TWWFlag.MISCELL
 
-        self.num_progression_locations = len(self.multiworld.get_locations(self.player))
         for location in self.multiworld.get_locations(self.player):
             # If not all the flags for a location are set, then force that location to have a non-progress item
             if location.flags & enabled_flags != location.flags:
@@ -313,7 +309,6 @@ class TWWWorld(World):
                     location,
                     lambda item: item.classification == IC.useful or item.classification == IC.filler,
                 )
-                self.num_progression_locations -= 1
 
     def generate_early(self):
         # Handle randomization options for dungeon items
@@ -472,15 +467,6 @@ class TWWWorld(World):
             ),
         )
 
-        # Validate that there are enough progression locations for the number of progression items
-        if self.num_progression_items > self.num_progression_locations:
-            raise FillError(
-                "There are more progression items than progression locations "
-                f"({self.num_progression_items} > {self.num_progression_locations}). "
-                "Ensure that the combination of options you have chosen allows for enough locations to "
-                "place progression items and try again."
-            )
-
     @classmethod
     def stage_pre_fill(cls, multiworld: MultiWorld):
         # Reference: `fill_dungeons_restrictive()` from ALTTP
@@ -591,12 +577,6 @@ class TWWWorld(World):
             self.itempool.append(self.create_item(self.get_filler_item_name()))
 
         self.multiworld.itempool += self.itempool
-
-        # Count up the total number of progression items
-        self.num_progression_items = 0
-        for item in self.pre_fill_items + self.itempool:
-            if item.classification == IC.progression or item.classification == IC.progression_skip_balancing:
-                self.num_progression_items += 1
 
     def get_filler_item_name(self) -> str:
         # Use the same weights for filler items that are used in the base rando.
