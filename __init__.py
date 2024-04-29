@@ -5,7 +5,7 @@ import yaml
 
 from BaseClasses import ItemClassification as IC
 from BaseClasses import MultiWorld, Region, Tutorial
-from Fill import FillError, fill_restrictive
+from Fill import fill_restrictive
 from worlds.AutoWorld import WebWorld, World
 from worlds.generic.Rules import add_item_rule
 from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess
