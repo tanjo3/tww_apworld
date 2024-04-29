@@ -276,9 +276,8 @@ async def check_death(ctx: TWWContext):
 
 
 def check_ingame():
-    current_stage_name = dolphin_memory_engine.read_bytes(CURR_STAGE_NAME_ADDR, 8)
-    return current_stage_name != b"sea_T\x00\x00\x00" and current_stage_name != b"Name\x00\x00\x00\x00"
-
+    current_stage_name = dolphin_memory_engine.read_bytes(CURR_STAGE_NAME_ADDR, 8).decode().strip("\x00")
+    return current_stage_name not in ["", "sea_T", "Name"]
 
 async def dolphin_sync_task(ctx: TWWContext):
     logger.info("Starting Dolphin connector. Use /dolphin for status information.")
