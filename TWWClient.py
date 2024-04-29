@@ -37,8 +37,8 @@ SWITCHES_BITFLD_ADDR = 0x803C5384
 PICKUPS_BITFLD_ADDR = 0x803C5394
 SEA_ALT_BITFLD_ADDR = 0x803C4FAC
 
-# We re-purpose the small key counter and dungeon flag bytes for Ganon's Tower for this
-EXPECTED_INDEX_ADDR = 0x803C50C8
+# The expected index for the next item that should be received. Uses event bits 0x60 and 0x61
+EXPECTED_INDEX_ADDR = 0x803C528C
 
 # These bytes contain the bits whether the player has received the reward for finding a particular Tingle statue.
 TINGLE_STATUE_1_ADDR = 0x803C523E  # 0x40 is the bit for Dragon Tingle statue
