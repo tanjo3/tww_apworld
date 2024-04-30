@@ -26,19 +26,21 @@ release page: `Archipelago_X.X.X_linux-x86_64.tar.gz`.
 [available on Flathub](https://flathub.org/apps/org.DolphinEmu.dolphin-emu).
 
 ## Installation
+
 All users should follow these steps:
 1. Unzip the downloaded TWW apworld zip file.
 2. Place the `tww.apworld` file in your Archipelago installation's `lib/worlds` folder (Windows default to:
 `%programdata%/Archipelago`).
     * If you have a `ww.apworld` file from a previous version of the apworld, you **must** delete it, as it is no longer
     supported. Additionally, if there is a `ww` or `tww` folder in that folder, you **must** also delete it. Keeping
-    these around will cause issues, even if seeds are successfully generated.
+    these around will cause issues, even if multiworlds are successfully generated.
 3. Place the content of the `lib` folder of the downloaded TWW apworld zip file into your Archipelago installation's
 `lib` folder.
 
 If you're playing The Wind Waker, you must unzip the TWW AP Client downloaded from the release page.
 
 ## Setting Up a YAML
+
 All players playing The Wind Waker must provide the room host with a YAML file containing the settings for their world.
 A sample YAML file for The Wind Waker is supplied in the TWW apworld download. Refer to the comments in that file for
 details about what each setting does.
@@ -46,8 +48,9 @@ details about what each setting does.
 Once you're happy with your settings, provide the room host with your YAML file and proceed to the next step.
 
 ## Generating a Multiworld
+
 If you're generating a multiworld game that includes The Wind Waker, you'll need to do so locally as the online
-generator does not yet support The Wind Waker. Follow these steps to generate a multiworld seed:
+generator does not yet support The Wind Waker. Follow these steps to generate a multiworld:
 1. Gather all player's YAMLs. Place these YAMLs into the `Players` folder of your Archipelago installation. If the
 folder does not exist, then it must be created manually. The files here should not be compressed.
 2. Modify any local host settings for generation, as desired.
@@ -64,12 +67,14 @@ host a room or provide it to the room host.
     instead.
 
 ## Hosting a Room
+
 If you're generating the multiworld, follow the instructions in the previous section. Once you have the zip file
 corresponding to your multiworld, follow
 [these steps](https://archipelago.gg/tutorial/Archipelago/setup/en#hosting-an-archipelago-server) to host a room. Follow
 the instructions for hosting on the website from a locally generated game or on a local machine.
 
 ## Connecting to a Room
+
 You should have the `.aptww` file provided to you by the multiworld generator. You should also have the room's server
 name and port number from the room's host.
 
@@ -82,10 +87,9 @@ open the client.
 player models for The Wind Waker. Follow the installation instructions there to set up custom player models.
 3. For the APTWW file, browse and locate the path to the `.aptww` you received from the multiworld generator.
 4. Click `Randomize` at the bottom. This randomizes the ISO and puts it in the output folder you specified. The file
-will be named `TWW AP_XXXXX_P#.iso`, where `#` is the slot number. Verify that the slot number corresponds to your slot
-number.
-5. Open Dolphin and use it to open the randomized ISO. Start a new file and get into the game. You don't need to do this
-step first, but it's good practice.
+will be named `TWW AP_XXXXX_P#_<name>.iso`, where `#` is the slot number and `<name>` is the slot (player) name. Verify
+that the values are correct for the multiworld.
+5. Open Dolphin and use it to open the randomized ISO.
 6. Start `ArchipelagoLauncher.exe` (without `.exe` on Linux) and choose `TWW Client`, which will open the text client.
 If Dolphin is not already open, or you have yet to start a new file, you will be prompted to do so.
     * Be sure to launch `TWW Client`, not `WW Client`. The latter is the name of the client's previous (pre-v2.0.0)
@@ -93,11 +97,13 @@ If Dolphin is not already open, or you have yet to start a new file, you will be
 7. Connect to the room by entering the server name and port number at the top and pressing `Connect`. For rooms hosted
 on the website, this will be `archipelago.gg:<port>`, where `<port>` is the port number. If a game is hosted from the
 `ArchipelagoServer.exe` (without `.exe` on Linux), this will default to `38281` but may be changed in the `host.yaml`.
-8. Once connected, you will be prompted to enter your slot name. Note that this is *not* your slot number. Instead, it's
-the name of your player slot that you are connecting to. This is the same name that was used when creating your YAML
-file. If the game is hosted on the website, this is also displayed on the room page. The name is case-sensitive.
+8. If you've opened a ROM corresponding to the multiworld to which you are connected, it should authenticate your slot
+name automatically.
+    * If you are encountering issues with authenticating, ensure that the randomized ROM is open in Dolphin and that it
+    corresponds to the multiworld to which you are connecting.
 
 ## Troubleshooting
+
 * If you do not see the client in the launcher, ensure you have placed the `tww.apworld` in the correct folder (the
 `lib/worlds` folder of your Archipelago installation).
 * If the client is not working, double-check that you have the most recent release of the `tww.apworld`. Additionally,
