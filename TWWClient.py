@@ -59,6 +59,10 @@ CURR_STAGE_NAME_ADDR = 0x803C9D3C
 # 0xFF represents no item. The array is read and cleared every frame.
 GIVE_ITEM_ARRAY_ADDR = 0x803FE868
 
+# This is the address that holds the player's slot name.
+# This way, the player does not have to manually authenticate their slot name.
+SLOT_NAME_ADDR = 0x803FE88C
+
 
 class TWWCommandProcessor(ClientCommandProcessor):
     def __init__(self, ctx: CommonContext):
@@ -77,10 +81,10 @@ class TWWContext(CommonContext):
 
     def __init__(self, server_address, password):
         super().__init__(server_address, password)
-        self.awaiting_auth = False
         self.items_received_2: list[tuple[NetworkItem, int]] = []
         self.dolphin_sync_task = None
         self.dolphin_status = CONNECTION_INITIAL_STATUS
+        self.awaiting_rom = False
         self.last_rcvd_index = -1
         self.has_send_death = False
 
@@ -111,7 +115,12 @@ class TWWContext(CommonContext):
     async def server_auth(self, password_requested: bool = False):
         if password_requested and not self.password:
             await super(TWWContext, self).server_auth(password_requested)
-        await self.get_username()
+        if not self.auth:
+            if self.awaiting_rom:
+                return
+            self.awaiting_rom = True
+            logger.info("Awaiting connection to Dolphin to get player information")
+            return
         await self.send_connect()
 
     def run_gui(self):
@@ -131,6 +140,10 @@ def read_short(console_address: int):
 
 def write_short(console_address: int, value: int):
     dolphin_memory_engine.write_bytes(console_address, value.to_bytes(2))
+
+
+def read_string(console_address: int, strlen: int):
+    return dolphin_memory_engine.read_bytes(console_address, strlen).decode().strip("\0")
 
 
 def _give_death(ctx: TWWContext):
@@ -276,19 +289,27 @@ async def check_death(ctx: TWWContext):
 
 
 def check_ingame():
-    current_stage_name = dolphin_memory_engine.read_bytes(CURR_STAGE_NAME_ADDR, 8).decode().strip("\x00")
-    return current_stage_name not in ["", "sea_T", "Name"]
+    return read_string(CURR_STAGE_NAME_ADDR, 8) not in ["", "sea_T", "Name"]
+
 
 async def dolphin_sync_task(ctx: TWWContext):
     logger.info("Starting Dolphin connector. Use /dolphin for status information.")
     while not ctx.exit_event.is_set():
         try:
             if dolphin_memory_engine.is_hooked() and ctx.dolphin_status == CONNECTION_CONNECTED_STATUS:
-                if ctx.server and ctx.slot:
+                if not check_ingame():
+                    await asyncio.sleep(0.1)
+                    continue
+                if ctx.slot:
                     if "DeathLink" in ctx.tags:
                         await check_death(ctx)
                     await give_items(ctx)
                     await check_locations(ctx)
+                else:
+                    if not ctx.auth:
+                        ctx.auth = read_string(SLOT_NAME_ADDR, 0x40)
+                    if ctx.awaiting_rom:
+                        await ctx.server_auth()
                 await asyncio.sleep(0.5)
             else:
                 if ctx.dolphin_status == CONNECTION_CONNECTED_STATUS:
@@ -300,11 +321,6 @@ async def dolphin_sync_task(ctx: TWWContext):
                     if dolphin_memory_engine.read_bytes(0x80000000, 6) != b"GZLE99":
                         logger.info(CONNECTION_REFUSED_GAME_STATUS)
                         ctx.dolphin_status = CONNECTION_REFUSED_GAME_STATUS
-                        dolphin_memory_engine.un_hook()
-                        await asyncio.sleep(5)
-                    elif not check_ingame():
-                        logger.info(CONNECTION_REFUSED_SAVE_STATUS)
-                        ctx.dolphin_status = CONNECTION_REFUSED_SAVE_STATUS
                         dolphin_memory_engine.un_hook()
                         await asyncio.sleep(5)
                     else:

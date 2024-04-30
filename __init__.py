@@ -592,6 +592,7 @@ class TWWWorld(World):
         output_data = {
             "Seed": self.multiworld.seed_name,
             "Slot": self.player,
+            "Name": self.multiworld.get_player_name(self.player),
             "Options": {},
             "Locations": {},
             "Entrances": {},
