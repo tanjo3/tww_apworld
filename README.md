@@ -60,7 +60,6 @@ can do. Suggestions for improvements are also welcome.
 
 ## Planned Features
 
-- Required bosses mode
 - Randomized charts
 - Option for adding Tingle Tuner logic to Tingle Chests
 - Dynamic CTMC based on enabled options
