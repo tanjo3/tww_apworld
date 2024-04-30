@@ -65,7 +65,7 @@ can do. Suggestions for improvements are also welcome.
 - Option for adding Tingle Tuner logic to Tingle Chests
 - Dynamic CTMC based on enabled options
 - Properly excluding locations based on options
-- Hint implementation from base random (hint placement options and hint types)
+- Hint implementation from base randomizer (hint placement options and hint types)
 - Integration with Archipelago's hint system (e.g., auction hints)
 - EnergyLink support
 - Continued bugfixes
