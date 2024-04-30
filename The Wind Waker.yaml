@@ -60,160 +60,182 @@ The Wind Waker:
 
   local_items:
     # Forces these items to be in their native world.
-    [ ]
+    []
 
   non_local_items:
     # Forces these items to be outside their native world.
-    [ ]
+    []
 
   start_inventory:
     # Start with these items.
-    # We recommend starting with these items: { "Wind Waker": 1, "Ballad of Gales": 1, "Wind's Requiem": 1 }
-    { }
+    {}
 
   start_hints:
     # Start with these item's locations prefilled into the !hint command.
-    [ ]
+    []
 
   start_location_hints:
     # Start with these locations and their item prefilled into the !hint command
-    [ ]
+    []
 
   exclude_locations:
     # Prevent these locations from having an important item
-    [ ]
+    []
 
   priority_locations:
     # Prevent these locations from having an unimportant item
-    [ ]
+    []
 
   item_links:
     # Share part of your item pool with other players.
-    [ ]
+    []
 
   progression_dungeons:
     # This controls whether dungeons can contain progress items.
     # If off, dungeons will still be randomized, but will only contain optional items you don't need to beat the game.
-    on: 50
-    off: 0
+    false: 0
+    true: 50
+
   progression_tingle_chests:
     # Tingle Chests that are hidden in dungeons and must be bombed to make them appear. (2 in DRC, 1 each in FW, TotG,
     # ET, and WT).
     # If off, they will still be randomized, but will only contain optional items you don't need to beat the game.
-    on: 0
-    off: 50
+    false: 50
+    true: 0
+
   progression_dungeon_secrets:
-    # DRC, FW, TotG, ET, and WT each have 2-3 secret items within them (11 in total).This controls whether they can be
-    # progress items. The items are fairly well-hidden (they aren't in chests), so don't select this option unless
-    # you're prepared to search each dungeon high and low!
+    # DRC, FW, TotG, ET, and WT each have 2-3 secret items within them (11 in total). This controls whether they can be
+    # progress items. The items are fairly well-hidden (they aren't in chests), so don't select this option unless you're
+    # prepared to search each dungeon high and low!
     # For a list of the dungeon secrets, refer to this Google doc:
     # https://docs.google.com/document/d/1LrjGr6W9970XEA-pzl8OhwnqMqTbQaxCX--M-kdsLos/edit
-    on: 0
-    off: 50
+    false: 50
+    true: 0
+
   progression_puzzle_secret_caves:
     # This controls whether puzzle-focused secret caves can contain progress items.
     # If off, they will still be randomized, but will only contain optional items you don't need to beat the game.
-    on: 50
-    off: 0
+    false: 0
+    true: 50
+
   progression_combat_secret_caves:
     # This controls whether combat-focused secret caves (besides Savage Labyrinth) can contain progress items.
     # If off, they will still be randomized, but will only contain optional items you don't need to beat the game.
-    on: 0
-    off: 50
+    false: 50
+    true: 0
+
   progression_savage_labyrinth:
     # This controls whether the Savage Labyrinth can contain progress items.
     # If off, it will still be randomized, but will only contain optional items you don't need to beat the game.
-    on: 0
-    off: 50
+    false: 50
+    true: 0
+
   progression_great_fairies:
     # This controls whether the items given by Great Fairies can be progress items.
     # If off, they will still be randomized, but will only contain optional items you don't need to beat the game.
-    on: 50
-    off: 0
+    false: 0
+    true: 50
+
   progression_short_sidequests:
     # This controls whether sidequests that can be completed quickly can reward progress items.
     # If off, they will still be randomized, but will only reward optional items you don't need to beat the game.
-    on: 0
-    off: 50
+    false: 50
+    true: 0
+
   progression_long_sidequests:
     # This controls whether long sidequests (e.g. Lenzo's assistant, withered trees, goron trading) can reward progress
     # items.
     # If off, they will still be randomized, but will only reward optional items you don't need to beat the game.
-    on: 0
-    off: 50
+    false: 50
+    true: 0
+
   progression_spoils_trading:
     # This controls whether the items you get by trading in spoils to NPCs can be progress items.
     # If off, they will still be randomized</u>, but will only reward optional items you don't need to beat the game.
-    on: 0
-    off: 50
+    false: 50
+    true: 0
+
   progression_minigames:
     # This controls whether most minigames can reward progress items (auctions, mail sorting, barrel shooting, bird-man
     # contest).
     # If off, minigames will still be randomized, but will only reward optional items you don't need to beat the game.
-    on: 0
-    off: 50
+    false: 50
+    true: 0
+
   progression_battlesquid:
     # This controls whether the Windfall battleship minigame can reward progress items.
     # If off, it will still be randomized, but will only reward optional items you don't need to beat the game.
-    on: 0
-    off: 50
+    false: 50
+    true: 0
+
   progression_free_gifts:
     # This controls whether gifts freely given by NPCs can be progress items (Tott, Salvage Corp, imprisoned Tingle).
     # If off, they will still be randomized, but will only be optional items you don't need to beat the game.
-    on: 50
-    off: 0
+    false: 0
+    true: 50
+
   progression_mail:
     # This controls whether mail can contain progress items.
     # If off, mail will still be randomized, but will only contain optional items you don't need to beat the game.
-    on: 0
-    off: 50
+    false: 50
+    true: 0
+
   progression_platforms_rafts:
     # This controls whether lookout platforms and rafts can contain progress items.
     # If off, they will still be randomized, but will only contain optional items you don't need to beat the game.
-    on: 0
-    off: 50
+    false: 50
+    true: 0
+
   progression_submarines:
     # This controls whether submarines can contain progress items.
-    # If off, submarines will still be randomized, but will only contain optional items you don't need to beat the game.
-    on: 0
-    off: 50
+    # If off, submarines will still be randomized, but will only contain optional items you don't need to beat the
+    # game.
+    false: 50
+    true: 0
+
   progression_eye_reef_chests:
     # This controls whether the chests that appear after clearing out the eye reefs can contain progress items.
     # If off, they will still be randomized, but will only contain optional items you don't need to beat the game.
-    on: 0
-    off: 50
+    false: 50
+    true: 0
+
   progression_big_octos_gunboats:
     # This controls whether the items dropped by Big Octos and Gunboats can contain progress items.
     # If off, they will still be randomized, but will only contain optional items you don't need to beat the game.
-    on: 0
-    off: 50
+    false: 50
+    true: 0
+
   progression_triforce_charts:
     # This controls whether the sunken treasure chests marked on Triforce Charts can contain progress items.
     # If off, they will still be randomized, but will only contain optional items you don't need to beat the game.
-    on: 0
-    off: 50
+    false: 50
+    true: 0
+
   progression_treasure_charts:
     # This controls whether the sunken treasure chests marked on Treasure Charts can contain progress items.
     # If off, they will still be randomized, but will only contain optional items you don't need to beat the game.
-    on: 0
-    off: 50
+    false: 50
+    true: 0
+
   progression_expensive_purchases:
     # This controls whether items that cost a lot of rupees can be progress items (Rock Spire shop, auctions, Tingle's
     # letter, trading quest).
     # If off, they will still be randomized, but will only be optional items you don't need to beat the game.
-    on: 50
-    off: 0
+    false: 0
+    true: 50
+
   progression_island_puzzles:
     # This controls whether various island puzzles can contain progress items (e.g. chests hidden in unusual places).
     # If off, they will still be randomized, but will only contain optional items you don't need to beat the game.
-    on: 0
-    off: 50
+    false: 50
+    true: 0
+
   progression_misc:
     # Miscellaneous locations that don't fit into any of the above categories (outdoors chests, wind shrine, Cyclos,
     # etc).
     # If off, they will still be randomized, but will only contain optional items you don't need to beat the game.
-    on: 0
-    off: 50
+    false: 50
+    true: 0
 
   randomize_mapcompass:
     # Controls how dungeon maps and compasses are randomized.
@@ -229,6 +251,7 @@ The Wind Waker:
     any_dungeon: 0
     local: 0
     keylunacy: 0
+
   randomize_smallkeys:
     # Controls how small keys are randomized.
     # Start With Small Keys: You will start the game with the small keys for all dungeons.
@@ -243,6 +266,7 @@ The Wind Waker:
     any_dungeon: 0
     local: 0
     keylunacy: 0
+
   randomize_bigkeys:
     # Controls how big keys are randomized.
     # Start With Big Keys: You will start the game with the big keys for all dungeons.
@@ -257,54 +281,59 @@ The Wind Waker:
     any_dungeon: 0
     local: 0
     keylunacy: 0
+
   sword_mode:
-    # Controls whether you start with the Hero's Sword, the Hero's Sword is randomized, or if there are no swords in the
-    # entire game.
-    # Start with Hero's Sword: You will start the game with the basic Hero's Sword already in your inventory (the
-    # default).
+    # Controls whether you start with the Hero's Sword, the Hero's Sword is randomized, or if there are no swords in
+    # the entire game.
+    # Start with Hero's Sword: You will start the game with the basic Hero's Sword already in your inventory.
     # No Starting Sword: You will start the game with no sword, and have to find it somewhere in the world like other
     # randomized items.
-    # Swordless: You will start the game with no sword, and won't be able to find it anywhere. You have to beat the
-    # entire game using other items as weapons instead of the sword. (Note that Phantom Ganon in FF becomes vulnerable
-    # to Skull Hammer in this mode.)
+    # Swordless: You will start the game with no sword, and won't be able to find it anywhere. You have to beat the entire
+    # game using other items as weapons instead of the sword. (Note that Phantom Ganon in FF becomes vulnerable to Skull
+    # Hammer in this mode.)
     start_with_sword: 50
     no_starting_sword: 0
     swordless: 0
+
   required_bosses:
-    # DEV NOTE: This option is currently unimplemented and will be ignored.
     # In this mode, you will not be allowed to beat the game until certain randomly-chosen bosses are defeated. Nothing
     # in dungeons for other bosses will ever be required.
-    # You can see which islands have the required bosses on them by opening the sea chart and checking which islands
-    # have blue quest markers.
-    on: 0
-    off: 50
+    # You can see which islands have the required bosses on them by opening the sea chart and checking which islands have
+    # blue quest markers.
+    false: 50
+    true: 0
+
   num_required_bosses:
-    # DEV NOTE: This option is currently unimplemented and will be ignored.
     # Select the number of randomly-chosen bosses that are required in Required Bosses Mode.
     # The door to Puppet Ganon will not unlock until you've defeated all of these bosses. Nothing in dungeons for other
     # bosses will ever be required.
-    1: 0
-    2: 0
-    3: 0
+    #
+    # You can define additional values between the minimum and maximum values.
+    # Minimum value is 1
+    # Maximum value is 6
     4: 50
-    5: 0
-    6: 0
+    random: 0
+    random-low: 0
+    random-high: 0
+
   chest_type_matches_contents:
     # Changes the chest type to reflect its contents. A metal chest has a progress item, a wooden chest has a
     # non-progress item or a consumable, and a green chest has a potentially required dungeon key.
-    on: 0
-    off: 50
+    false: 50
+    true: 0
+
   trap_chests:
     # DEV NOTE: This option is currently unimplemented and will be ignored.
-    # Allows the randomizer to place several trapped chests across the game that do not give you items.
-    # Perfect for spicing up any run!
-    on: 0
-    off: 50
+    # Allows the randomizer to place several trapped chests across the game that do not give you items. Perfect for
+    # spicing up any run!
+    false: 50
+    true: 0
 
   hero_mode:
     # In Hero Mode, you take four times more damage than normal and heart refills will not drop.
-    on: 0
-    off: 50
+    false: 50
+    true: 0
+
   logic_obscurity:
     # Obscure tricks are ways of obtaining items that are not obvious and may involve thinking outside the box.
     # This option controls the maximum difficulty of obscure tricks the randomizer will require you to do to beat the
@@ -313,6 +342,7 @@ The Wind Waker:
     normal: 0
     hard: 0
     very_hard: 0
+
   logic_precision:
     # Precise tricks are ways of obtaining items that involve difficult inputs such as accurate aiming or perfect
     # timing.
@@ -326,159 +356,186 @@ The Wind Waker:
   randomize_dungeon_entrances:
     # Shuffles around which dungeon entrances take you into which dungeons.
     # (No effect on Forsaken Fortress or Ganon's Tower.)
-    on: 0
-    off: 50
+    false: 50
+    true: 0
+
   randomize_secret_cave_entrances:
     # Shuffles around which secret cave entrances take you into which secret caves.
-    on: 0
-    off: 50
+    false: 50
+    true: 0
+
   randomize_miniboss_entrances:
     # Allows dungeon miniboss doors to act as entrances to be randomized.
     # If on with random dungeon entrances, dungeons may nest within each other, forming chains of connected dungeons.
-    on: 0
-    off: 50
+    false: 50
+    true: 0
+
   randomize_boss_entrances:
     # Allows dungeon boss doors to act as entrances to be randomized.
     # If on with random dungeon entrances, dungeons may nest within each other, forming chains of connected dungeons.
-    on: 0
-    off: 50
+    false: 50
+    true: 0
+
   randomize_secret_cave_inner_entrances:
     # Allows the pit in Ice Ring Isle's secret cave and the rear exit out of Cliff Plateau Isles' secret cave to act as
     # entrances to be randomized.
-    on: 0
-    off: 50
+    false: 50
+    true: 0
+
   randomize_fairy_fountain_entrances:
     # Allows the pits that lead down into Fairy Fountains to act as entrances to be randomized.
-    on: 0
-    off: 50
+    false: 50
+    true: 0
+
   mix_entrances:
     # Controls how the different types (pools) of randomized entrances should be shuffled.
-    # Separate Pools: Each pool of randomized entrances will only be shuffled within itself.
+    # Separate Pools: Each pool of randomized entrances with shuffle into itself (e.g., dungeons into dungeons).
     # Mix Pools: All pools of randomized entrances will be combined into one pool to be shuffled.
     separate_pools: 50
     mix_pools: 0
 
   randomize_enemies:
-    # Randomizes the placement of non-boss enemies. This option is an incomplete option from the base randomizer and may
-    # result in unbeatable seeds! Use at your own risk!
-    on: 0
-    off: 50
+    # Randomizes the placement of non-boss enemies. This option is an incomplete option from the base randomizer and
+    # may result in unbeatable seeds! Use at your own risk!
+    false: 50
+    true: 0
+
   randomize_starting_island:
     # Randomizes which island you start the game on.
-    on: 0
-    off: 50
+    false: 50
+    true: 0
+
   randomize_charts:
     # DEV NOTE: This option is currently unimplemented and will be ignored.
     # Randomizes which sector is drawn on each Triforce/Treasure Chart.
-    on: 0
-    off: 50
+    false: 50
+    true: 0
 
   hoho_hints:
     # DEV NOTE: This option is currently unimplemented and will be ignored.
-    # Places hints on Old Man Ho Ho.
-    # Old Man Ho Ho appears at 10 different islands in the game. Talk to Old Man Ho Ho to get hints.
-    on: 50
-    off: 0
+    # Places hints on Old Man Ho Ho. Old Man Ho Ho appears at 10 different islands in the game. Talk to Old Man Ho Ho to
+    # get hints.
+    false: 0
+    true: 50
+
   fishmen_hints:
     # DEV NOTE: This option is currently unimplemented and will be ignored.
-    # Places hints on the fishmen.
-    # There is one fishman at each of the 49 islands of the Great Sea. Each fishman must be fed an All-Purpose Bait
-    # before he will give a hint.
-    on: 50
-    off: 0
+    # Places hints on the fishmen. There is one fishman at each of the 49 islands of the Great Sea. Each fishman must be
+    # fed an All-Purpose Bait before he will give a hint.
+    false: 0
+    true: 50
+
   korl_hints:
     # DEV NOTE: This option is currently unimplemented and will be ignored.
-    # Places hints on the King of Red Lions.
-    # Talk to the King of Red Lions to get hints.
-    on: 0
-    off: 50
+    # Places hints on the King of Red Lions. Talk to the King of Red Lions to get hints.
+    false: 50
+    true: 0
+
   num_item_hints:
     # DEV NOTE: This option is currently unimplemented and will be ignored.
-    # The number of item hints that will be placed. Item hints tell you which area contains a particular progress item
-    # in this seed.
-    # If multiple hint placement options are selected, the hint count will be split evenly among the placement options.
-    0: 0
+    # The number of item hints that will be placed. Item hints tell you which area contains a particular progress item in
+    # this seed. If multiple hint placement options are selected, the hint count will be split evenly among the placement
+    # options.
+    #
+    # You can define additional values between the minimum and maximum values.
+    # Minimum value is 0
+    # Maximum value is 15
     15: 50
     random: 0
-    random-low: 0 # any valid number, weighted towards the lower end
-    random-middle: 0 # any valid number, weighted towards the central range
-    random-high: 0 # any valid number, weighted towards the higher end
+    random-low: 0
+    random-high: 0
+
   num_location_hints:
     # DEV NOTE: This option is currently unimplemented and will be ignored.
     # The number of location hints that will be placed. Location hints tell you what item is at a specific location in
-    # this seed.
-    # If multiple hint placement options are selected, the hint count will be split evenly among the placement options.
-    0: 0
+    # this seed. If multiple hint placement options are selected, the hint count will be split evenly among the placement
+    # options.
+    #
+    # You can define additional values between the minimum and maximum values.
+    # Minimum value is 0
+    # Maximum value is 15
     5: 50
-    15: 0
     random: 0
     random-low: 0
-    random-middle: 0
     random-high: 0
+
   num_barren_hints:
     # DEV NOTE: This option is currently unimplemented and will be ignored.
     # The number of barren hints that will be placed. Barren hints tell you that an area does not contain any required
-    # items in this seed.
-    # If multiple hint placement options are selected, the hint count will be split evenly among the placement options.
+    # items in this seed. If multiple hint placement options are selected, the hint count will be split evenly among the
+    # placement options.
+    #
+    # You can define additional values between the minimum and maximum values.
+    # Minimum value is 0
+    # Maximum value is 15
     0: 50
-    15: 0
     random: 0
     random-low: 0
-    random-middle: 0
     random-high: 0
+
   num_path_hints:
     # DEV NOTE: This option is currently unimplemented and will be ignored.
-    # The number of path hints that will be placed. Path hints tell you that an area contains an item that is required
-    # to reach a particular goal in this seed.
-    # If multiple hint placement options are selected, the hint count will be split evenly among the placement options.
+    # The number of path hints that will be placed. Path hints tell you that an area contains an item that is required to
+    # reach a particular goal in this seed. If multiple hint placement options are selected, the hint count will be split
+    # evenly among the placement options.
+    #
+    # You can define additional values between the minimum and maximum values.
+    # Minimum value is 0
+    # Maximum value is 15
     0: 50
-    15: 0
     random: 0
     random-low: 0
-    random-middle: 0
     random-high: 0
+
   cryptic_hints:
     # DEV NOTE: This option is currently unimplemented and will be ignored.
     # When this option is selected, all hints will be phrased cryptically instead of telling you the names of locations
     # and items directly.
-    on: 50
-    off: 0
+    false: 0
+    true: 50
+
   prioritize_remote_hints:
     # DEV NOTE: This option is currently unimplemented and will be ignored.
     # When this option is selected, certain locations that are out of the way and time-consuming to complete will take
     # precedence over normal location hints.
-    on: 0
-    off: 50
+    false: 50
+    true: 0
 
   swift_sail:
     # Sailing speed is doubled and the direction of the wind is always at your back as long as the sail is out.
-    on: 50
-    off: 0
+    false: 0
+    true: 50
+
   instant_text_boxes:
-    # Also, the B button is changed to instantly skip through text as long as you hold it down.
-    on: 50
-    off: 0
+    # Text appears instantly. Also, the B button is changed to instantly skip through text as long as you hold it
+    # down.
+    false: 0
+    true: 50
+
   reveal_full_sea_chart:
     # Start the game with the sea chart fully drawn out.
-    on: 50
-    off: 0
+    false: 0
+    true: 50
+
   add_shortcut_warps_between_dungeons:
     # Adds new warp pots that act as shortcuts connecting dungeons to each other directly. (DRC, FW, TotG, and
-    # separately FF, ET, WT.)
-    # Each pot must be unlocked before it can be used, so you cannot use them to access dungeons you wouldn't already
-    # have access to.
-    on: 0
-    off: 50
+    # separately FF, ET, WT.) Each pot must be unlocked before it can be used, so you cannot use them to access dungeons
+    # you wouldn't already have access to.
+    false: 50
+    true: 0
+
   skip_rematch_bosses:
     # Removes the door in Ganon's Tower that only unlocks when you defeat the rematch versions of Gohma, Kalle Demos,
     # Jalhalla, and Molgera.
-    on: 50
-    off: 0
+    false: 0
+    true: 50
+
   remove_music:
     # Mutes all ingame music.
-    on: 0
-    off: 50
+    false: 50
+    true: 0
 
   death_link:
+    # When you die, everyone dies. Of course the reverse is true too.
     false: 50
     true: 0

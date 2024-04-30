@@ -4,14 +4,16 @@ from Options import Choice, DeathLink, DefaultOnToggle, PerGameCommonOptions, Ra
 
 
 class Dungeons(DefaultOnToggle):
-    """This controls whether dungeons can contain progress items."""
+    """This controls whether dungeons can contain progress items.
+    If off, dungeons will still be randomized, but will only contain optional items you don't need to beat the game."""
 
     display_name = "Dungeons"
 
 
 class TingleChests(Toggle):
     """Tingle Chests that are hidden in dungeons and must be bombed to make them appear. (2 in DRC, 1 each in FW, TotG,
-    ET, and WT)."""
+    ET, and WT).
+    If off, they will still be randomized, but will only contain optional items you don't need to beat the game."""
 
     display_name = "Tingle Chests"
 
@@ -19,133 +21,154 @@ class TingleChests(Toggle):
 class DungeonSecrets(Toggle):
     """DRC, FW, TotG, ET, and WT each have 2-3 secret items within them (11 in total). This controls whether they can be
     progress items. The items are fairly well-hidden (they aren't in chests), so don't select this option unless you're
-    prepared to search each dungeon high and low!"""
+    prepared to search each dungeon high and low!
+    For a list of the dungeon secrets, refer to this Google doc:
+    https://docs.google.com/document/d/1LrjGr6W9970XEA-pzl8OhwnqMqTbQaxCX--M-kdsLos/edit"""
 
     display_name = "Dungeon Secrets"
 
 
 class PuzzleSecretCaves(DefaultOnToggle):
-    """This controls whether puzzle-focused secret caves can contain progress items."""
+    """This controls whether puzzle-focused secret caves can contain progress items.
+    If off, they will still be randomized, but will only contain optional items you don't need to beat the game."""
 
     display_name = "Puzzle Secret Caves"
 
 
 class CombatSecretCaves(Toggle):
-    """This controls whether combat-focused secret caves (besides Savage Labyrinth) can contain progress items."""
+    """This controls whether combat-focused secret caves (besides Savage Labyrinth) can contain progress items.
+    If off, they will still be randomized, but will only contain optional items you don't need to beat the game."""
 
     display_name = "Combat Secret Caves"
 
 
 class SavageLabyrinth(Toggle):
-    """This controls whether the Savage Labyrinth can contain progress items."""
+    """This controls whether the Savage Labyrinth can contain progress items.
+    If off, it will still be randomized, but will only contain optional items you don't need to beat the game."""
 
     display_name = "Savage Labyrinth"
 
 
 class GreatFairies(DefaultOnToggle):
-    """This controls whether the items given by Great Fairies can be progress items."""
+    """This controls whether the items given by Great Fairies can be progress items.
+    If off, they will still be randomized, but will only contain optional items you don't need to beat the game."""
 
     display_name = "Great Fairies"
 
 
 class ShortSidequests(Toggle):
-    """This controls whether sidequests that can be completed quickly can reward progress items."""
+    """This controls whether sidequests that can be completed quickly can reward progress items.
+    If off, they will still be randomized, but will only reward optional items you don't need to beat the game."""
 
     display_name = "Short Sidequests"
 
 
 class LongSidequests(Toggle):
     """This controls whether long sidequests (e.g. Lenzo's assistant, withered trees, goron trading) can reward progress
-    items."""
+    items.
+    If off, they will still be randomized, but will only reward optional items you don't need to beat the game."""
 
     display_name = "Long Sidequests"
 
 
 class SpoilsTrading(Toggle):
-    """This controls whether the items you get by trading in spoils to NPCs can be progress items."""
+    """This controls whether the items you get by trading in spoils to NPCs can be progress items.
+    If off, they will still be randomized</u>, but will only reward optional items you don't need to beat the game."""
 
     display_name = "Spoils Trading"
 
 
 class Minigames(Toggle):
     """This controls whether most minigames can reward progress items (auctions, mail sorting, barrel shooting, bird-man
-    contest)."""
+    contest).
+    If off, minigames will still be randomized, but will only reward optional items you don't need to beat the game."""
 
     display_name = "Minigames"
 
 
 class Battlesquid(Toggle):
-    """This controls whether the Windfall battleship minigame can reward progress items."""
+    """This controls whether the Windfall battleship minigame can reward progress items.
+    If off, it will still be randomized, but will only reward optional items you don't need to beat the game."""
 
     display_name = "Battlesquid Minigame"
 
 
 class FreeGifts(DefaultOnToggle):
-    """This controls whether gifts freely given by NPCs can be progress items (Tott, Salvage Corp, imprisoned
-    Tingle)."""
+    """This controls whether gifts freely given by NPCs can be progress items (Tott, Salvage Corp, imprisoned Tingle).
+    If off, they will still be randomized, but will only be optional items you don't need to beat the game."""
 
     display_name = "Free Gifts"
 
 
 class Mail(Toggle):
-    """This controls whether mail can contain progress items."""
+    """This controls whether mail can contain progress items.
+    If off, mail will still be randomized, but will only contain optional items you don't need to beat the game."""
 
     display_name = "Mail"
 
 
 class PlatformsRafts(Toggle):
-    """This controls whether lookout platforms and rafts can contain progress items."""
+    """This controls whether lookout platforms and rafts can contain progress items.
+    If off, they will still be randomized, but will only contain optional items you don't need to beat the game."""
 
     display_name = "Lookout Platforms and Rafts"
 
 
 class Submarines(Toggle):
-    """This controls whether submarines can contain progress items."""
+    """This controls whether submarines can contain progress items.
+    If off, submarines will still be randomized, but will only contain optional items you don't need to beat the
+    game."""
 
     display_name = "Submarines"
 
 
 class EyeReefChests(Toggle):
-    """This controls whether the chests that appear after clearing out the eye reefs can contain progress items."""
+    """This controls whether the chests that appear after clearing out the eye reefs can contain progress items.
+    If off, they will still be randomized, but will only contain optional items you don't need to beat the game."""
 
     display_name = "Eye Reef Chests"
 
 
 class BigOctosGunboats(Toggle):
-    """This controls whether the items dropped by Big Octos and Gunboats can contain progress items."""
+    """This controls whether the items dropped by Big Octos and Gunboats can contain progress items.
+    If off, they will still be randomized, but will only contain optional items you don't need to beat the game."""
 
     display_name = "Big Octos and Gunboats"
 
 
 class TriforceCharts(Toggle):
-    """This controls whether the sunken treasure chests marked on Triforce Charts can contain progress items."""
+    """This controls whether the sunken treasure chests marked on Triforce Charts can contain progress items.
+    If off, they will still be randomized, but will only contain optional items you don't need to beat the game."""
 
     display_name = "Sunken Treasure (From Triforce Charts)"
 
 
 class TreasureCharts(Toggle):
-    """This controls whether the sunken treasure chests marked on Treasure Charts can contain progress items."""
+    """This controls whether the sunken treasure chests marked on Treasure Charts can contain progress items.
+    If off, they will still be randomized, but will only contain optional items you don't need to beat the game."""
 
     display_name = "Sunken Treasure (From Treasure Charts)"
 
 
 class ExpensivePurchases(DefaultOnToggle):
     """This controls whether items that cost a lot of rupees can be progress items (Rock Spire shop, auctions, Tingle's
-    letter, trading quest)."""
+    letter, trading quest).
+    If off, they will still be randomized, but will only be optional items you don't need to beat the game."""
 
     display_name = "Expensive Purchases"
 
 
 class IslandPuzzles(Toggle):
-    """This controls whether various island puzzles can contain progress items (e.g. chests hidden in unusual
-    places)."""
+    """This controls whether various island puzzles can contain progress items (e.g. chests hidden in unusual places).
+    If off, they will still be randomized, but will only contain optional items you don't need to beat the game."""
 
     display_name = "Island Puzzles"
 
 
 class Misc(Toggle):
     """Miscellaneous locations that don't fit into any of the above categories (outdoors chests, wind shrine, Cyclos,
-    etc)."""
+    etc).
+    If off, they will still be randomized, but will only contain optional items you don't need to beat the game."""
 
     display_name = "Miscellaneous"
 
@@ -226,16 +249,17 @@ class SwordMode(Choice):
 
 class RequiredBosses(Toggle):
     """In this mode, you will not be allowed to beat the game until certain randomly-chosen bosses are defeated. Nothing
-    in dungeons for other bosses will ever be required. You can see which islands have the required bosses on them by
-    opening the sea chart and checking which islands have blue quest markers."""
+    in dungeons for other bosses will ever be required.
+    You can see which islands have the required bosses on them by opening the sea chart and checking which islands have
+    blue quest markers."""
 
     display_name = "Required Bosses Mode"
 
 
 class NumRequiredBosses(Range):
-    """Select the number of randomly-chosen bosses that are required in Required Bosses Mode. The door to Puppet Ganon
-    will not unlock until you've defeated all of these bosses. Nothing in dungeons for other bosses will ever be
-    required."""
+    """Select the number of randomly-chosen bosses that are required in Required Bosses Mode.
+    The door to Puppet Ganon will not unlock until you've defeated all of these bosses. Nothing in dungeons for other
+    bosses will ever be required."""
 
     display_name = "Number of Required Bosses"
     range_start = 1
@@ -251,7 +275,8 @@ class ChestTypeMatchesContents(Toggle):
 
 
 class TrapChests(Toggle):
-    """Allows the randomizer to place several trapped chests across the game that do not give you items. Perfect for
+    """DEV NOTE: This option is currently unimplemented and will be ignored.
+    Allows the randomizer to place several trapped chests across the game that do not give you items. Perfect for
     spicing up any run!"""
 
     display_name = "Enable Trap Chests"
@@ -264,8 +289,9 @@ class HeroMode(Toggle):
 
 
 class LogicObscurity(Choice):
-    """Obscure tricks are ways of obtaining items that are not obvious and may involve thinking outside the box. This
-    option controls the maximum difficulty of obscure tricks the randomizer will require you to do to beat the game."""
+    """Obscure tricks are ways of obtaining items that are not obvious and may involve thinking outside the box.
+    This option controls the maximum difficulty of obscure tricks the randomizer will require you to do to beat the
+    game."""
 
     display_name = "Obscure Tricks Required"
     option_none = 0
@@ -277,8 +303,9 @@ class LogicObscurity(Choice):
 
 class LogicPrecision(Choice):
     """Precise tricks are ways of obtaining items that involve difficult inputs such as accurate aiming or perfect
-    timing. This option controls the maximum difficulty of precise tricks the randomizer will require you to do to beat
-    the game."""
+    timing.
+    This option controls the maximum difficulty of precise tricks the randomizer will require you to do to beat the
+    game."""
 
     display_name = "Precise Tricks Required"
     option_none = 0
@@ -289,8 +316,8 @@ class LogicPrecision(Choice):
 
 
 class RandomizeDungeonEntrances(Toggle):
-    """Shuffles around which dungeon entrances take you into which dungeons. (No effect on Forsaken Fortress or Ganon's
-    Tower.)"""
+    """Shuffles around which dungeon entrances take you into which dungeons.
+    (No effect on Forsaken Fortress or Ganon's Tower.)"""
 
     display_name = "Randomize Dungeons"
 
@@ -302,13 +329,15 @@ class RandomizeSecretCavesEntrances(Toggle):
 
 
 class RandomizeMinibossEntrances(Toggle):
-    """Allows dungeon miniboss doors to act as entrances to be randomized."""
+    """Allows dungeon miniboss doors to act as entrances to be randomized.
+    If on with random dungeon entrances, dungeons may nest within each other, forming chains of connected dungeons."""
 
     display_name = "Randomize Nested Minibosses"
 
 
 class RandomizeBossEntrances(Toggle):
-    """Allows dungeon boss doors to act as entrances to be randomized."""
+    """Allows dungeon boss doors to act as entrances to be randomized.
+    If on with random dungeon entrances, dungeons may nest within each other, forming chains of connected dungeons."""
 
     display_name = "Randomize Nested Bosses"
 
@@ -327,9 +356,9 @@ class RandomizeFairyFountainEntrances(Toggle):
 
 
 class MixEntrances(Choice):
-    """Controls how different types (pools) of entrances should be randomized.
+    """Controls how the different types (pools) of randomized entrances should be shuffled.
     Separate Pools: Each pool of randomized entrances with shuffle into itself (e.g., dungeons into dungeons).
-    Mix Pools: Combine all pools of randomized entrances into one big pool and shuffle all entrances together."""
+    Mix Pools: All pools of randomized entrances will be combined into one pool to be shuffled."""
 
     display_name = "Mix Entrances"
     option_separate_pools = 0
@@ -339,7 +368,7 @@ class MixEntrances(Choice):
 
 class RandomizeEnemies(Toggle):
     """Randomizes the placement of non-boss enemies. This option is an incomplete option from the base randomizer and
-    may result in unbeatable seeds! Use at  your own risk!"""
+    may result in unbeatable seeds! Use at your own risk!"""
 
     display_name = "Randomize Enemies"
 
@@ -357,35 +386,40 @@ class RandomizeStartingIsland(Toggle):
 
 
 class RandomizeCharts(Toggle):
-    """Randomizes which sector is drawn on each Triforce/Treasure Chart."""
+    """DEV NOTE: This option is currently unimplemented and will be ignored.
+    Randomizes which sector is drawn on each Triforce/Treasure Chart."""
 
     display_name = "Randomize Charts"
 
 
 class HoHoHints(DefaultOnToggle):
-    """Places hints on Old Man Ho Ho. Old Man Ho Ho appears at 10 different islands in the game. Talk to Old Man Ho Ho
-    to get hints."""
+    """DEV NOTE: This option is currently unimplemented and will be ignored.
+    Places hints on Old Man Ho Ho. Old Man Ho Ho appears at 10 different islands in the game. Talk to Old Man Ho Ho to
+    get hints."""
 
     display_name = "Place Hints on Old Man Ho Ho"
 
 
 class FishmenHints(DefaultOnToggle):
-    """Places hints on the fishmen. There is one fishman at each of the 49 islands of the Great Sea. Each fishman must
-    be fed an All-Purpose Bait before he will give a hint."""
+    """DEV NOTE: This option is currently unimplemented and will be ignored.
+    Places hints on the fishmen. There is one fishman at each of the 49 islands of the Great Sea. Each fishman must be
+    fed an All-Purpose Bait before he will give a hint."""
 
     display_name = "Place Hints on Fishmen"
 
 
 class KoRLHints(Toggle):
-    """Places hints on the King of Red Lions. Talk to the King of Red Lions to get hints."""
+    """DEV NOTE: This option is currently unimplemented and will be ignored.
+    Places hints on the King of Red Lions. Talk to the King of Red Lions to get hints."""
 
     display_name = "Place Hints on King of Red Lions"
 
 
 class NumItemHints(Range):
-    """The number of item hints that will be placed. Item hints tell you which area contains a particular progress item
-    in this seed. If multiple hint placement options are selected, the hint count will be split evenly among the
-    placement options."""
+    """DEV NOTE: This option is currently unimplemented and will be ignored.
+    The number of item hints that will be placed. Item hints tell you which area contains a particular progress item in
+    this seed. If multiple hint placement options are selected, the hint count will be split evenly among the placement
+    options."""
 
     display_name = "Item Hints"
     range_start = 0
@@ -394,7 +428,8 @@ class NumItemHints(Range):
 
 
 class NumLocationHints(Range):
-    """The number of location hints that will be placed. Location hints tell you what item is at a specific location in
+    """DEV NOTE: This option is currently unimplemented and will be ignored.
+    The number of location hints that will be placed. Location hints tell you what item is at a specific location in
     this seed. If multiple hint placement options are selected, the hint count will be split evenly among the placement
     options."""
 
@@ -405,7 +440,8 @@ class NumLocationHints(Range):
 
 
 class NumBarrenHints(Range):
-    """The number of barren hints that will be placed. Barren hints tell you that an area does not contain any required
+    """DEV NOTE: This option is currently unimplemented and will be ignored.
+    The number of barren hints that will be placed. Barren hints tell you that an area does not contain any required
     items in this seed. If multiple hint placement options are selected, the hint count will be split evenly among the
     placement options."""
 
@@ -416,9 +452,10 @@ class NumBarrenHints(Range):
 
 
 class NumPathHints(Range):
-    """The number of path hints that will be placed. Path hints tell you that an area contains an item that is required
-    to reach a particular goal in this seed. If multiple hint placement options are selected, the hint count will be
-    split evenly among the placement options."""
+    """DEV NOTE: This option is currently unimplemented and will be ignored.
+    The number of path hints that will be placed. Path hints tell you that an area contains an item that is required to
+    reach a particular goal in this seed. If multiple hint placement options are selected, the hint count will be split
+    evenly among the placement options."""
 
     display_name = "Path Hints"
     range_start = 0
@@ -427,14 +464,16 @@ class NumPathHints(Range):
 
 
 class CrypticHints(DefaultOnToggle):
-    """When this option is selected, all hints will be phrased cryptically instead of telling you the names of locations
+    """DEV NOTE: This option is currently unimplemented and will be ignored.
+    When this option is selected, all hints will be phrased cryptically instead of telling you the names of locations
     and items directly."""
 
     display_name = "Use Cryptic Text for Hints"
 
 
 class PrioritizeRemoteHints(Toggle):
-    """When this option is selected, certain locations that are out of the way and time-consuming to complete will take
+    """DEV NOTE: This option is currently unimplemented and will be ignored.
+    When this option is selected, certain locations that are out of the way and time-consuming to complete will take
     precedence over normal location hints."""
 
     display_name = "Prioritize Remote Location Hints"
