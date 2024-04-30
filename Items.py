@@ -16,7 +16,7 @@ class TWWItem(Item):
     game: str = "The Wind Waker"
 
     def __init__(self, name: str, player: int, data: TWWItemData, force_nonprogress: bool):
-        adjusted_classification = IC.useful if force_nonprogress else data.classification
+        adjusted_classification = IC.filler if force_nonprogress else data.classification
         super(TWWItem, self).__init__(name, adjusted_classification, TWWItem.get_apid(data.code), player)
 
         self.type = data.type
@@ -29,7 +29,7 @@ class TWWItem(Item):
 
 
 ITEM_TABLE: dict[str, TWWItemData] = {
-    "Telescope":               TWWItemData("Item",    IC.useful,                       0,  1, 0x20),
+    "Telescope":               TWWItemData("Item",    IC.filler,                       0,  1, 0x20),
   # "Boat's Sail":             TWWItemData("Item",    IC.progression,                  1,  1, 0x78),
     "Wind Waker":              TWWItemData("Item",    IC.progression,                  2,  1, 0x22),
     "Grappling Hook":          TWWItemData("Item",    IC.progression,                  3,  1, 0x25),
@@ -46,8 +46,8 @@ ITEM_TABLE: dict[str, TWWItemData] = {
     "Skull Hammer":            TWWItemData("Item",    IC.progression,                 14,  1, 0x33),
     "Power Bracelets":         TWWItemData("Item",    IC.progression,                 15,  1, 0x28),
 
-    "Hero's Charm":            TWWItemData("Item",    IC.useful,                      16,  1, 0x43),
-    "Hurricane Spin":          TWWItemData("Item",    IC.useful,                      17,  1, 0xAA),
+    "Hero's Charm":            TWWItemData("Item",    IC.filler,                      16,  1, 0x43),
+    "Hurricane Spin":          TWWItemData("Item",    IC.filler,                      17,  1, 0xAA),
     "Dragon Tingle Statue":    TWWItemData("Item",    IC.progression,                 18,  1, 0xA3),
     "Forbidden Tingle Statue": TWWItemData("Item",    IC.progression,                 19,  1, 0xA4),
     "Goddess Tingle Statue":   TWWItemData("Item",    IC.progression,                 20,  1, 0xA5),
@@ -79,13 +79,13 @@ ITEM_TABLE: dict[str, TWWItemData] = {
     "Joy Pendant":             TWWItemData("Spoil",   IC.filler,                      43,  9, 0x1F),
 
     "All-Purpose Bait":        TWWItemData("Bait",    IC.filler,                      44,  1, 0x82),
-    "Hyoi Pear":               TWWItemData("Bait",    IC.useful,                      45,  4, 0x83),
+    "Hyoi Pear":               TWWItemData("Bait",    IC.filler,                      45,  4, 0x83),
 
     "Note to Mom":             TWWItemData("Letter",  IC.progression,                 46,  1, 0x99),
     "Maggie's Letter":         TWWItemData("Letter",  IC.progression,                 47,  1, 0x9A),
     "Moblin's Letter":         TWWItemData("Letter",  IC.progression,                 48,  1, 0x9B),
     "Cabana Deed":             TWWItemData("Letter",  IC.progression,                 49,  1, 0x9C),
-    "Fill-Up Coupon":          TWWItemData("Letter",  IC.useful,                      50,  1, 0x9E),
+    "Fill-Up Coupon":          TWWItemData("Letter",  IC.filler,                      50,  1, 0x9E),
 
     "Nayru's Pearl":           TWWItemData("Pearl",   IC.progression,                 51,  1, 0x69),
     "Din's Pearl":             TWWItemData("Pearl",   IC.progression,                 52,  1, 0x6A),
@@ -97,7 +97,7 @@ ITEM_TABLE: dict[str, TWWItemData] = {
     "Progressive Bow":         TWWItemData("Prog",    IC.progression,                 57,  3, 0x27),
     "Progressive Magic Meter": TWWItemData("Prog",    IC.progression,                 58,  2, 0xB1),
     "Progressive Quiver":      TWWItemData("Prog",    IC.progression,                 59,  2, 0xAF),
-    "Progressive Bomb Bag":    TWWItemData("Prog",    IC.progression,                 60,  2, 0xAD),
+    "Progressive Bomb Bag":    TWWItemData("Prog",    IC.useful,                      60,  2, 0xAD),
     "Progressive Wallet":      TWWItemData("Prog",    IC.progression,                 61,  2, 0xAB),
     "Empty Bottle":            TWWItemData("Prog",    IC.progression,                 62,  4, 0x50),
 
@@ -151,15 +151,15 @@ ITEM_TABLE: dict[str, TWWItemData] = {
     "Treasure Chart 40":       TWWItemData("Chart",   IC.progression_skip_balancing, 110,  1, 0xDF),
     "Treasure Chart 41":       TWWItemData("Chart",   IC.progression_skip_balancing, 111,  1, 0xD2),
  
-    "Tingle's Chart":          TWWItemData("Chart",   IC.useful,                     112,  1, 0xDC),
+    "Tingle's Chart":          TWWItemData("Chart",   IC.filler,                     112,  1, 0xDC),
     "Ghost Ship Chart":        TWWItemData("Chart",   IC.progression,                113,  1, 0xDB),
-    "Octo Chart":              TWWItemData("Chart",   IC.useful,                     114,  1, 0xCA),
-    "Great Fairy Chart":       TWWItemData("Chart",   IC.useful,                     115,  1, 0xC9),
-    "Secret Cave Chart":       TWWItemData("Chart",   IC.useful,                     116,  1, 0xC6),
-    "Light Ring Chart":        TWWItemData("Chart",   IC.useful,                     117,  1, 0xC5),
-    "Platform Chart":          TWWItemData("Chart",   IC.useful,                     118,  1, 0xC4),
-    "Beedle's Chart":          TWWItemData("Chart",   IC.useful,                     119,  1, 0xC3),
-    "Submarine Chart":         TWWItemData("Chart",   IC.useful,                     120,  1, 0xC2),
+    "Octo Chart":              TWWItemData("Chart",   IC.filler,                     114,  1, 0xCA),
+    "Great Fairy Chart":       TWWItemData("Chart",   IC.filler,                     115,  1, 0xC9),
+    "Secret Cave Chart":       TWWItemData("Chart",   IC.filler,                     116,  1, 0xC6),
+    "Light Ring Chart":        TWWItemData("Chart",   IC.filler,                     117,  1, 0xC5),
+    "Platform Chart":          TWWItemData("Chart",   IC.filler,                     118,  1, 0xC4),
+    "Beedle's Chart":          TWWItemData("Chart",   IC.filler,                     119,  1, 0xC3),
+    "Submarine Chart":         TWWItemData("Chart",   IC.filler,                     120,  1, 0xC2),
 
     "Green Rupee":             TWWItemData("Rupee",   IC.filler,                     121,  1, 0x01),
     "Blue Rupee":              TWWItemData("Rupee",   IC.filler,                     122,  2, 0x02),
@@ -170,8 +170,8 @@ ITEM_TABLE: dict[str, TWWItemData] = {
     "Silver Rupee":            TWWItemData("Rupee",   IC.filler,                     127, 15, 0x0F),
     "Rainbow Rupee":           TWWItemData("Rupee",   IC.filler,                     128,  1, 0xB8),
 
-    "Piece of Heart":          TWWItemData("Heart",   IC.useful,                     129, 44, 0x07),
-    "Heart Container":         TWWItemData("Heart",   IC.useful,                     130,  6, 0x08),
+    "Piece of Heart":          TWWItemData("Heart",   IC.filler,                     129, 44, 0x07),
+    "Heart Container":         TWWItemData("Heart",   IC.filler,                     130,  6, 0x08),
 
     "DRC Big Key":             TWWItemData("BKey",    IC.progression,                131,  1, 0x14),
     "DRC Small Key":           TWWItemData("SKey",    IC.progression,                132,  4, 0x13),
@@ -183,18 +183,18 @@ ITEM_TABLE: dict[str, TWWItemData] = {
     "ET Small Key":            TWWItemData("SKey",    IC.progression,                139,  3, 0x73),
     "WT Big Key":              TWWItemData("BKey",    IC.progression,                140,  1, 0x81),
     "WT Small Key":            TWWItemData("SKey",    IC.progression,                141,  2, 0x77),
-    "DRC Dungeon Map":         TWWItemData("Map",     IC.useful,                     142,  1, 0x1B),
-    "DRC Compass":             TWWItemData("Compass", IC.useful,                     143,  1, 0x1C),
-    "FW Dungeon Map":          TWWItemData("Map",     IC.useful,                     144,  1, 0x41),
-    "FW Compass":              TWWItemData("Compass", IC.useful,                     145,  1, 0x5A),
-    "TotG Dungeon Map":        TWWItemData("Map",     IC.useful,                     146,  1, 0x5D),
-    "TotG Compass":            TWWItemData("Compass", IC.useful,                     147,  1, 0x5E),
-    "FF Dungeon Map":          TWWItemData("Map",     IC.useful,                     148,  1, 0x5F),
-    "FF Compass":              TWWItemData("Compass", IC.useful,                     149,  1, 0x60),
-    "ET Dungeon Map":          TWWItemData("Map",     IC.useful,                     150,  1, 0x75),
-    "ET Compass":              TWWItemData("Compass", IC.useful,                     151,  1, 0x76),
-    "WT Dungeon Map":          TWWItemData("Map",     IC.useful,                     152,  1, 0x84),
-    "WT Compass":              TWWItemData("Compass", IC.useful,                     153,  1, 0x85),
+    "DRC Dungeon Map":         TWWItemData("Map",     IC.filler,                     142,  1, 0x1B),
+    "DRC Compass":             TWWItemData("Compass", IC.filler,                     143,  1, 0x1C),
+    "FW Dungeon Map":          TWWItemData("Map",     IC.filler,                     144,  1, 0x41),
+    "FW Compass":              TWWItemData("Compass", IC.filler,                     145,  1, 0x5A),
+    "TotG Dungeon Map":        TWWItemData("Map",     IC.filler,                     146,  1, 0x5D),
+    "TotG Compass":            TWWItemData("Compass", IC.filler,                     147,  1, 0x5E),
+    "FF Dungeon Map":          TWWItemData("Map",     IC.filler,                     148,  1, 0x5F),
+    "FF Compass":              TWWItemData("Compass", IC.filler,                     149,  1, 0x60),
+    "ET Dungeon Map":          TWWItemData("Map",     IC.filler,                     150,  1, 0x75),
+    "ET Compass":              TWWItemData("Compass", IC.filler,                     151,  1, 0x76),
+    "WT Dungeon Map":          TWWItemData("Map",     IC.filler,                     152,  1, 0x84),
+    "WT Compass":              TWWItemData("Compass", IC.filler,                     153,  1, 0x85),
 
     "Victory":                 TWWItemData("Item",    IC.progression,               None,  1, None),
 }

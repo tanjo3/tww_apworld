@@ -21,6 +21,12 @@ class TWWLogic(LogicMixin):
     def _tww_outside_required_bosses_mode(self, player: int):
         return not self.multiworld.worlds[player].options.required_bosses
 
+    def _tww_can_defeat_all_required_bosses(self, player: int):
+        return all(
+            self.can_reach(loc, "Location", player)
+            for loc in self.multiworld.worlds[player].required_boss_item_locations
+        )
+
     def _tww_obscure_1(self, player: int):
         return (
             self.multiworld.worlds[player].options.logic_obscurity == "normal"

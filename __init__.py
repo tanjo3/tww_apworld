@@ -3,15 +3,14 @@ from dataclasses import fields
 
 import yaml
 
-from BaseClasses import ItemClassification as IC
-from BaseClasses import MultiWorld, Region, Tutorial
-from Fill import fill_restrictive
+from BaseClasses import LocationProgressType, MultiWorld, Region, Tutorial
+from Fill import FillError, fill_restrictive
 from worlds.AutoWorld import WebWorld, World
 from worlds.generic.Rules import add_item_rule
 from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess
 
 from .Items import ITEM_TABLE, TWWItem
-from .Locations import LOCATION_TABLE, VANILLA_DUNGEON_ITEM_LOCATIONS, TWWFlag, TWWLocation
+from .Locations import LOCATION_TABLE, VANILLA_DUNGEON_ITEM_LOCATIONS, TWWFlag, TWWLocation, split_location_name_by_zone
 from .Macros import *
 from .Options import TWWOptions
 from .Regions import *
@@ -101,6 +100,10 @@ class TWWWorld(World):
         self.own_dungeon_item_names: set[str] = set()
         self.any_dungeon_item_names: set[str] = set()
 
+        self.required_boss_item_locations: list[str] = []
+        self.required_dungeons: list[str] = []
+        self.banned_dungeons: list[str] = []
+
     def _get_access_rule(self, region):
         snake_case_region = region.lower().replace("'", "").replace(" ", "_")
         return f"can_access_{snake_case_region}"
@@ -133,6 +136,66 @@ class TWWWorld(World):
             if location.name in ff_dungeon_locations or location.region in dungeon_regions
         ]
 
+    def _randomize_required_bosses(self):
+        dungeon_names = {
+            "Dragon Roost Cavern",
+            "Forbidden Woods",
+            "Tower of the Gods",
+            "Forsaken Fortress",
+            "Earth Temple",
+            "Wind Temple",
+        }
+
+        # If the user enforces a dungeon location to be priority, consider that when selecting required bosses
+        required_dungeons = set()
+        for location_name in self.options.priority_locations.value:
+            dungeon_name, _ = split_location_name_by_zone(location_name)
+            if dungeon_name in dungeon_names:
+                required_dungeons.add(dungeon_name)
+
+        # Ensure that we aren't prioritizing more dungeon locations than requested number of required bosses
+        num_required_bosses = self.options.num_required_bosses
+        if len(required_dungeons) > num_required_bosses:
+            raise FillError("Could not select required bosses to satisfy options set by user")
+
+        # Finish selecting required bosses
+        remaining_dungeon_options = dungeon_names - required_dungeons
+        required_dungeons.update(
+            self.multiworld.random.sample(list(remaining_dungeon_options), num_required_bosses - len(required_dungeons))
+        )
+
+        # Exclude locations which are not in the dungeon of a required boss
+        banned_dungeons = dungeon_names - required_dungeons
+        for location_name, _ in LOCATION_TABLE.items():
+            dungeon_name, _ = split_location_name_by_zone(location_name)
+            if dungeon_name in banned_dungeons:
+                self.multiworld.get_location(location_name, self.player).progress_type = LocationProgressType.EXCLUDED
+
+        # Exclude mail related to banned dungeons
+        if "Forbidden Woods" in banned_dungeons:
+            self.multiworld.get_location("Mailbox - Letter from Orca", self.player).progress_type = (
+                LocationProgressType.EXCLUDED
+            )
+        if "Forsaken Fortress" in banned_dungeons:
+            self.multiworld.get_location("Mailbox - Letter from Aryll", self.player).progress_type = (
+                LocationProgressType.EXCLUDED
+            )
+            self.multiworld.get_location("Mailbox - Letter from Tingle", self.player).progress_type = (
+                LocationProgressType.EXCLUDED
+            )
+        if "Earth Temple" in banned_dungeons:
+            self.multiworld.get_location("Mailbox - Letter from Baito", self.player).progress_type = (
+                LocationProgressType.EXCLUDED
+            )
+
+        # Record the item location names for required bosses
+        possible_boss_item_locations = [loc for loc, data in LOCATION_TABLE.items() if TWWFlag.BOSS in data.flags]
+        self.required_boss_item_locations = [
+            loc for loc in possible_boss_item_locations if split_location_name_by_zone(loc)[0] in required_dungeons
+        ]
+        self.required_dungeons = list(required_dungeons)
+        self.banned_dungeons = list(banned_dungeons)
+
     def _randomize_entrances(self):
         # Copy over the lists of entrances by type
         entrances = [
@@ -163,6 +226,29 @@ class TWWWorld(World):
         ]
 
         entrance_exit_pairs: list[tuple[Region, Region]] = []
+
+        # Force miniboss doors to be vanilla in nonrequired dungeons
+        for miniboss_entrance, miniboss_exit in zip(entrances[1], exits[1]):
+            assert miniboss_entrance.startswith("Miniboss Entrance in ")
+            dungeon_name = miniboss_entrance[len("Miniboss Entrance in ") :]
+            if dungeon_name in self.banned_dungeons:
+                entrances[1].remove(miniboss_entrance)
+                entrance_region = self.multiworld.get_region(miniboss_entrance, self.player)
+                exits[1].remove(miniboss_exit)
+                exit_region = self.multiworld.get_region(miniboss_exit, self.player)
+                entrance_exit_pairs.append((entrance_region, exit_region))
+
+        # Force boss doors to be vanilla in nonrequired dungeons
+        for boss_entrance, boss_exit in zip(entrances[2], exits[2]):
+            assert boss_entrance.startswith("Boss Entrance in ")
+            dungeon_name = boss_entrance[len("Boss Entrance in ") :]
+            if dungeon_name in self.banned_dungeons:
+                entrances[2].remove(boss_entrance)
+                entrance_region = self.multiworld.get_region(boss_entrance, self.player)
+                exits[2].remove(boss_exit)
+                exit_region = self.multiworld.get_region(boss_exit, self.player)
+                entrance_exit_pairs.append((entrance_region, exit_region))
+
         if self.options.mix_entrances == "separate_pools":
             # Connect entrances to exits of the same type
             for option, entrance_group, exit_group in zip(options, entrances, exits):
@@ -305,10 +391,7 @@ class TWWWorld(World):
         for location in self.multiworld.get_locations(self.player):
             # If not all the flags for a location are set, then force that location to have a non-progress item
             if location.flags & enabled_flags != location.flags:
-                add_item_rule(
-                    location,
-                    lambda item: item.classification == IC.useful or item.classification == IC.filler,
-                )
+                location.progress_type = LocationProgressType.EXCLUDED
 
     def generate_early(self):
         # Handle randomization options for dungeon items
@@ -394,16 +477,6 @@ class TWWWorld(World):
             connecting_region = self.multiworld.get_region(entrance, self.player)
             parent_region.connect(connecting_region, rule=rule)
 
-        # Randomize entrances to exits, if the option is set
-        entrance_exit_pairs = self._randomize_entrances()
-
-        # Connect entrances to exits
-        for entrance_region, exit_region in entrance_exit_pairs:
-            rule = lambda state, entrance=entrance_region.name: getattr(Macros, self._get_access_rule(entrance))(
-                state, self.player
-            )
-            entrance_region.connect(exit_region, rule=rule)
-
     def create_item(self, item: str) -> TWWItem:
         # TODO: calculate nonprogress items dynamically
         set_non_progress = False
@@ -419,9 +492,6 @@ class TWWWorld(World):
         raise Exception(f"Invalid item name: {item}")
 
     def pre_fill(self):
-        # Set nonprogress location from options
-        self._set_nonprogress_locations()
-
         # Ban the Bait Bag slot from having bait
         beedle_20 = self.multiworld.get_location("The Great Sea - Beedle's Shop Ship - 20 Rupee Item", self.player)
         add_item_rule(beedle_20, lambda item: item.name not in ["All-Purpose Bait", "Hyoi Pear"])
@@ -466,6 +536,23 @@ class TWWWorld(World):
                 )
             ),
         )
+
+        # Set nonprogress location from options
+        self._set_nonprogress_locations()
+
+        # Select required bosses
+        if self.options.required_bosses:
+            self._randomize_required_bosses()
+
+        # Randomize entrances to exits, if the option is set
+        entrance_exit_pairs = self._randomize_entrances()
+
+        # Connect entrances to exits
+        for entrance_region, exit_region in entrance_exit_pairs:
+            rule = lambda state, entrance=entrance_region.name: getattr(Macros, self._get_access_rule(entrance))(
+                state, self.player
+            )
+            entrance_region.connect(exit_region, rule=rule)
 
     @classmethod
     def stage_pre_fill(cls, multiworld: MultiWorld):
@@ -594,6 +681,7 @@ class TWWWorld(World):
             "Slot": self.player,
             "Name": self.multiworld.get_player_name(self.player),
             "Options": {},
+            "Required Bosses": self.required_boss_item_locations,
             "Locations": {},
             "Entrances": {},
         }

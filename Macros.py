@@ -889,7 +889,7 @@ def can_unlock_puppet_ganon_door(state: CollectionState, player: int):
         and can_defeat_mighty_darknuts(state, player)
         and (
             state._tww_outside_required_bosses_mode(player)
-            or (state._tww_in_required_bosses_mode(player) and can_defeat_all_required_bosses(state, player))
+            or (state._tww_in_required_bosses_mode(player) and state._tww_can_defeat_all_required_bosses(player))
         )
     )
 
@@ -1667,10 +1667,6 @@ def has_chart_for_island_48(state: CollectionState, player: int):
 
 def has_chart_for_island_49(state: CollectionState, player: int):
     return state.has("Treasure Chart 33", player)
-
-
-def can_defeat_all_required_bosses(state: CollectionState, player: int):
-    return True
 
 
 def todo(state: CollectionState, player: int):
