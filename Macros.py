@@ -164,7 +164,7 @@ def has_magic_meter_upgrade(state: CollectionState, player: int):
 
 
 def has_all_8_triforce_shards(state: CollectionState, player: int):
-    return state.has_group("shards", player, 8)
+    return state.has_group("Shards", player, 8)
 
 
 def has_tingle_bombs(state: CollectionState, player: int):
@@ -395,7 +395,7 @@ def can_access_dungeon_entrance_in_forest_haven_sector(state: CollectionState, p
 
 
 def can_access_dungeon_entrance_in_tower_of_the_gods_sector(state: CollectionState, player: int):
-    return state.has_group("pearls", player, 3)
+    return state.has_group("Pearls", player, 3)
 
 
 def can_access_dungeon_entrance_in_forsaken_fortress_sector(state: CollectionState, player: int):

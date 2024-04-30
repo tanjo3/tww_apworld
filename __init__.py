@@ -65,12 +65,12 @@ class TWWWorld(World):
     }
 
     item_name_groups = {
-        "pearls": {
+        "Pearls": {
             "Nayru's Pearl",
             "Din's Pearl",
             "Farore's Pearl",
         },
-        "shards": {
+        "Shards": {
             "Triforce Shard 1",
             "Triforce Shard 2",
             "Triforce Shard 3",
@@ -80,7 +80,7 @@ class TWWWorld(World):
             "Triforce Shard 7",
             "Triforce Shard 8",
         },
-        "tingle_statues": {
+        "Tingle Statues": {
             "Dragon Tingle Statue",
             "Forbidden Tingle Statue",
             "Goddess Tingle Statue",
