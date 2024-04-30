@@ -98,7 +98,7 @@ If Dolphin is not already open, or you have yet to start a new file, you will be
 on the website, this will be `archipelago.gg:<port>`, where `<port>` is the port number. If a game is hosted from the
 `ArchipelagoServer.exe` (without `.exe` on Linux), this will default to `38281` but may be changed in the `host.yaml`.
 8. If you've opened a ROM corresponding to the multiworld to which you are connected, it should authenticate your slot
-name automatically.
+name automatically when you start a new save file.
     * If you are encountering issues with authenticating, ensure that the randomized ROM is open in Dolphin and that it
     corresponds to the multiworld to which you are connecting.
 
