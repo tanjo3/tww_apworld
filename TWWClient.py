@@ -157,7 +157,10 @@ def _give_death(ctx: TWWContext):
         write_short(CURR_HEALTH_ADDR, 0)
 
 
-def _give_item(ctx: TWWContext, item_name: str):
+def _give_item(ctx: TWWContext, item_name: str) -> bool:
+    if not check_ingame() or dolphin_memory_engine.read_byte(CURR_STAGE_ID_ADDR) == 0xFF:
+        return False
+
     item_id = ITEM_TABLE[item_name].item_id
 
     # Loop through the give item array, placing the item in an empty slot
@@ -172,7 +175,7 @@ def _give_item(ctx: TWWContext, item_name: str):
 
 
 async def give_items(ctx: TWWContext):
-    if check_ingame():
+    if check_ingame() and dolphin_memory_engine.read_byte(CURR_STAGE_ID_ADDR) != 0xFF:
         # Read the expected index of the player, which is the index of the latest item they've received
         expected_idx = read_short(EXPECTED_INDEX_ADDR)
 
@@ -298,6 +301,8 @@ async def dolphin_sync_task(ctx: TWWContext):
         try:
             if dolphin_memory_engine.is_hooked() and ctx.dolphin_status == CONNECTION_CONNECTED_STATUS:
                 if not check_ingame():
+                    # Reset give item array while not in game
+                    dolphin_memory_engine.write_bytes(GIVE_ITEM_ARRAY_ADDR, bytes([0xFF] * ctx.len_give_item_array))
                     await asyncio.sleep(0.1)
                     continue
                 if ctx.slot:
@@ -310,7 +315,7 @@ async def dolphin_sync_task(ctx: TWWContext):
                         ctx.auth = read_string(SLOT_NAME_ADDR, 0x40)
                     if ctx.awaiting_rom:
                         await ctx.server_auth()
-                await asyncio.sleep(0.5)
+                await asyncio.sleep(0.1)
             else:
                 if ctx.dolphin_status == CONNECTION_CONNECTED_STATUS:
                     logger.info("Connection to Dolphin lost, reconnecting...")
