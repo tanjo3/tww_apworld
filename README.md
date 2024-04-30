@@ -20,7 +20,7 @@ location from the Archipelago server.
 ## Which locations get shuffled?
 
 All randomizable locations will have their items shuffled each seed. However, the randomizer is designed so that only
-certain groups of locations can contain progression items. The remaining locations will only contain items unnecessary
+certain groups of locations can contain progression items. The remaining locations will only include items unnecessary
 to beat the game, such as rupees or Heart Pieces.
 
 ## What is the goal of The Wind Waker?
@@ -30,25 +30,45 @@ fully-powered Master Sword (unless it's swordless mode), Light Arrows, and any o
 
 ## I need help! What do I do?
 
-Refer to the [FAQ](https://lagolunatic.github.io/wwrando/faq/) first. If you are still stuck, please ask in the Wind
-Waker thread (under `future-game-design`) in the Archipelago server.
+Refer to the [FAQ](https://lagolunatic.github.io/wwrando/faq/) first. Then, try the
+[troubleshooting](https://github.com/tanjo3/tww_apworld/blob/master/docs/setup_en.md#troubleshooting) steps in the setup
+guide. If you are still stuck, please ask in the Wind Waker thread (under `future-game-design`) in the Archipelago
+server.
 
 ## Known issues
 
+- Randomized freestanding rupees, spoils, and bait will also be given to the player picking up the item. The item will
+  be sent properly, but the collecting player will receive an extra copy.
 - Some locations have been reported to be sent earlier or later than intended:
+  - Windfall Island - Mrs. Marie - Give 40 Joy Pendants
   - Windfall Island - Lenzo's House - Become Lenzo's Assistant
   - Windfall Island - Linda and Anton
+  - Dragon Roost Island - Wind Shrine
   - Tower of the Gods - Stone Tablet
   - Mailbox - Letter from Hoskit's Girlfriend
   - Mailbox - Letter from Baito's Mother
-- Salvages from random light rings (which are not randomized) will not work.
+- Demo items (items which are held over Link's head) which are **not** randomized, such as rupees from salvages from
+  random light rings or rewards from minigames, will not work.
+- Item get messages for progressive items received on locations that send earlier than intended will be incorrect. This
+  does not affect gameplay.
+- The Heart Piece count in item get messages will be off by one. This does not affect gameplay.
+- It has been reported that sometimes you will receive an extra copy of an item you've received.
+- It has been reported that item links can be buggy. Nothing game-breaking, but do be aware of it.
 
 Feel free to report any other issues in the Wind Waker thread in the Archipelago server! I'll take a look and see what I
 can do. Suggestions for improvements are also welcome.
 
 ## Planned Features
 
-- Support for remaining randomization options (such as required bosses mode)
+- Required bosses mode
+- Randomized charts
+- Option for adding Tingle Tuner logic to Tingle Chests
+- Dynamic CTMC based on enabled options
+- Properly excluding locations based on options
+- Hint implementation from base random (hint placement options and hint types)
+- Integration with Archipelago's hint system (e.g., auction hints)
+- EnergyLink support
+- Continued bugfixes
 
 ## Running from source
 
