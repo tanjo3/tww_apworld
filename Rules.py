@@ -1489,7 +1489,7 @@ def set_rules(world: MultiWorld, player: int):
     )
     set_rule(
         world.get_location("Tingle Island - Sunken Treasure", player),
-        lambda state: state.has("Grappling Hook", player) and state._tww_has_chart_for_island(player, 11),
+        lambda state: state.has("Grappling Hook", player) and state._tww_has_chart_for_island(player, 17),
     )
     set_rule(
         world.get_location("Northern Triangle Island - Sunken Treasure", player),
