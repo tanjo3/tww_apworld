@@ -810,7 +810,6 @@ class TWWWorld(World):
             "num_location_hints": self.options.num_location_hints.value,
             "num_barren_hints": self.options.num_barren_hints.value,
             "num_path_hints": self.options.num_path_hints.value,
-            "cryptic_hints": self.options.cryptic_hints.value,
             "prioritize_remote_hints": self.options.prioritize_remote_hints.value,
             "swift_sail": self.options.swift_sail.value,
             "instant_text_boxes": self.options.instant_text_boxes.value,

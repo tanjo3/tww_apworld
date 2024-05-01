@@ -484,14 +484,6 @@ class NumPathHints(Range):
     default = 0
 
 
-class CrypticHints(DefaultOnToggle):
-    """DEV NOTE: This option is currently unimplemented and will be ignored.
-    When this option is selected, all hints will be phrased cryptically instead of telling you the names of locations
-    and items directly."""
-
-    display_name = "Use Cryptic Text for Hints"
-
-
 class PrioritizeRemoteHints(Toggle):
     """DEV NOTE: This option is currently unimplemented and will be ignored.
     When this option is selected, certain locations that are out of the way and time-consuming to complete will take
@@ -597,7 +589,6 @@ class TWWOptions(PerGameCommonOptions):
     num_location_hints: NumLocationHints
     num_barren_hints: NumBarrenHints
     num_path_hints: NumPathHints
-    cryptic_hints: CrypticHints
     prioritize_remote_hints: PrioritizeRemoteHints
     swift_sail: SwiftSail
     instant_text_boxes: InstantTextBoxes
