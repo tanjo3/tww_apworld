@@ -414,7 +414,6 @@ The Wind Waker:
     true: 0
 
   randomize_charts:
-    # DEV NOTE: This option is currently unimplemented and will be ignored.
     # Randomizes which sector is drawn on each Triforce/Treasure Chart.
     false: 50
     true: 0

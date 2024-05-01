@@ -9,7 +9,7 @@ from worlds.AutoWorld import WebWorld, World
 from worlds.generic.Rules import add_item_rule
 from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess
 
-from .Items import ITEM_TABLE, TWWItem
+from .Items import ISLAND_NUMBER_TO_CHART_NAME, ITEM_TABLE, TWWItem
 from .Locations import (
     DUNGEON_NAMES,
     LOCATION_TABLE,
@@ -107,6 +107,8 @@ class TWWWorld(World):
         self.own_dungeon_item_names: set[str] = set()
         self.any_dungeon_item_names: set[str] = set()
 
+        self.island_number_to_chart_name = ISLAND_NUMBER_TO_CHART_NAME.copy()
+
         self.required_boss_item_locations: list[str] = []
         self.required_dungeons: list[str] = []
         self.banned_dungeons: list[str] = []
@@ -142,6 +144,20 @@ class TWWWorld(World):
             for location in self.multiworld.get_locations(self.player)
             if location.name in ff_dungeon_locations or location.region in dungeon_regions
         ]
+
+    def _randomize_charts(self):
+        # This code comes straight from the base randomizer's chart randomizer.
+
+        original_item_names = list(self.island_number_to_chart_name.values())
+
+        # Shuffles the list of island numbers.
+        # The shuffled island numbers determine which sector each chart points to.
+        shuffled_island_numbers = list(self.island_number_to_chart_name.keys())
+        self.multiworld.random.shuffle(shuffled_island_numbers)
+
+        for original_item_name in original_item_names:
+            shuffled_island_number = shuffled_island_numbers.pop()
+            self.island_number_to_chart_name[shuffled_island_number] = original_item_name
 
     def _randomize_required_bosses(self):
         dungeon_names = set(DUNGEON_NAMES)
@@ -446,6 +462,10 @@ class TWWWorld(World):
                 self.options.start_inventory.value.get("Progressive Sword", 0) + 1
             )
 
+        # Randomize which chart points to each sector, if the option is enabled
+        if self.options.randomize_charts:
+            self._randomize_charts()
+
     def create_regions(self):
         # "Menu" is the required starting point
         menu_region = Region("Menu", self.player, self.multiworld)
@@ -691,6 +711,7 @@ class TWWWorld(World):
             "Required Bosses": self.required_boss_item_locations,
             "Locations": {},
             "Entrances": {},
+            "Charts": self.island_number_to_chart_name,
         }
 
         # Output relevant options to file

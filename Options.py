@@ -401,8 +401,7 @@ class RandomizeStartingIsland(Toggle):
 
 
 class RandomizeCharts(Toggle):
-    """DEV NOTE: This option is currently unimplemented and will be ignored.
-    Randomizes which sector is drawn on each Triforce/Treasure Chart."""
+    """Randomizes which sector is drawn on each Triforce/Treasure Chart."""
 
     display_name = "Randomize Charts"
 

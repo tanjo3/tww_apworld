@@ -6,6 +6,20 @@ from .Macros import *
 
 
 class TWWLogic(LogicMixin):
+    def _tww_has_chart_for_island(self, player: int, island_number: int):
+        chart_item_name = self.multiworld.worlds[player].island_number_to_chart_name[island_number]
+
+        if "Triforce Chart" in chart_item_name:
+            return self.has(chart_item_name, player) and has_any_wallet_upgrade(self, player)
+        else:
+            return self.has(chart_item_name, player)
+
+    def _tww_can_defeat_all_required_bosses(self, player: int):
+        return all(
+            self.can_reach(loc, "Location", player)
+            for loc in self.multiworld.worlds[player].required_boss_item_locations
+        )
+
     def _tww_rematch_bosses_skipped(self, player: int):
         return self.multiworld.worlds[player].options.skip_rematch_bosses
 
@@ -20,12 +34,6 @@ class TWWLogic(LogicMixin):
 
     def _tww_outside_required_bosses_mode(self, player: int):
         return not self.multiworld.worlds[player].options.required_bosses
-
-    def _tww_can_defeat_all_required_bosses(self, player: int):
-        return all(
-            self.can_reach(loc, "Location", player)
-            for loc in self.multiworld.worlds[player].required_boss_item_locations
-        )
 
     def _tww_obscure_1(self, player: int):
         return (
@@ -1409,38 +1417,38 @@ def set_rules(world: MultiWorld, player: int):
     # Sunken Treasure
     set_rule(
         world.get_location("Forsaken Fortress Sector - Sunken Treasure", player),
-        lambda state: state.has("Grappling Hook", player) and has_chart_for_island_1(state, player),
+        lambda state: state.has("Grappling Hook", player) and state._tww_has_chart_for_island(player, 1),
     )
     set_rule(
         world.get_location("Star Island - Sunken Treasure", player),
-        lambda state: state.has("Grappling Hook", player) and has_chart_for_island_2(state, player),
+        lambda state: state.has("Grappling Hook", player) and state._tww_has_chart_for_island(player, 2),
     )
     set_rule(
         world.get_location("Northern Fairy Island - Sunken Treasure", player),
-        lambda state: state.has("Grappling Hook", player) and has_chart_for_island_3(state, player),
+        lambda state: state.has("Grappling Hook", player) and state._tww_has_chart_for_island(player, 3),
     )
     set_rule(
         world.get_location("Gale Isle - Sunken Treasure", player),
-        lambda state: state.has("Grappling Hook", player) and has_chart_for_island_4(state, player),
+        lambda state: state.has("Grappling Hook", player) and state._tww_has_chart_for_island(player, 4),
     )
     set_rule(
         world.get_location("Crescent Moon Island - Sunken Treasure", player),
-        lambda state: state.has("Grappling Hook", player) and has_chart_for_island_5(state, player),
+        lambda state: state.has("Grappling Hook", player) and state._tww_has_chart_for_island(player, 5),
     )
     set_rule(
         world.get_location("Seven-Star Isles - Sunken Treasure", player),
         lambda state: state.has("Grappling Hook", player)
-        and has_chart_for_island_6(state, player)
+        and state._tww_has_chart_for_island(player, 6)
         and (state.has("Bombs", player) or state._tww_precise_1(player)),
     )
     set_rule(
         world.get_location("Overlook Island - Sunken Treasure", player),
-        lambda state: state.has("Grappling Hook", player) and has_chart_for_island_7(state, player),
+        lambda state: state.has("Grappling Hook", player) and state._tww_has_chart_for_island(player, 7),
     )
     set_rule(
         world.get_location("Four-Eye Reef - Sunken Treasure", player),
         lambda state: state.has("Grappling Hook", player)
-        and has_chart_for_island_8(state, player)
+        and state._tww_has_chart_for_island(player, 8)
         and (
             state.has("Bombs", player)
             or state._tww_precise_1(player)
@@ -1449,60 +1457,60 @@ def set_rules(world: MultiWorld, player: int):
     )
     set_rule(
         world.get_location("Mother and Child Isles - Sunken Treasure", player),
-        lambda state: state.has("Grappling Hook", player) and has_chart_for_island_9(state, player),
+        lambda state: state.has("Grappling Hook", player) and state._tww_has_chart_for_island(player, 9),
     )
     set_rule(
         world.get_location("Spectacle Island - Sunken Treasure", player),
-        lambda state: state.has("Grappling Hook", player) and has_chart_for_island_10(state, player),
+        lambda state: state.has("Grappling Hook", player) and state._tww_has_chart_for_island(player, 10),
     )
     set_rule(
         world.get_location("Windfall Island - Sunken Treasure", player),
-        lambda state: state.has("Grappling Hook", player) and has_chart_for_island_11(state, player),
+        lambda state: state.has("Grappling Hook", player) and state._tww_has_chart_for_island(player, 11),
     )
     set_rule(
         world.get_location("Pawprint Isle - Sunken Treasure", player),
-        lambda state: state.has("Grappling Hook", player) and has_chart_for_island_12(state, player),
+        lambda state: state.has("Grappling Hook", player) and state._tww_has_chart_for_island(player, 12),
     )
     set_rule(
         world.get_location("Dragon Roost Island - Sunken Treasure", player),
-        lambda state: state.has("Grappling Hook", player) and has_chart_for_island_13(state, player),
+        lambda state: state.has("Grappling Hook", player) and state._tww_has_chart_for_island(player, 13),
     )
     set_rule(
         world.get_location("Flight Control Platform - Sunken Treasure", player),
-        lambda state: state.has("Grappling Hook", player) and has_chart_for_island_14(state, player),
+        lambda state: state.has("Grappling Hook", player) and state._tww_has_chart_for_island(player, 14),
     )
     set_rule(
         world.get_location("Western Fairy Island - Sunken Treasure", player),
-        lambda state: state.has("Grappling Hook", player) and has_chart_for_island_15(state, player),
+        lambda state: state.has("Grappling Hook", player) and state._tww_has_chart_for_island(player, 15),
     )
     set_rule(
         world.get_location("Rock Spire Isle - Sunken Treasure", player),
-        lambda state: state.has("Grappling Hook", player) and has_chart_for_island_16(state, player),
+        lambda state: state.has("Grappling Hook", player) and state._tww_has_chart_for_island(player, 16),
     )
     set_rule(
         world.get_location("Tingle Island - Sunken Treasure", player),
-        lambda state: state.has("Grappling Hook", player) and has_chart_for_island_17(state, player),
+        lambda state: state.has("Grappling Hook", player) and state._tww_has_chart_for_island(player, 11),
     )
     set_rule(
         world.get_location("Northern Triangle Island - Sunken Treasure", player),
-        lambda state: state.has("Grappling Hook", player) and has_chart_for_island_18(state, player),
+        lambda state: state.has("Grappling Hook", player) and state._tww_has_chart_for_island(player, 18),
     )
     set_rule(
         world.get_location("Eastern Fairy Island - Sunken Treasure", player),
-        lambda state: state.has("Grappling Hook", player) and has_chart_for_island_19(state, player),
+        lambda state: state.has("Grappling Hook", player) and state._tww_has_chart_for_island(player, 19),
     )
     set_rule(
         world.get_location("Fire Mountain - Sunken Treasure", player),
-        lambda state: state.has("Grappling Hook", player) and has_chart_for_island_20(state, player),
+        lambda state: state.has("Grappling Hook", player) and state._tww_has_chart_for_island(player, 20),
     )
     set_rule(
         world.get_location("Star Belt Archipelago - Sunken Treasure", player),
-        lambda state: state.has("Grappling Hook", player) and has_chart_for_island_21(state, player),
+        lambda state: state.has("Grappling Hook", player) and state._tww_has_chart_for_island(player, 21),
     )
     set_rule(
         world.get_location("Three-Eye Reef - Sunken Treasure", player),
         lambda state: state.has("Grappling Hook", player)
-        and has_chart_for_island_22(state, player)
+        and state._tww_has_chart_for_island(player, 22)
         and (
             state.has("Bombs", player)
             or state._tww_precise_1(player)
@@ -1511,12 +1519,12 @@ def set_rules(world: MultiWorld, player: int):
     )
     set_rule(
         world.get_location("Greatfish Isle - Sunken Treasure", player),
-        lambda state: state.has("Grappling Hook", player) and has_chart_for_island_23(state, player),
+        lambda state: state.has("Grappling Hook", player) and state._tww_has_chart_for_island(player, 23),
     )
     set_rule(
         world.get_location("Cyclops Reef - Sunken Treasure", player),
         lambda state: state.has("Grappling Hook", player)
-        and has_chart_for_island_24(state, player)
+        and state._tww_has_chart_for_island(player, 24)
         and (
             state.has("Bombs", player)
             or state._tww_precise_1(player)
@@ -1526,7 +1534,7 @@ def set_rules(world: MultiWorld, player: int):
     set_rule(
         world.get_location("Six-Eye Reef - Sunken Treasure", player),
         lambda state: state.has("Grappling Hook", player)
-        and has_chart_for_island_25(state, player)
+        and state._tww_has_chart_for_island(player, 25)
         and (
             state.has("Bombs", player)
             or state._tww_precise_1(player)
@@ -1535,92 +1543,92 @@ def set_rules(world: MultiWorld, player: int):
     )
     set_rule(
         world.get_location("Tower of the Gods Sector - Sunken Treasure", player),
-        lambda state: state.has("Grappling Hook", player) and has_chart_for_island_26(state, player),
+        lambda state: state.has("Grappling Hook", player) and state._tww_has_chart_for_island(player, 26),
     )
     set_rule(
         world.get_location("Eastern Triangle Island - Sunken Treasure", player),
-        lambda state: state.has("Grappling Hook", player) and has_chart_for_island_27(state, player),
+        lambda state: state.has("Grappling Hook", player) and state._tww_has_chart_for_island(player, 27),
     )
     set_rule(
         world.get_location("Thorned Fairy Island - Sunken Treasure", player),
-        lambda state: state.has("Grappling Hook", player) and has_chart_for_island_28(state, player),
+        lambda state: state.has("Grappling Hook", player) and state._tww_has_chart_for_island(player, 28),
     )
     set_rule(
         world.get_location("Needle Rock Isle - Sunken Treasure", player),
-        lambda state: state.has("Grappling Hook", player) and has_chart_for_island_29(state, player),
+        lambda state: state.has("Grappling Hook", player) and state._tww_has_chart_for_island(player, 29),
     )
     set_rule(
         world.get_location("Islet of Steel - Sunken Treasure", player),
-        lambda state: state.has("Grappling Hook", player) and has_chart_for_island_30(state, player),
+        lambda state: state.has("Grappling Hook", player) and state._tww_has_chart_for_island(player, 30),
     )
     set_rule(
         world.get_location("Stone Watcher Island - Sunken Treasure", player),
-        lambda state: state.has("Grappling Hook", player) and has_chart_for_island_31(state, player),
+        lambda state: state.has("Grappling Hook", player) and state._tww_has_chart_for_island(player, 31),
     )
     set_rule(
         world.get_location("Southern Triangle Island - Sunken Treasure", player),
         lambda state: state.has("Grappling Hook", player)
-        and has_chart_for_island_32(state, player)
+        and state._tww_has_chart_for_island(player, 32)
         and (can_defeat_seahats(state, player) or state._tww_precise_1(player)),
     )
     set_rule(
         world.get_location("Private Oasis - Sunken Treasure", player),
-        lambda state: state.has("Grappling Hook", player) and has_chart_for_island_33(state, player),
+        lambda state: state.has("Grappling Hook", player) and state._tww_has_chart_for_island(player, 33),
     )
     set_rule(
         world.get_location("Bomb Island - Sunken Treasure", player),
-        lambda state: state.has("Grappling Hook", player) and has_chart_for_island_34(state, player),
+        lambda state: state.has("Grappling Hook", player) and state._tww_has_chart_for_island(player, 34),
     )
     set_rule(
         world.get_location("Bird's Peak Rock - Sunken Treasure", player),
-        lambda state: state.has("Grappling Hook", player) and has_chart_for_island_35(state, player),
+        lambda state: state.has("Grappling Hook", player) and state._tww_has_chart_for_island(player, 35),
     )
     set_rule(
         world.get_location("Diamond Steppe Island - Sunken Treasure", player),
-        lambda state: state.has("Grappling Hook", player) and has_chart_for_island_36(state, player),
+        lambda state: state.has("Grappling Hook", player) and state._tww_has_chart_for_island(player, 36),
     )
     set_rule(
         world.get_location("Five-Eye Reef - Sunken Treasure", player),
         lambda state: state.has("Grappling Hook", player)
-        and has_chart_for_island_37(state, player)
+        and state._tww_has_chart_for_island(player, 37)
         and can_destroy_cannons(state, player),
     )
     set_rule(
         world.get_location("Shark Island - Sunken Treasure", player),
-        lambda state: state.has("Grappling Hook", player) and has_chart_for_island_38(state, player),
+        lambda state: state.has("Grappling Hook", player) and state._tww_has_chart_for_island(player, 38),
     )
     set_rule(
         world.get_location("Southern Fairy Island - Sunken Treasure", player),
-        lambda state: state.has("Grappling Hook", player) and has_chart_for_island_39(state, player),
+        lambda state: state.has("Grappling Hook", player) and state._tww_has_chart_for_island(player, 39),
     )
     set_rule(
         world.get_location("Ice Ring Isle - Sunken Treasure", player),
-        lambda state: state.has("Grappling Hook", player) and has_chart_for_island_40(state, player),
+        lambda state: state.has("Grappling Hook", player) and state._tww_has_chart_for_island(player, 40),
     )
     set_rule(
         world.get_location("Forest Haven - Sunken Treasure", player),
-        lambda state: state.has("Grappling Hook", player) and has_chart_for_island_41(state, player),
+        lambda state: state.has("Grappling Hook", player) and state._tww_has_chart_for_island(player, 41),
     )
     set_rule(
         world.get_location("Cliff Plateau Isles - Sunken Treasure", player),
-        lambda state: state.has("Grappling Hook", player) and has_chart_for_island_42(state, player),
+        lambda state: state.has("Grappling Hook", player) and state._tww_has_chart_for_island(player, 42),
     )
     set_rule(
         world.get_location("Horseshoe Island - Sunken Treasure", player),
-        lambda state: state.has("Grappling Hook", player) and has_chart_for_island_43(state, player),
+        lambda state: state.has("Grappling Hook", player) and state._tww_has_chart_for_island(player, 43),
     )
     set_rule(
         world.get_location("Outset Island - Sunken Treasure", player),
-        lambda state: state.has("Grappling Hook", player) and has_chart_for_island_44(state, player),
+        lambda state: state.has("Grappling Hook", player) and state._tww_has_chart_for_island(player, 44),
     )
     set_rule(
         world.get_location("Headstone Island - Sunken Treasure", player),
-        lambda state: state.has("Grappling Hook", player) and has_chart_for_island_45(state, player),
+        lambda state: state.has("Grappling Hook", player) and state._tww_has_chart_for_island(player, 45),
     )
     set_rule(
         world.get_location("Two-Eye Reef - Sunken Treasure", player),
         lambda state: state.has("Grappling Hook", player)
-        and has_chart_for_island_46(state, player)
+        and state._tww_has_chart_for_island(player, 46)
         and (
             state.has("Bombs", player)
             or state._tww_precise_1(player)
@@ -1629,15 +1637,15 @@ def set_rules(world: MultiWorld, player: int):
     )
     set_rule(
         world.get_location("Angular Isles - Sunken Treasure", player),
-        lambda state: state.has("Grappling Hook", player) and has_chart_for_island_47(state, player),
+        lambda state: state.has("Grappling Hook", player) and state._tww_has_chart_for_island(player, 47),
     )
     set_rule(
         world.get_location("Boating Course - Sunken Treasure", player),
-        lambda state: state.has("Grappling Hook", player) and has_chart_for_island_48(state, player),
+        lambda state: state.has("Grappling Hook", player) and state._tww_has_chart_for_island(player, 48),
     )
     set_rule(
         world.get_location("Five-Star Isles - Sunken Treasure", player),
-        lambda state: state.has("Grappling Hook", player) and has_chart_for_island_49(state, player),
+        lambda state: state.has("Grappling Hook", player) and state._tww_has_chart_for_island(player, 49),
     )
 
     set_rule(
