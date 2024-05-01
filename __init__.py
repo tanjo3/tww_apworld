@@ -170,7 +170,6 @@ class TWWWorld(World):
 
         # Finish selecting required bosses
         required_dungeons.update(self.multiworld.random.sample(list(remaining_dungeon_options), num_remaining))
-        print(required_dungeons)
 
         # Exclude locations which are not in the dungeon of a required boss
         banned_dungeons = dungeon_names - required_dungeons
