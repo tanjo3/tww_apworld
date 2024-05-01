@@ -330,6 +330,13 @@ class LogicPrecision(Choice):
     default = 0
 
 
+class EnableTunerLogic(Toggle):
+    """If enabled, the randomizer can logically expect the Tingle Tuner for Tingle chests.
+    The randomizer behavior of logically expecting Bombs/bomb flowers to spawn in Tingle chests remains unchanged."""
+
+    display_name = "Enable Tuner Logic"
+
+
 class RandomizeDungeonEntrances(Toggle):
     """Shuffles around which dungeon entrances take you into which dungeons.
     (No effect on Forsaken Fortress or Ganon's Tower.)"""
@@ -571,6 +578,7 @@ class TWWOptions(PerGameCommonOptions):
     hero_mode: HeroMode
     logic_obscurity: LogicObscurity
     logic_precision: LogicPrecision
+    enable_tuner_logic: EnableTunerLogic
     randomize_dungeon_entrances: RandomizeDungeonEntrances
     randomize_secret_cave_entrances: RandomizeSecretCavesEntrances
     randomize_miniboss_entrances: RandomizeMinibossEntrances

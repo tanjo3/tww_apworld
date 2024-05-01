@@ -781,6 +781,7 @@ class TWWWorld(World):
             "hero_mode": self.options.hero_mode.value,
             "logic_obscurity": self.options.logic_obscurity.value,
             "logic_precision": self.options.logic_precision.value,
+            "enable_tuner_logic": self.options.enable_tuner_logic.value,
             "randomize_dungeon_entrances": self.options.randomize_dungeon_entrances.value,
             "randomize_secret_cave_entrances": self.options.randomize_secret_cave_entrances.value,
             "randomize_miniboss_entrances": self.options.randomize_miniboss_entrances.value,

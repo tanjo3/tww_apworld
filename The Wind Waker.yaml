@@ -361,6 +361,12 @@ The Wind Waker:
     hard: 0
     very_hard: 0
 
+  enable_tuner_logic:
+    # If enabled, the randomizer can logically expect the Tingle Tuner for Tingle chests.
+    # The randomizer behavior of logically expecting Bombs/bomb flowers to spawn in Tingle chests remains unchanged.
+    false: 50
+    true: 0
+
   randomize_dungeon_entrances:
     # Shuffles around which dungeon entrances take you into which dungeons.
     # (No effect on Forsaken Fortress or Ganon's Tower.)

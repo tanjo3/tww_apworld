@@ -60,7 +60,6 @@ can do. Suggestions for improvements are also welcome.
 
 ## Planned Features
 
-- Option for adding Tingle Tuner logic to Tingle Chests
 - Dynamic CTMC based on enabled options
 - Properly excluding locations based on options
 - Hint implementation from base randomizer (hint placement options and hint types)

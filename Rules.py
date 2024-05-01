@@ -67,6 +67,9 @@ class TWWLogic(LogicMixin):
     def _tww_precise_3(self, player: int):
         return self.multiworld.worlds[player].options.logic_precision == "very_hard"
 
+    def _tww_tuner_logic_enabled(self, player: int):
+        return self.multiworld.worlds[player].options.enable_tuner_logic
+
 
 def set_rules(world: MultiWorld, player: int):
     # Outset Island

@@ -168,7 +168,7 @@ def has_all_8_triforce_shards(state: CollectionState, player: int):
 
 
 def has_tingle_bombs(state: CollectionState, player: int):
-    return state.has("Bombs", player)
+    return state.has("Bombs", player) or (state._tww_tuner_logic_enabled(player) and state.has("Tingle Tuner", player))
 
 
 def can_activate_tingle_bomb_triggers_without_tingle_tuner(state: CollectionState, player: int):
