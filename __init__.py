@@ -733,6 +733,7 @@ class TWWWorld(World):
             if location.name != "Defeat Ganondorf":
                 if location.item:
                     item_info = {
+                        "player": location.item.player,
                         "name": location.item.name,
                         "game": location.item.game,
                         "classification": location.item.classification.name,
