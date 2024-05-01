@@ -73,6 +73,15 @@ class TWWLocation(Location):
         return base_id + code if code is not None else None
 
 
+DUNGEON_NAMES = [
+    "Dragon Roost Cavern",
+    "Forbidden Woods",
+    "Tower of the Gods",
+    "Forsaken Fortress",
+    "Earth Temple",
+    "Wind Temple",
+]
+
 LOCATION_TABLE: dict[str, TWWLocationData] = {
     # Outset Island
     "Outset Island - Underneath Link's House": TWWLocationData(

@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 
-from Options import Choice, DeathLink, DefaultOnToggle, PerGameCommonOptions, Range, Toggle
+from Options import Choice, DeathLink, DefaultOnToggle, OptionSet, PerGameCommonOptions, Range, Toggle
+from worlds.tww.Locations import DUNGEON_NAMES
 
 
 class Dungeons(DefaultOnToggle):
@@ -265,6 +266,20 @@ class NumRequiredBosses(Range):
     range_start = 1
     range_end = 6
     default = 4
+
+
+class IncludedDungeons(OptionSet):
+    """A list of dungeons which should always be included when required bosses mode is on."""
+
+    display_name = "Included Dungeons"
+    valid_keys = frozenset(DUNGEON_NAMES)
+
+
+class ExcludedDungeons(OptionSet):
+    """A list of dungeons which should always be excluded when required bosses mode is on."""
+
+    display_name = "Excluded Dungeons"
+    valid_keys = frozenset(DUNGEON_NAMES)
 
 
 class ChestTypeMatchesContents(Toggle):
@@ -550,6 +565,8 @@ class TWWOptions(PerGameCommonOptions):
     sword_mode: SwordMode
     required_bosses: RequiredBosses
     num_required_bosses: NumRequiredBosses
+    included_dungeons: IncludedDungeons
+    excluded_dungeons: ExcludedDungeons
     chest_type_matches_contents: ChestTypeMatchesContents
     trap_chests: TrapChests
     hero_mode: HeroMode

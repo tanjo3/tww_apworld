@@ -4,13 +4,20 @@ from dataclasses import fields
 import yaml
 
 from BaseClasses import LocationProgressType, MultiWorld, Region, Tutorial
-from Fill import FillError, fill_restrictive
+from Fill import fill_restrictive
 from worlds.AutoWorld import WebWorld, World
 from worlds.generic.Rules import add_item_rule
 from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess
 
 from .Items import ITEM_TABLE, TWWItem
-from .Locations import LOCATION_TABLE, VANILLA_DUNGEON_ITEM_LOCATIONS, TWWFlag, TWWLocation, split_location_name_by_zone
+from .Locations import (
+    DUNGEON_NAMES,
+    LOCATION_TABLE,
+    VANILLA_DUNGEON_ITEM_LOCATIONS,
+    TWWFlag,
+    TWWLocation,
+    split_location_name_by_zone,
+)
 from .Macros import *
 from .Options import TWWOptions
 from .Regions import *
@@ -137,17 +144,14 @@ class TWWWorld(World):
         ]
 
     def _randomize_required_bosses(self):
-        dungeon_names = {
-            "Dragon Roost Cavern",
-            "Forbidden Woods",
-            "Tower of the Gods",
-            "Forsaken Fortress",
-            "Earth Temple",
-            "Wind Temple",
-        }
+        dungeon_names = set(DUNGEON_NAMES)
+
+        # Assert that the user is not including and excluding a dungeon at the same time
+        if len(self.options.included_dungeons.value & self.options.excluded_dungeons.value) != 0:
+            raise RuntimeError("Conflict found in the lists of required and banned dungeons for required bosses mode")
 
         # If the user enforces a dungeon location to be priority, consider that when selecting required bosses
-        required_dungeons = set()
+        required_dungeons = self.options.included_dungeons.value
         for location_name in self.options.priority_locations.value:
             dungeon_name, _ = split_location_name_by_zone(location_name)
             if dungeon_name in dungeon_names:
@@ -156,13 +160,17 @@ class TWWWorld(World):
         # Ensure that we aren't prioritizing more dungeon locations than requested number of required bosses
         num_required_bosses = self.options.num_required_bosses
         if len(required_dungeons) > num_required_bosses:
-            raise FillError("Could not select required bosses to satisfy options set by user")
+            raise RuntimeError("Could not select required bosses to satisfy options set by user")
+
+        # Ensure that after removing excluded dungeons that we still have enough dungeons to satisfy user options
+        num_remaining = num_required_bosses - len(required_dungeons)
+        remaining_dungeon_options = dungeon_names - required_dungeons - self.options.excluded_dungeons.value
+        if len(remaining_dungeon_options) < num_remaining:
+            raise RuntimeError("Could not select required bosses to satisfy options set by user")
 
         # Finish selecting required bosses
-        remaining_dungeon_options = dungeon_names - required_dungeons
-        required_dungeons.update(
-            self.multiworld.random.sample(list(remaining_dungeon_options), num_required_bosses - len(required_dungeons))
-        )
+        required_dungeons.update(self.multiworld.random.sample(list(remaining_dungeon_options), num_remaining))
+        print(required_dungeons)
 
         # Exclude locations which are not in the dungeon of a required boss
         banned_dungeons = dungeon_names - required_dungeons
@@ -747,6 +755,8 @@ class TWWWorld(World):
             "required_bosses": self.options.required_bosses.value,
             "num_required_bosses": self.options.num_required_bosses.value,
             "chest_type_matches_contents": self.options.chest_type_matches_contents.value,
+            "included_dungeons": self.options.included_dungeons.value,
+            "excluded_dungeons": self.options.excluded_dungeons.value,
             "trap_chests": self.options.trap_chests.value,
             "hero_mode": self.options.hero_mode.value,
             "logic_obscurity": self.options.logic_obscurity.value,

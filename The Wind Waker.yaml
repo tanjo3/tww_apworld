@@ -316,6 +316,14 @@ The Wind Waker:
     random-low: 0
     random-high: 0
 
+  included_dungeons:
+    # A list of dungeons which should always be included when required bosses mode is on.
+    []
+
+  excluded_dungeons:
+    # A list of dungeons which should always be excluded when required bosses mode is on.
+    []
+
   chest_type_matches_contents:
     # Changes the chest type to reflect its contents. A metal chest has a progress item, a wooden chest has a
     # non-progress item or a consumable, and a green chest has a potentially required dungeon key.
