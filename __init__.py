@@ -12,6 +12,7 @@ from worlds.LauncherComponents import Component, SuffixIdentifier, Type, compone
 from .Items import ISLAND_NUMBER_TO_CHART_NAME, ITEM_TABLE, TWWItem
 from .Locations import (
     DUNGEON_NAMES,
+    ISLAND_NUMBER_TO_NAME,
     LOCATION_TABLE,
     VANILLA_DUNGEON_ITEM_LOCATIONS,
     TWWFlag,
@@ -158,6 +159,14 @@ class TWWWorld(World):
         for original_item_name in original_item_names:
             shuffled_island_number = shuffled_island_numbers.pop()
             self.island_number_to_chart_name[shuffled_island_number] = original_item_name
+
+            # Properly adjust the flags for sunken treasure locations
+            island_name = ISLAND_NUMBER_TO_NAME[shuffled_island_number]
+            island_location = self.multiworld.get_location(f"{island_name} - Sunken Treasure", self.player)
+            if original_item_name.startswith("Triforce Chart "):
+                island_location.flags = TWWFlag.TRI_CHT
+            else:
+                island_location.flags = TWWFlag.TRE_CHT
 
     def _randomize_required_bosses(self):
         dungeon_names = set(DUNGEON_NAMES)
@@ -462,10 +471,6 @@ class TWWWorld(World):
                 self.options.start_inventory.value.get("Progressive Sword", 0) + 1
             )
 
-        # Randomize which chart points to each sector, if the option is enabled
-        if self.options.randomize_charts:
-            self._randomize_charts()
-
     def create_regions(self):
         # "Menu" is the required starting point
         menu_region = Region("Menu", self.player, self.multiworld)
@@ -563,6 +568,10 @@ class TWWWorld(World):
                 )
             ),
         )
+
+        # Randomize which chart points to each sector, if the option is enabled
+        if self.options.randomize_charts:
+            self._randomize_charts()
 
         # Set nonprogress location from options
         self._set_nonprogress_locations()
