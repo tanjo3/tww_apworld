@@ -330,13 +330,6 @@ The Wind Waker:
     false: 50
     true: 0
 
-  trap_chests:
-    # DEV NOTE: This option is currently unimplemented and will be ignored.
-    # Allows the randomizer to place several trapped chests across the game that do not give you items. Perfect for
-    # spicing up any run!
-    false: 50
-    true: 0
-
   hero_mode:
     # In Hero Mode, you take four times more damage than normal and heart refills will not drop.
     false: 50
@@ -421,96 +414,6 @@ The Wind Waker:
 
   randomize_charts:
     # Randomizes which sector is drawn on each Triforce/Treasure Chart.
-    false: 50
-    true: 0
-
-  hoho_hints:
-    # DEV NOTE: This option is currently unimplemented and will be ignored.
-    # Places hints on Old Man Ho Ho. Old Man Ho Ho appears at 10 different islands in the game. Talk to Old Man Ho Ho to
-    # get hints.
-    false: 0
-    true: 50
-
-  fishmen_hints:
-    # DEV NOTE: This option is currently unimplemented and will be ignored.
-    # Places hints on the fishmen. There is one fishman at each of the 49 islands of the Great Sea. Each fishman must be
-    # fed an All-Purpose Bait before he will give a hint.
-    false: 0
-    true: 50
-
-  korl_hints:
-    # DEV NOTE: This option is currently unimplemented and will be ignored.
-    # Places hints on the King of Red Lions. Talk to the King of Red Lions to get hints.
-    false: 50
-    true: 0
-
-  num_item_hints:
-    # DEV NOTE: This option is currently unimplemented and will be ignored.
-    # The number of item hints that will be placed. Item hints tell you which area contains a particular progress item in
-    # this seed. If multiple hint placement options are selected, the hint count will be split evenly among the placement
-    # options.
-    #
-    # You can define additional values between the minimum and maximum values.
-    # Minimum value is 0
-    # Maximum value is 15
-    15: 50
-    random: 0
-    random-low: 0
-    random-high: 0
-
-  num_location_hints:
-    # DEV NOTE: This option is currently unimplemented and will be ignored.
-    # The number of location hints that will be placed. Location hints tell you what item is at a specific location in
-    # this seed. If multiple hint placement options are selected, the hint count will be split evenly among the placement
-    # options.
-    #
-    # You can define additional values between the minimum and maximum values.
-    # Minimum value is 0
-    # Maximum value is 15
-    5: 50
-    random: 0
-    random-low: 0
-    random-high: 0
-
-  num_barren_hints:
-    # DEV NOTE: This option is currently unimplemented and will be ignored.
-    # The number of barren hints that will be placed. Barren hints tell you that an area does not contain any required
-    # items in this seed. If multiple hint placement options are selected, the hint count will be split evenly among the
-    # placement options.
-    #
-    # You can define additional values between the minimum and maximum values.
-    # Minimum value is 0
-    # Maximum value is 15
-    0: 50
-    random: 0
-    random-low: 0
-    random-high: 0
-
-  num_path_hints:
-    # DEV NOTE: This option is currently unimplemented and will be ignored.
-    # The number of path hints that will be placed. Path hints tell you that an area contains an item that is required to
-    # reach a particular goal in this seed. If multiple hint placement options are selected, the hint count will be split
-    # evenly among the placement options.
-    #
-    # You can define additional values between the minimum and maximum values.
-    # Minimum value is 0
-    # Maximum value is 15
-    0: 50
-    random: 0
-    random-low: 0
-    random-high: 0
-
-  cryptic_hints:
-    # DEV NOTE: This option is currently unimplemented and will be ignored.
-    # When this option is selected, all hints will be phrased cryptically instead of telling you the names of locations
-    # and items directly.
-    false: 0
-    true: 50
-
-  prioritize_remote_hints:
-    # DEV NOTE: This option is currently unimplemented and will be ignored.
-    # When this option is selected, certain locations that are out of the way and time-consuming to complete will take
-    # precedence over normal location hints.
     false: 50
     true: 0
 

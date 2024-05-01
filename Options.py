@@ -566,7 +566,7 @@ class TWWOptions(PerGameCommonOptions):
     included_dungeons: IncludedDungeons
     excluded_dungeons: ExcludedDungeons
     chest_type_matches_contents: ChestTypeMatchesContents
-    trap_chests: TrapChests
+    # trap_chests: TrapChests
     hero_mode: HeroMode
     logic_obscurity: LogicObscurity
     logic_precision: LogicPrecision
@@ -582,14 +582,14 @@ class TWWOptions(PerGameCommonOptions):
     # randomize_music: RandomizeMusic
     randomize_starting_island: RandomizeStartingIsland
     randomize_charts: RandomizeCharts
-    hoho_hints: HoHoHints
-    fishmen_hints: FishmenHints
-    korl_hints: KoRLHints
-    num_item_hints: NumItemHints
-    num_location_hints: NumLocationHints
-    num_barren_hints: NumBarrenHints
-    num_path_hints: NumPathHints
-    prioritize_remote_hints: PrioritizeRemoteHints
+    # hoho_hints: HoHoHints
+    # fishmen_hints: FishmenHints
+    # korl_hints: KoRLHints
+    # num_item_hints: NumItemHints
+    # num_location_hints: NumLocationHints
+    # num_barren_hints: NumBarrenHints
+    # num_path_hints: NumPathHints
+    # prioritize_remote_hints: PrioritizeRemoteHints
     swift_sail: SwiftSail
     instant_text_boxes: InstantTextBoxes
     reveal_full_sea_chart: RevealFullSeaChart
