@@ -13,10 +13,6 @@ Items get shuffled between the different locations in the game, so each playthro
 include chests, items received from NPC, and treasure salvaged from the ocean floor. The randomizer also includes
 quality-of-life features such as a fully opened world, removing many cutscenes, increased sailing speed, and more.
 
-In-game item models still need to be implemented in the project's current state. Instead, all items in the game will be
-a green rupee. This is a temporary measure until item models are implemented. You'll receive the actual item for that
-location from the Archipelago server.
-
 ## Which locations get shuffled?
 
 All randomizable locations will have their items shuffled each seed. However, the randomizer is designed so that only
