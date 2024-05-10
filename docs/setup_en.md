@@ -104,12 +104,20 @@ name automatically when you start a new save file.
 
 ## Troubleshooting
 
+* Ensure that you are running version v0.4.4 or higher of Archipelago.
 * If you do not see the client in the launcher, ensure you have placed the `tww.apworld` in the correct folder (the
 `lib/worlds` folder of your Archipelago installation).
 * If the client is not working, double-check that you have the most recent release of the `tww.apworld`. Additionally,
-ensure that there is no `ww.apworld` file or `ww`/`tww` folders in your `lib/worlds` folder. Finally, ensure that the
-content of the `lib` folder from the release download has been placed in the `lib` folder of your Archipelago
-installation.
+ensure that there is no `ww.apworld` file or `ww`/`tww` folders in your `lib/worlds` folder. If those exist, delete
+them. Finally, ensure that the content of the `lib` folder from the release download has been placed in the `lib` folder
+of your Archipelago installation.
+* If you press Randomize in the build and nothing happens, ensure that you are using the correct version of the build
+for the `aptww` file you are using.
+    * v2.4.0 apworlds should use the 2.2.0 build, v2.3.x apworlds should use the 2.1.0 build, and older apworlds should
+    use 2.0.0.
+    * Remember that you should use the same apworld version with which the `aptww` was generated; ask the multiworld
+    generator if you're unsure which version was used.
+if you're unsure which version was used.
 * Ensure that you do not have any Dolphin cheats or codes enabled. Some cheats or codes can unexpectedly interfere with
 emulation and make troubleshooting errors difficult.
 * If you get an error message, ensure that `Enable Emulated Memory Size Override` in Dolphin (under `Options` >
