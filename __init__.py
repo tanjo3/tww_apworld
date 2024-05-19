@@ -471,6 +471,10 @@ class TWWWorld(World):
                 self.options.start_inventory.value.get("Progressive Sword", 0) + 1
             )
 
+        # If sword mode is Swordless, ensure the player does not start with a sword
+        if self.options.sword_mode == "swordless":
+            self.options.start_inventory.value["Progressive Sword"] = 0
+
     def create_regions(self):
         # "Menu" is the required starting point
         menu_region = Region("Menu", self.player, self.multiworld)
@@ -683,6 +687,9 @@ class TWWWorld(World):
                 for location in VANILLA_DUNGEON_ITEM_LOCATIONS[item]:
                     self.multiworld.get_location(location, self.player).place_locked_item(self.create_item(item))
             else:
+                if item == "Progressive Sword" and self.options.sword_mode == "swordless":
+                    continue
+
                 copies_to_place = data.quantity - exclude.count(item)
                 for _ in range(copies_to_place):
                     if item in self.own_dungeon_item_names or item in self.any_dungeon_item_names:
