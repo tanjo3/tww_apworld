@@ -467,9 +467,9 @@ class TWWWorld(World):
                 self.options.start_inventory.value.get("Progressive Sword", 0) + 1
             )
 
-        # If sword mode is Swordless, ensure the player does not start with a sword.
-        if self.options.sword_mode == "swordless":
-            self.options.start_inventory.value["Progressive Sword"] = 0
+        # If sword mode is No Starting Sword or Swordless, then ensure the player doesn't start with a sword.
+        if self.options.sword_mode in ["no_starting_sword", "swordless"]:
+            del self.options.start_inventory.value["Progressive Sword"]
 
     def create_regions(self):
         # "Menu" is the required starting point.
