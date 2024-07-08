@@ -107,7 +107,10 @@ class TWWWorld(World):
         },
     }
 
+    required_client_version = (0, 4, 5)
     web = TWWWeb()
+
+    set_rules = set_rules
 
     def __init__(self, *args, **kwargs):
         super(TWWWorld, self).__init__(*args, **kwargs)
@@ -173,7 +176,7 @@ class TWWWorld(World):
 
             # Properly adjust the flags for sunken treasure locations.
             island_name = ISLAND_NUMBER_TO_NAME[shuffled_island_number]
-            island_location = self.multiworld.get_location(f"{island_name} - Sunken Treasure", self.player)
+            island_location = self.get_location(f"{island_name} - Sunken Treasure")
             if original_item_name.startswith("Triforce Chart "):
                 island_location.flags = TWWFlag.TRI_CHT
             else:
@@ -212,24 +215,16 @@ class TWWWorld(World):
         for location_name, _ in LOCATION_TABLE.items():
             dungeon_name, _ = split_location_name_by_zone(location_name)
             if dungeon_name in banned_dungeons:
-                self.multiworld.get_location(location_name, self.player).progress_type = LocationProgressType.EXCLUDED
+                self.get_location(location_name).progress_type = LocationProgressType.EXCLUDED
 
         # Exclude mail related to banned dungeons.
         if "Forbidden Woods" in banned_dungeons:
-            self.multiworld.get_location("Mailbox - Letter from Orca", self.player).progress_type = (
-                LocationProgressType.EXCLUDED
-            )
+            self.get_location("Mailbox - Letter from Orca").progress_type = LocationProgressType.EXCLUDED
         if "Forsaken Fortress" in banned_dungeons:
-            self.multiworld.get_location("Mailbox - Letter from Aryll", self.player).progress_type = (
-                LocationProgressType.EXCLUDED
-            )
-            self.multiworld.get_location("Mailbox - Letter from Tingle", self.player).progress_type = (
-                LocationProgressType.EXCLUDED
-            )
+            self.get_location("Mailbox - Letter from Aryll").progress_type = LocationProgressType.EXCLUDED
+            self.get_location("Mailbox - Letter from Tingle").progress_type = LocationProgressType.EXCLUDED
         if "Earth Temple" in banned_dungeons:
-            self.multiworld.get_location("Mailbox - Letter from Baito", self.player).progress_type = (
-                LocationProgressType.EXCLUDED
-            )
+            self.get_location("Mailbox - Letter from Baito").progress_type = LocationProgressType.EXCLUDED
 
         # Record the item location names for required bosses.
         possible_boss_item_locations = [loc for loc, data in LOCATION_TABLE.items() if TWWFlag.BOSS in data.flags]
@@ -276,10 +271,8 @@ class TWWWorld(World):
             dungeon_name = miniboss_entrance[len("Miniboss Entrance in ") :]
             if dungeon_name in self.banned_dungeons:
                 entrances[1].remove(miniboss_entrance)
-                entrance_region = self.multiworld.get_region(miniboss_entrance, self.player)
                 exits[1].remove(miniboss_exit)
-                exit_region = self.multiworld.get_region(miniboss_exit, self.player)
-                entrance_exit_pairs.append((entrance_region, exit_region))
+                entrance_exit_pairs.append((self.get_region(miniboss_entrance), self.get_region(miniboss_exit)))
 
         # Force boss doors to be vanilla in nonrequired dungeons.
         for boss_entrance, boss_exit in zip(entrances[2], exits[2]):
@@ -287,10 +280,8 @@ class TWWWorld(World):
             dungeon_name = boss_entrance[len("Boss Entrance in ") :]
             if dungeon_name in self.banned_dungeons:
                 entrances[2].remove(boss_entrance)
-                entrance_region = self.multiworld.get_region(boss_entrance, self.player)
                 exits[2].remove(boss_exit)
-                exit_region = self.multiworld.get_region(boss_exit, self.player)
-                entrance_exit_pairs.append((entrance_region, exit_region))
+                entrance_exit_pairs.append((self.get_region(boss_entrance), self.get_region(boss_exit)))
 
         if self.options.mix_entrances == "separate_pools":
             # Connect entrances to exits of the same type.
@@ -301,9 +292,7 @@ class TWWWorld(World):
                     self.multiworld.random.shuffle(exit_group)
 
                 for entrance_name, exit_name in zip(entrance_group, exit_group):
-                    entrance_region = self.multiworld.get_region(entrance_name, self.player)
-                    exit_region = self.multiworld.get_region(exit_name, self.player)
-                    entrance_exit_pairs.append((entrance_region, exit_region))
+                    entrance_exit_pairs.append((self.get_region(entrance_name), self.get_region(exit_name)))
         elif self.options.mix_entrances == "mix_pools":
             # We do a bit of extra work here in order to prevent unreachable "islands" of regions.
             # For example, DRC boss door leading to DRC. This will cause generation failures.
@@ -320,9 +309,7 @@ class TWWWorld(World):
                     # If not randomized, then just connect the entrance-exit pairs now.
                     for entrance_name, exit_name in zip(entrance_group, exit_group):
                         non_randomized_exits.append(exit_name)
-                        entrance_region = self.multiworld.get_region(entrance_name, self.player)
-                        exit_region = self.multiworld.get_region(exit_name, self.player)
-                        entrance_exit_pairs.append((entrance_region, exit_region))
+                        entrance_exit_pairs.append((self.get_region(entrance_name), self.get_region(exit_name)))
 
             # Build a list of accessible randomized entrances, assuming the player has all items.
             accessible_entrances: list[str] = []
@@ -352,9 +339,7 @@ class TWWWorld(World):
                 entrance_name = accessible_entrances.pop()
 
                 # Connect the pair.
-                entrance_region = self.multiworld.get_region(entrance_name, self.player)
-                exit_region = self.multiworld.get_region(exit_name, self.player)
-                entrance_exit_pairs.append((entrance_region, exit_region))
+                entrance_exit_pairs.append((self.get_region(entrance_name), self.get_region(exit_name)))
 
                 # Remove the pair from the list of entrance/exits to be connected.
                 randomized_entrances.remove(entrance_name)
@@ -374,9 +359,7 @@ class TWWWorld(World):
             self.multiworld.random.shuffle(randomized_entrances)
             self.multiworld.random.shuffle(randomized_exits)
             for entrance_name, exit_name in zip(randomized_entrances, randomized_exits):
-                entrance_region = self.multiworld.get_region(entrance_name, self.player)
-                exit_region = self.multiworld.get_region(exit_name, self.player)
-                entrance_exit_pairs.append((entrance_region, exit_region))
+                entrance_exit_pairs.append((self.get_region(entrance_name), self.get_region(exit_name)))
         else:
             raise Exception(f"Invalid entrance randomization option: {self.options.mix_entrances}")
 
@@ -501,7 +484,7 @@ class TWWWorld(World):
 
         # Assign each location to their region.
         for location, data in LOCATION_TABLE.items():
-            region = self.multiworld.get_region(data.region, self.player)
+            region = self.get_region(data.region)
             region.locations.append(TWWLocation(self.player, location, region, data))
 
         # Connect the "Menu" region to the "The Great Sea" region.
@@ -510,8 +493,7 @@ class TWWWorld(World):
         # Connect the dungeon, secret caves, and fairy fountain regions to the "The Great Sea" region.
         for entrance in DUNGEON_ENTRANCES + SECRET_CAVES_ENTRANCES + FAIRY_FOUNTAIN_ENTRANCES:
             rule = lambda state, entrance=entrance: getattr(Macros, self._get_access_rule(entrance))(state, self.player)
-            connecting_region = self.multiworld.get_region(entrance, self.player)
-            great_sea_region.connect(connecting_region, rule=rule)
+            great_sea_region.connect(self.get_region(entrance), rule=rule)
 
         # Connect nested regions with their parent region
         for entrance in MINIBOSS_ENTRANCES + BOSS_ENTRANCES + SECRET_CAVES_INNER_ENTRANCES:
@@ -520,9 +502,8 @@ class TWWWorld(World):
             if parent_region_name in ["Hyrule Castle", "Forsaken Fortress"]:
                 parent_region_name = "The Great Sea"
             rule = lambda state, entrance=entrance: getattr(Macros, self._get_access_rule(entrance))(state, self.player)
-            parent_region = self.multiworld.get_region(parent_region_name, self.player)
-            connecting_region = self.multiworld.get_region(entrance, self.player)
-            parent_region.connect(connecting_region, rule=rule)
+            parent_region = self.get_region(parent_region_name)
+            parent_region.connect(self.get_region(entrance), rule=rule)
 
     def create_item(self, item: str) -> TWWItem:
         # TODO: calculate nonprogress items dynamically
@@ -540,18 +521,14 @@ class TWWWorld(World):
 
     def pre_fill(self):
         # Ban the Bait Bag slot from having bait.
-        beedle_20 = self.multiworld.get_location("The Great Sea - Beedle's Shop Ship - 20 Rupee Item", self.player)
+        beedle_20 = self.get_location("The Great Sea - Beedle's Shop Ship - 20 Rupee Item")
         add_item_rule(beedle_20, lambda item: item.name not in ["All-Purpose Bait", "Hyoi Pear"])
 
         # Also ban the same item from appearing more than once in the Rock Spire Isle shop ship.
-        beedle_500 = self.multiworld.get_location(
-            "Rock Spire Isle - Beedle's Special Shop Ship - 500 Rupee Item", self.player
-        )
-        beedle_950 = self.multiworld.get_location(
-            "Rock Spire Isle - Beedle's Special Shop Ship - 950 Rupee Item", self.player
-        )
-        beedle_900 = self.multiworld.get_location(
-            "Rock Spire Isle - Beedle's Special Shop Ship - 900 Rupee Item", self.player
+        beedle_500 = self.get_location("Rock Spire Isle - Beedle's Special Shop Ship - 500 Rupee Item")
+        beedle_950 = self.get_location("Rock Spire Isle - Beedle's Special Shop Ship - 950 Rupee Item")
+        beedle_900 = self.get_location(
+            "Rock Spire Isle - Beedle's Special Shop Ship - 900 Rupee Item",
         )
         add_item_rule(
             beedle_500,
@@ -692,11 +669,11 @@ class TWWWorld(World):
         for item, data in ITEM_TABLE.items():
             if item == "Victory":
                 # Victory item is always on Defeat Ganondorf location.
-                self.multiworld.get_location("Defeat Ganondorf", self.player).place_locked_item(self.create_item(item))
+                self.get_location("Defeat Ganondorf").place_locked_item(self.create_item(item))
             elif item in self.vanilla_dungeon_item_names:
                 # Place desired vanilla dungeon item in their vanilla locations.
                 for location in VANILLA_DUNGEON_ITEM_LOCATIONS[item]:
-                    self.multiworld.get_location(location, self.player).place_locked_item(self.create_item(item))
+                    self.get_location(location).place_locked_item(self.create_item(item))
             else:
                 if item == "Progressive Sword" and self.options.sword_mode == "swordless":
                     continue
@@ -730,9 +707,6 @@ class TWWWorld(World):
         ]
         filler_weights = [3, 7, 10, 15, 3]
         return self.multiworld.random.choices(filler_consumables, weights=filler_weights, k=1)[0]
-
-    def set_rules(self):
-        set_rules(self.multiworld, self.player)
 
     def generate_output(self, output_directory: str):
         # Output seed name and slot number to seed RNG in randomizer client.
