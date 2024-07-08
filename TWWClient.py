@@ -6,7 +6,14 @@ from typing import Any
 import dolphin_memory_engine
 
 import Utils
-from CommonClient import ClientCommandProcessor, CommonContext, get_base_parser, gui_enabled, logger, server_loop
+from CommonClient import (
+    ClientCommandProcessor,
+    CommonContext,
+    get_base_parser,
+    gui_enabled,
+    logger,
+    server_loop,
+)
 from NetUtils import ClientStatus, NetworkItem
 
 from .Items import ITEM_TABLE, LOOKUP_ID_TO_NAME

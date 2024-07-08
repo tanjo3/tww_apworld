@@ -1,12 +1,21 @@
 from dataclasses import dataclass
 
-from Options import Choice, DeathLink, DefaultOnToggle, OptionSet, PerGameCommonOptions, Range, Toggle
+from Options import (
+    Choice,
+    DeathLink,
+    DefaultOnToggle,
+    OptionSet,
+    PerGameCommonOptions,
+    Range,
+    Toggle,
+)
 from worlds.tww.Locations import DUNGEON_NAMES
 
 
 class Dungeons(DefaultOnToggle):
     """This controls whether dungeons can contain progress items.
-    If off, dungeons will still be randomized, but will only contain optional items you don't need to beat the game."""
+    If off, dungeons will still be randomized, but will only contain optional items you don't need to beat the game.
+    """
 
     display_name = "Dungeons"
 
@@ -14,7 +23,8 @@ class Dungeons(DefaultOnToggle):
 class TingleChests(Toggle):
     """Tingle Chests that are hidden in dungeons and must be bombed to make them appear. (2 in DRC, 1 each in FW, TotG,
     ET, and WT).
-    If off, they will still be randomized, but will only contain optional items you don't need to beat the game."""
+    If off, they will still be randomized, but will only contain optional items you don't need to beat the game.
+    """
 
     display_name = "Tingle Chests"
 
@@ -24,42 +34,48 @@ class DungeonSecrets(Toggle):
     progress items. The items are fairly well-hidden (they aren't in chests), so don't select this option unless you're
     prepared to search each dungeon high and low!
     For a list of the dungeon secrets, refer to this Google doc:
-    https://docs.google.com/document/d/1LrjGr6W9970XEA-pzl8OhwnqMqTbQaxCX--M-kdsLos/edit"""
+    https://docs.google.com/document/d/1LrjGr6W9970XEA-pzl8OhwnqMqTbQaxCX--M-kdsLos/edit
+    """
 
     display_name = "Dungeon Secrets"
 
 
 class PuzzleSecretCaves(DefaultOnToggle):
     """This controls whether puzzle-focused secret caves can contain progress items.
-    If off, they will still be randomized, but will only contain optional items you don't need to beat the game."""
+    If off, they will still be randomized, but will only contain optional items you don't need to beat the game.
+    """
 
     display_name = "Puzzle Secret Caves"
 
 
 class CombatSecretCaves(Toggle):
     """This controls whether combat-focused secret caves (besides Savage Labyrinth) can contain progress items.
-    If off, they will still be randomized, but will only contain optional items you don't need to beat the game."""
+    If off, they will still be randomized, but will only contain optional items you don't need to beat the game.
+    """
 
     display_name = "Combat Secret Caves"
 
 
 class SavageLabyrinth(Toggle):
     """This controls whether the Savage Labyrinth can contain progress items.
-    If off, it will still be randomized, but will only contain optional items you don't need to beat the game."""
+    If off, it will still be randomized, but will only contain optional items you don't need to beat the game.
+    """
 
     display_name = "Savage Labyrinth"
 
 
 class GreatFairies(DefaultOnToggle):
     """This controls whether the items given by Great Fairies can be progress items.
-    If off, they will still be randomized, but will only contain optional items you don't need to beat the game."""
+    If off, they will still be randomized, but will only contain optional items you don't need to beat the game.
+    """
 
     display_name = "Great Fairies"
 
 
 class ShortSidequests(Toggle):
     """This controls whether sidequests that can be completed quickly can reward progress items.
-    If off, they will still be randomized, but will only reward optional items you don't need to beat the game."""
+    If off, they will still be randomized, but will only reward optional items you don't need to beat the game.
+    """
 
     display_name = "Short Sidequests"
 
@@ -67,14 +83,16 @@ class ShortSidequests(Toggle):
 class LongSidequests(Toggle):
     """This controls whether long sidequests (e.g. Lenzo's assistant, withered trees, goron trading) can reward progress
     items.
-    If off, they will still be randomized, but will only reward optional items you don't need to beat the game."""
+    If off, they will still be randomized, but will only reward optional items you don't need to beat the game.
+    """
 
     display_name = "Long Sidequests"
 
 
 class SpoilsTrading(Toggle):
     """This controls whether the items you get by trading in spoils to NPCs can be progress items.
-    If off, they will still be randomized</u>, but will only reward optional items you don't need to beat the game."""
+    If off, they will still be randomized</u>, but will only reward optional items you don't need to beat the game.
+    """
 
     display_name = "Spoils Trading"
 
@@ -82,35 +100,40 @@ class SpoilsTrading(Toggle):
 class Minigames(Toggle):
     """This controls whether most minigames can reward progress items (auctions, mail sorting, barrel shooting, bird-man
     contest).
-    If off, minigames will still be randomized, but will only reward optional items you don't need to beat the game."""
+    If off, minigames will still be randomized, but will only reward optional items you don't need to beat the game.
+    """
 
     display_name = "Minigames"
 
 
 class Battlesquid(Toggle):
     """This controls whether the Windfall battleship minigame can reward progress items.
-    If off, it will still be randomized, but will only reward optional items you don't need to beat the game."""
+    If off, it will still be randomized, but will only reward optional items you don't need to beat the game.
+    """
 
     display_name = "Battlesquid Minigame"
 
 
 class FreeGifts(DefaultOnToggle):
     """This controls whether gifts freely given by NPCs can be progress items (Tott, Salvage Corp, imprisoned Tingle).
-    If off, they will still be randomized, but will only be optional items you don't need to beat the game."""
+    If off, they will still be randomized, but will only be optional items you don't need to beat the game.
+    """
 
     display_name = "Free Gifts"
 
 
 class Mail(Toggle):
     """This controls whether mail can contain progress items.
-    If off, mail will still be randomized, but will only contain optional items you don't need to beat the game."""
+    If off, mail will still be randomized, but will only contain optional items you don't need to beat the game.
+    """
 
     display_name = "Mail"
 
 
 class PlatformsRafts(Toggle):
     """This controls whether lookout platforms and rafts can contain progress items.
-    If off, they will still be randomized, but will only contain optional items you don't need to beat the game."""
+    If off, they will still be randomized, but will only contain optional items you don't need to beat the game.
+    """
 
     display_name = "Lookout Platforms and Rafts"
 
@@ -125,28 +148,32 @@ class Submarines(Toggle):
 
 class EyeReefChests(Toggle):
     """This controls whether the chests that appear after clearing out the eye reefs can contain progress items.
-    If off, they will still be randomized, but will only contain optional items you don't need to beat the game."""
+    If off, they will still be randomized, but will only contain optional items you don't need to beat the game.
+    """
 
     display_name = "Eye Reef Chests"
 
 
 class BigOctosGunboats(Toggle):
     """This controls whether the items dropped by Big Octos and Gunboats can contain progress items.
-    If off, they will still be randomized, but will only contain optional items you don't need to beat the game."""
+    If off, they will still be randomized, but will only contain optional items you don't need to beat the game.
+    """
 
     display_name = "Big Octos and Gunboats"
 
 
 class TriforceCharts(Toggle):
     """This controls whether the sunken treasure chests marked on Triforce Charts can contain progress items.
-    If off, they will still be randomized, but will only contain optional items you don't need to beat the game."""
+    If off, they will still be randomized, but will only contain optional items you don't need to beat the game.
+    """
 
     display_name = "Sunken Treasure (From Triforce Charts)"
 
 
 class TreasureCharts(Toggle):
     """This controls whether the sunken treasure chests marked on Treasure Charts can contain progress items.
-    If off, they will still be randomized, but will only contain optional items you don't need to beat the game."""
+    If off, they will still be randomized, but will only contain optional items you don't need to beat the game.
+    """
 
     display_name = "Sunken Treasure (From Treasure Charts)"
 
@@ -154,14 +181,16 @@ class TreasureCharts(Toggle):
 class ExpensivePurchases(DefaultOnToggle):
     """This controls whether items that cost a lot of rupees can be progress items (Rock Spire shop, auctions, Tingle's
     letter, trading quest).
-    If off, they will still be randomized, but will only be optional items you don't need to beat the game."""
+    If off, they will still be randomized, but will only be optional items you don't need to beat the game.
+    """
 
     display_name = "Expensive Purchases"
 
 
 class IslandPuzzles(Toggle):
     """This controls whether various island puzzles can contain progress items (e.g. chests hidden in unusual places).
-    If off, they will still be randomized, but will only contain optional items you don't need to beat the game."""
+    If off, they will still be randomized, but will only contain optional items you don't need to beat the game.
+    """
 
     display_name = "Island Puzzles"
 
@@ -169,7 +198,8 @@ class IslandPuzzles(Toggle):
 class Misc(Toggle):
     """Miscellaneous locations that don't fit into any of the above categories (outdoors chests, wind shrine, Cyclos,
     etc).
-    If off, they will still be randomized, but will only contain optional items you don't need to beat the game."""
+    If off, they will still be randomized, but will only contain optional items you don't need to beat the game.
+    """
 
     display_name = "Miscellaneous"
 
@@ -181,7 +211,8 @@ class RandomizeMapCompass(Choice):
     Own Dungeon Maps & Compasses: Dungeon maps and compasses will be randomized locally within their own dungeon.
     Any Dungeon Maps & Compasses: Dungeon maps and compasses will be randomized locally within any dungeon.
     Local Maps & Compasses: Dungeon maps and compasses will be randomized locally anywhere.
-    Key-Lunacy: Dungeon maps and compasses can be found anywhere, without restriction."""
+    Key-Lunacy: Dungeon maps and compasses can be found anywhere, without restriction.
+    """
 
     display_name = "Randomize Maps & Compasses"
     option_startwith = 0
@@ -200,7 +231,8 @@ class RandomizeSmallKeys(Choice):
     Own Dungeon Small Keys: Small keys will be randomized locally within their own dungeon.
     Any Dungeon Small Keys: Small keys will be randomized locally within any dungeon.
     Local Small Keys: Small keys will be randomized locally anywhere.
-    Key-Lunacy: Small keys can be found in any progression location, if dungeons are randomized."""
+    Key-Lunacy: Small keys can be found in any progression location, if dungeons are randomized.
+    """
 
     display_name = "Randomize Small Keys"
     option_startwith = 0
@@ -219,7 +251,8 @@ class RandomizeBigKeys(Choice):
     Own Dungeon Big Keys: Big keys will be randomized locally within their own dungeon.
     Any Dungeon Big Keys: Big keys will be randomized locally within any dungeon.
     Local Big Keys: Big keys will be randomized locally anywhere.
-    Key-Lunacy: Big keys can be found in any progression location, if dungeons are randomized."""
+    Key-Lunacy: Big keys can be found in any progression location, if dungeons are randomized.
+    """
 
     display_name = "Randomize Big Keys"
     option_startwith = 0
@@ -284,7 +317,8 @@ class ExcludedDungeons(OptionSet):
 
 class ChestTypeMatchesContents(Toggle):
     """Changes the chest type to reflect its contents. A metal chest has a progress item, a wooden chest has a
-    non-progress item or a consumable, and a green chest has a potentially required dungeon key."""
+    non-progress item or a consumable, and a green chest has a potentially required dungeon key.
+    """
 
     display_name = "Chest Type Matches Contents"
 
@@ -332,7 +366,8 @@ class LogicPrecision(Choice):
 
 class EnableTunerLogic(Toggle):
     """If enabled, the randomizer can logically expect the Tingle Tuner for Tingle chests.
-    The randomizer behavior of logically expecting Bombs/bomb flowers to spawn in Tingle chests remains unchanged."""
+    The randomizer behavior of logically expecting Bombs/bomb flowers to spawn in Tingle chests remains unchanged.
+    """
 
     display_name = "Enable Tuner Logic"
 
@@ -352,14 +387,16 @@ class RandomizeSecretCavesEntrances(Toggle):
 
 class RandomizeMinibossEntrances(Toggle):
     """Allows dungeon miniboss doors to act as entrances to be randomized.
-    If on with random dungeon entrances, dungeons may nest within each other, forming chains of connected dungeons."""
+    If on with random dungeon entrances, dungeons may nest within each other, forming chains of connected dungeons.
+    """
 
     display_name = "Randomize Nested Minibosses"
 
 
 class RandomizeBossEntrances(Toggle):
     """Allows dungeon boss doors to act as entrances to be randomized.
-    If on with random dungeon entrances, dungeons may nest within each other, forming chains of connected dungeons."""
+    If on with random dungeon entrances, dungeons may nest within each other, forming chains of connected dungeons.
+    """
 
     display_name = "Randomize Nested Bosses"
 
@@ -380,7 +417,8 @@ class RandomizeFairyFountainEntrances(Toggle):
 class MixEntrances(Choice):
     """Controls how the different types (pools) of randomized entrances should be shuffled.
     Separate Pools: Each pool of randomized entrances with shuffle into itself (e.g., dungeons into dungeons).
-    Mix Pools: All pools of randomized entrances will be combined into one pool to be shuffled."""
+    Mix Pools: All pools of randomized entrances will be combined into one pool to be shuffled.
+    """
 
     display_name = "Mix Entrances"
     option_separate_pools = 0
@@ -431,7 +469,8 @@ class FishmenHints(DefaultOnToggle):
 
 class KoRLHints(Toggle):
     """DEV NOTE: This option is currently unimplemented and will be ignored.
-    Places hints on the King of Red Lions. Talk to the King of Red Lions to get hints."""
+    Places hints on the King of Red Lions. Talk to the King of Red Lions to get hints.
+    """
 
     display_name = "Place Hints on King of Red Lions"
 
