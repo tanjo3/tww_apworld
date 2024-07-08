@@ -116,7 +116,7 @@ FAIRY_FOUNTAIN_EXITS = [
     "Northern Fairy Fountain",
 ]
 
-# THis dict maps exits to entrances located in that exit
+# This dictionary maps exits to entrances located in that exit.
 ENTRANCE_ACCESSIBILITY: dict[str, list[str]] = {
     "The Great Sea": [
         "Dungeon Entrance on Dragon Roost Island",

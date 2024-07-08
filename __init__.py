@@ -497,7 +497,7 @@ class TWWWorld(World):
             rule = lambda state, entrance=entrance: getattr(Macros, self._get_access_rule(entrance))(state, self.player)
             great_sea_region.connect(self.get_region(entrance), rule=rule)
 
-        # Connect nested regions with their parent region
+        # Connect nested regions with their parent region.
         for entrance in MINIBOSS_ENTRANCES + BOSS_ENTRANCES + SECRET_CAVES_INNER_ENTRANCES:
             parent_region_name = entrance.split(" in ")[-1]
             # Consider Hyrule Castle and Forsaken Fortress as part of The Great Sea (regions are not randomizable).
