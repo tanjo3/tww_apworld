@@ -68,7 +68,7 @@ class TWWLocation(Location):
         self.address = self.address
 
     @staticmethod
-    def get_apid(code: int):
+    def get_apid(code: int | None):
         base_id: int = 2326528
         return base_id + code if code is not None else None
 

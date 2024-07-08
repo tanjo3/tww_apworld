@@ -89,7 +89,7 @@ class TWWContext(CommonContext):
     def __init__(self, server_address, password):
         super().__init__(server_address, password)
         self.items_received_2: list[tuple[NetworkItem, int]] = []
-        self.dolphin_sync_task = None
+        self.dolphin_sync_task: asyncio.Task | None = None
         self.dolphin_status = CONNECTION_INITIAL_STATUS
         self.awaiting_rom = False
         self.last_rcvd_index = -1
@@ -141,21 +141,21 @@ class TWWContext(CommonContext):
         self.ui_task = asyncio.create_task(self.ui.async_run(), name="UI")
 
 
-def read_short(console_address: int):
+def read_short(console_address: int) -> int:
     return int.from_bytes(dolphin_memory_engine.read_bytes(console_address, 2))
 
 
-def write_short(console_address: int, value: int):
+def write_short(console_address: int, value: int) -> None:
     dolphin_memory_engine.write_bytes(console_address, value.to_bytes(2))
 
 
-def read_string(console_address: int, strlen: int):
+def read_string(console_address: int, strlen: int) -> str:
     return dolphin_memory_engine.read_bytes(console_address, strlen).decode().strip("\0")
 
 
 def _give_death(ctx: TWWContext):
     if (
-        ctx.slot
+        ctx.slot is not None
         and dolphin_memory_engine.is_hooked()
         and ctx.dolphin_status == CONNECTION_CONNECTED_STATUS
         and check_ingame()
@@ -252,6 +252,7 @@ async def check_locations(ctx: TWWContext):
                 case TWWLocationType.CHART:
                     checked = (charts_bitfield >> data.bit) & 1
                 case TWWLocationType.BOCTO:
+                    assert data.address is not None
                     checked = (read_short(data.address) >> data.bit) & 1
                 case TWWLocationType.CHEST:
                     checked = (chests_bitfield >> data.bit) & 1
@@ -288,7 +289,7 @@ async def check_alive():
 
 
 async def check_death(ctx: TWWContext):
-    if check_ingame():
+    if ctx.slot is not None and check_ingame():
         cur_health = read_short(CURR_HEALTH_ADDR)
         if cur_health <= 0:
             if not ctx.has_send_death and time.time() >= ctx.last_death_link + 3:
@@ -312,7 +313,7 @@ async def dolphin_sync_task(ctx: TWWContext):
                     dolphin_memory_engine.write_bytes(GIVE_ITEM_ARRAY_ADDR, bytes([0xFF] * ctx.len_give_item_array))
                     await asyncio.sleep(0.1)
                     continue
-                if ctx.slot:
+                if ctx.slot is not None:
                     if "DeathLink" in ctx.tags:
                         await check_death(ctx)
                     await give_items(ctx)

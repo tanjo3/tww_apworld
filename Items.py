@@ -23,7 +23,7 @@ class TWWItem(Item):
         self.item_id = data.item_id
 
     @staticmethod
-    def get_apid(code: int):
+    def get_apid(code: int | None):
         base_id: int = 2322432
         return base_id + code if code is not None else None
 
