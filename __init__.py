@@ -30,6 +30,8 @@ from .Options import TWWOptions
 from .Regions import *
 from .Rules import set_rules
 
+VERSION = (2, 5, 0)
+
 
 def run_client():
     print("Running TWW Client")
@@ -711,6 +713,7 @@ class TWWWorld(World):
     def generate_output(self, output_directory: str):
         # Output seed name and slot number to seed RNG in randomizer client.
         output_data = {
+            "Version": VERSION,
             "Seed": self.multiworld.seed_name,
             "Slot": self.player,
             "Name": self.multiworld.get_player_name(self.player),
