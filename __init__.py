@@ -81,7 +81,7 @@ class TWWWorld(World):
         name: TWWLocation.get_apid(data.code) for name, data in LOCATION_TABLE.items() if data.code is not None
     }
 
-    required_client_version = (0, 4, 5)
+    required_client_version = (0, 5, 0)
 
     web = TWWWeb()
 
