@@ -7,6 +7,7 @@ from Options import (
     OptionSet,
     PerGameCommonOptions,
     Range,
+    StartInventoryPool,
     Toggle,
 )
 
@@ -574,6 +575,7 @@ class RemoveMusic(Toggle):
 
 @dataclass
 class TWWOptions(PerGameCommonOptions):
+    start_inventory_from_pool: StartInventoryPool
     progression_dungeons: Dungeons
     progression_tingle_chests: TingleChests
     progression_dungeon_secrets: DungeonSecrets
