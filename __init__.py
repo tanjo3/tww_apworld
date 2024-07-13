@@ -526,6 +526,9 @@ class TWWWorld(World):
         for field in fields(self.options):
             output_data["Options"][field.name] = getattr(self.options, field.name).value
 
+        # Temporarily force boss rematches to be skipped until Jalhalla bug is fixed.
+        output_data["Options"]["skip_rematch_bosses"] = True
+
         # Output which item has been placed at each location.
         locations = multiworld.get_locations(player)
         for location in locations:
@@ -653,7 +656,7 @@ class TWWWorld(World):
             "instant_text_boxes": self.options.instant_text_boxes.value,
             "reveal_full_sea_chart": self.options.reveal_full_sea_chart.value,
             "add_shortcut_warps_between_dungeons": self.options.add_shortcut_warps_between_dungeons.value,
-            "skip_rematch_bosses": self.options.skip_rematch_bosses.value,
+            # "skip_rematch_bosses": self.options.skip_rematch_bosses.value,
             "remove_music": self.options.remove_music.value,
             "death_link": self.options.death_link.value,
         }

@@ -20,7 +20,8 @@ class TWWLogic(LogicMixin):
         )
 
     def _tww_rematch_bosses_skipped(self, player: int):
-        return self.multiworld.worlds[player].options.skip_rematch_bosses
+        # return self.multiworld.worlds[player].options.skip_rematch_bosses
+        return True
 
     def _tww_in_swordless_mode(self, player: int):
         return self.multiworld.worlds[player].options.sword_mode == "swordless"
