@@ -15,8 +15,7 @@ class TWWLogic(LogicMixin):
 
     def _tww_can_defeat_all_required_bosses(self, player: int):
         return all(
-            self.can_reach(loc, "Location", player)
-            for loc in self.multiworld.worlds[player].required_boss_item_locations
+            self.can_reach_location(loc, player) for loc in self.multiworld.worlds[player].required_boss_item_locations
         )
 
     def _tww_rematch_bosses_skipped(self, player: int):
@@ -124,7 +123,7 @@ def set_rules(world):
     )
     set_rule(
         world.get_location("Outset Island - Savage Labyrinth - Floor 50"),
-        lambda state: state.can_reach("Outset Island - Savage Labyrinth - Floor 30", "Location", player)
+        lambda state: state.can_reach_location("Outset Island - Savage Labyrinth - Floor 30", player)
         and can_aim_mirror_shield(state, player)
         and can_defeat_redeads(state, player)
         and can_defeat_blue_bubbles(state, player)
@@ -948,7 +947,7 @@ def set_rules(world):
         world.get_location("Mailbox - Letter from Baito"),
         lambda state: state.has("Delivery Bag", player)
         and state.has("Note to Mom", player)
-        and state.can_reach("Earth Temple - Jalhalla Heart Container", "Location", player),
+        and state.can_reach_location("Earth Temple - Jalhalla Heart Container", player),
     )
     set_rule(
         world.get_location("Mailbox - Letter from Komali's Father"),
@@ -984,7 +983,7 @@ def set_rules(world):
     # )
     set_rule(
         world.get_location("Mailbox - Letter from Orca"),
-        lambda state: state.can_reach("Forbidden Woods - Kalle Demos Heart Container", "Location", player),
+        lambda state: state.can_reach_location("Forbidden Woods - Kalle Demos Heart Container", player),
     )
     set_rule(
         world.get_location("Mailbox - Letter from Grandma"),
@@ -994,14 +993,14 @@ def set_rules(world):
     )
     set_rule(
         world.get_location("Mailbox - Letter from Aryll"),
-        lambda state: state.can_reach("Forsaken Fortress - Helmaroc King Heart Container", "Location", player)
+        lambda state: state.can_reach_location("Forsaken Fortress - Helmaroc King Heart Container", player)
         and can_play_song_of_passing(state, player),
     )
     set_rule(
         world.get_location("Mailbox - Letter from Tingle"),
         lambda state: rescued_tingle(state, player)
         and has_any_wallet_upgrade(state, player)
-        and state.can_reach("Forsaken Fortress - Helmaroc King Heart Container", "Location", player)
+        and state.can_reach_location("Forsaken Fortress - Helmaroc King Heart Container", player)
         and can_play_song_of_passing(state, player),
     )
 
@@ -1018,7 +1017,7 @@ def set_rules(world):
         lambda state: can_access_forest_haven(state, player)
         and state.has("Empty Bottle", player)
         and can_play_ballad_of_gales(state, player)
-        and state.can_reach("Cliff Plateau Isles - Highest Isle", "Location", player),
+        and state.can_reach_location("Cliff Plateau Isles - Highest Isle", player),
     )
     set_rule(
         world.get_location("The Great Sea - Ghost Ship"),

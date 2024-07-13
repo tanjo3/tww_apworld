@@ -411,15 +411,15 @@ def can_access_dungeon_entrance_on_gale_isle(state: CollectionState, player: int
 
 
 def can_access_dragon_roost_cavern(state: CollectionState, player: int):
-    return state.can_reach("Dragon Roost Cavern", "Region", player)
+    return state.can_reach_region("Dragon Roost Cavern", player)
 
 
 def can_access_forbidden_woods(state: CollectionState, player: int):
-    return state.can_reach("Forbidden Woods", "Region", player)
+    return state.can_reach_region("Forbidden Woods", player)
 
 
 def can_access_tower_of_the_gods(state: CollectionState, player: int):
-    return state.can_reach("Tower of the Gods", "Region", player)
+    return state.can_reach_region("Tower of the Gods", player)
 
 
 def can_access_forsaken_fortress(state: CollectionState, player: int):
@@ -427,11 +427,11 @@ def can_access_forsaken_fortress(state: CollectionState, player: int):
 
 
 def can_access_earth_temple(state: CollectionState, player: int):
-    return state.can_reach("Earth Temple", "Region", player)
+    return state.can_reach_region("Earth Temple", player)
 
 
 def can_access_wind_temple(state: CollectionState, player: int):
-    return state.can_reach("Wind Temple", "Region", player)
+    return state.can_reach_region("Wind Temple", player)
 
 
 def can_access_miniboss_entrance_in_forbidden_woods(state: CollectionState, player: int):
@@ -465,23 +465,23 @@ def can_access_miniboss_entrance_in_hyrule_castle(state: CollectionState, player
 
 
 def can_access_forbidden_woods_miniboss_arena(state: CollectionState, player: int):
-    return state.can_reach("Forbidden Woods Miniboss Arena", "Region", player)
+    return state.can_reach_region("Forbidden Woods Miniboss Arena", player)
 
 
 def can_access_tower_of_the_gods_miniboss_arena(state: CollectionState, player: int):
-    return state.can_reach("Tower of the Gods Miniboss Arena", "Region", player)
+    return state.can_reach_region("Tower of the Gods Miniboss Arena", player)
 
 
 def can_access_earth_temple_miniboss_arena(state: CollectionState, player: int):
-    return state.can_reach("Earth Temple Miniboss Arena", "Region", player)
+    return state.can_reach_region("Earth Temple Miniboss Arena", player)
 
 
 def can_access_wind_temple_miniboss_arena(state: CollectionState, player: int):
-    return state.can_reach("Wind Temple Miniboss Arena", "Region", player)
+    return state.can_reach_region("Wind Temple Miniboss Arena", player)
 
 
 def can_access_master_sword_chamber(state: CollectionState, player: int):
-    return state.can_reach("Master Sword Chamber", "Region", player)
+    return state.can_reach_region("Master Sword Chamber", player)
 
 
 def can_access_boss_entrance_in_dragon_roost_cavern(state: CollectionState, player: int):
@@ -535,27 +535,27 @@ def can_access_boss_entrance_in_wind_temple(state: CollectionState, player: int)
 
 
 def can_access_gohma_boss_arena(state: CollectionState, player: int):
-    return state.can_reach("Gohma Boss Arena", "Region", player)
+    return state.can_reach_region("Gohma Boss Arena", player)
 
 
 def can_access_kalle_demos_boss_arena(state: CollectionState, player: int):
-    return state.can_reach("Kalle Demos Boss Arena", "Region", player)
+    return state.can_reach_region("Kalle Demos Boss Arena", player)
 
 
 def can_access_gohdan_boss_arena(state: CollectionState, player: int):
-    return state.can_reach("Gohdan Boss Arena", "Region", player)
+    return state.can_reach_region("Gohdan Boss Arena", player)
 
 
 def can_access_helmaroc_king_boss_arena(state: CollectionState, player: int):
-    return state.can_reach("Helmaroc King Boss Arena", "Region", player)
+    return state.can_reach_region("Helmaroc King Boss Arena", player)
 
 
 def can_access_jalhalla_boss_arena(state: CollectionState, player: int):
-    return state.can_reach("Jalhalla Boss Arena", "Region", player)
+    return state.can_reach_region("Jalhalla Boss Arena", player)
 
 
 def can_access_molgera_boss_arena(state: CollectionState, player: int):
-    return state.can_reach("Molgera Boss Arena", "Region", player)
+    return state.can_reach_region("Molgera Boss Arena", player)
 
 
 def can_access_secret_cave_entrance_on_outset_island(state: CollectionState, player: int):
@@ -644,83 +644,83 @@ def can_access_secret_cave_entrance_on_star_island(state: CollectionState, playe
 
 
 def can_access_savage_labyrinth(state: CollectionState, player: int):
-    return state.can_reach("Savage Labyrinth", "Region", player)
+    return state.can_reach_region("Savage Labyrinth", player)
 
 
 def can_access_dragon_roost_island_secret_cave(state: CollectionState, player: int):
-    return state.can_reach("Dragon Roost Island Secret Cave", "Region", player)
+    return state.can_reach_region("Dragon Roost Island Secret Cave", player)
 
 
 def can_access_fire_mountain_secret_cave(state: CollectionState, player: int):
-    return state.can_reach("Fire Mountain Secret Cave", "Region", player)
+    return state.can_reach_region("Fire Mountain Secret Cave", player)
 
 
 def can_access_ice_ring_isle_secret_cave(state: CollectionState, player: int):
-    return state.can_reach("Ice Ring Isle Secret Cave", "Region", player)
+    return state.can_reach_region("Ice Ring Isle Secret Cave", player)
 
 
 def can_access_cabana_labyrinth(state: CollectionState, player: int):
-    return state.can_reach("Cabana Labyrinth", "Region", player)
+    return state.can_reach_region("Cabana Labyrinth", player)
 
 
 def can_access_needle_rock_isle_secret_cave(state: CollectionState, player: int):
-    return state.can_reach("Needle Rock Isle Secret Cave", "Region", player)
+    return state.can_reach_region("Needle Rock Isle Secret Cave", player)
 
 
 def can_access_angular_isles_secret_cave(state: CollectionState, player: int):
-    return state.can_reach("Angular Isles Secret Cave", "Region", player)
+    return state.can_reach_region("Angular Isles Secret Cave", player)
 
 
 def can_access_boating_course_secret_cave(state: CollectionState, player: int):
-    return state.can_reach("Boating Course Secret Cave", "Region", player)
+    return state.can_reach_region("Boating Course Secret Cave", player)
 
 
 def can_access_stone_watcher_island_secret_cave(state: CollectionState, player: int):
-    return state.can_reach("Stone Watcher Island Secret Cave", "Region", player)
+    return state.can_reach_region("Stone Watcher Island Secret Cave", player)
 
 
 def can_access_overlook_island_secret_cave(state: CollectionState, player: int):
-    return state.can_reach("Overlook Island Secret Cave", "Region", player)
+    return state.can_reach_region("Overlook Island Secret Cave", player)
 
 
 def can_access_birds_peak_rock_secret_cave(state: CollectionState, player: int):
-    return state.can_reach("Bird's Peak Rock Secret Cave", "Region", player)
+    return state.can_reach_region("Bird's Peak Rock Secret Cave", player)
 
 
 def can_access_pawprint_isle_chuchu_cave(state: CollectionState, player: int):
-    return state.can_reach("Pawprint Isle Chuchu Cave", "Region", player)
+    return state.can_reach_region("Pawprint Isle Chuchu Cave", player)
 
 
 def can_access_pawprint_isle_wizzrobe_cave(state: CollectionState, player: int):
-    return state.can_reach("Pawprint Isle Wizzrobe Cave", "Region", player)
+    return state.can_reach_region("Pawprint Isle Wizzrobe Cave", player)
 
 
 def can_access_diamond_steppe_island_warp_maze_cave(state: CollectionState, player: int):
-    return state.can_reach("Diamond Steppe Island Warp Maze Cave", "Region", player)
+    return state.can_reach_region("Diamond Steppe Island Warp Maze Cave", player)
 
 
 def can_access_bomb_island_secret_cave(state: CollectionState, player: int):
-    return state.can_reach("Bomb Island Secret Cave", "Region", player)
+    return state.can_reach_region("Bomb Island Secret Cave", player)
 
 
 def can_access_rock_spire_isle_secret_cave(state: CollectionState, player: int):
-    return state.can_reach("Rock Spire Isle Secret Cave", "Region", player)
+    return state.can_reach_region("Rock Spire Isle Secret Cave", player)
 
 
 def can_access_shark_island_secret_cave(state: CollectionState, player: int):
-    return state.can_reach("Shark Island Secret Cave", "Region", player)
+    return state.can_reach_region("Shark Island Secret Cave", player)
 
 
 def can_access_cliff_plateau_isles_secret_cave(state: CollectionState, player: int):
-    return state.can_reach("Cliff Plateau Isles Secret Cave", "Region", player)
+    return state.can_reach_region("Cliff Plateau Isles Secret Cave", player)
 
 
 def can_access_horseshoe_island_secret_cave(state: CollectionState, player: int):
-    return state.can_reach("Horseshoe Island Secret Cave", "Region", player)
+    return state.can_reach_region("Horseshoe Island Secret Cave", player)
 
 
 def can_access_star_island_secret_cave(state: CollectionState, player: int):
-    return state.can_reach("Star Island Secret Cave", "Region", player)
+    return state.can_reach_region("Star Island Secret Cave", player)
 
 
 def can_access_inner_entrance_in_ice_ring_isle_secret_cave(state: CollectionState, player: int):
@@ -736,11 +736,11 @@ def can_access_inner_entrance_in_cliff_plateau_isles_secret_cave(state: Collecti
 
 
 def can_access_ice_ring_isle_inner_cave(state: CollectionState, player: int):
-    return state.can_reach("Ice Ring Isle Inner Cave", "Region", player)
+    return state.can_reach_region("Ice Ring Isle Inner Cave", player)
 
 
 def can_access_cliff_plateau_isles_inner_cave(state: CollectionState, player: int):
-    return state.can_reach("Cliff Plateau Isles Inner Cave", "Region", player)
+    return state.can_reach_region("Cliff Plateau Isles Inner Cave", player)
 
 
 def can_access_fairy_fountain_entrance_on_outset_island(state: CollectionState, player: int):
@@ -768,27 +768,27 @@ def can_access_fairy_fountain_entrance_on_northern_fairy_island(state: Collectio
 
 
 def can_access_outset_fairy_fountain(state: CollectionState, player: int):
-    return state.can_reach("Outset Fairy Fountain", "Region", player)
+    return state.can_reach_region("Outset Fairy Fountain", player)
 
 
 def can_access_thorned_fairy_fountain(state: CollectionState, player: int):
-    return state.can_reach("Thorned Fairy Fountain", "Region", player)
+    return state.can_reach_region("Thorned Fairy Fountain", player)
 
 
 def can_access_eastern_fairy_fountain(state: CollectionState, player: int):
-    return state.can_reach("Eastern Fairy Fountain", "Region", player)
+    return state.can_reach_region("Eastern Fairy Fountain", player)
 
 
 def can_access_western_fairy_fountain(state: CollectionState, player: int):
-    return state.can_reach("Western Fairy Fountain", "Region", player)
+    return state.can_reach_region("Western Fairy Fountain", player)
 
 
 def can_access_southern_fairy_fountain(state: CollectionState, player: int):
-    return state.can_reach("Southern Fairy Fountain", "Region", player)
+    return state.can_reach_region("Southern Fairy Fountain", player)
 
 
 def can_access_northern_fairy_fountain(state: CollectionState, player: int):
-    return state.can_reach("Northern Fairy Fountain", "Region", player)
+    return state.can_reach_region("Northern Fairy Fountain", player)
 
 
 def can_get_past_forsaken_fortress_gate(state: CollectionState, player: int):
@@ -930,24 +930,23 @@ def can_farm_knights_crests(state: CollectionState, player: int):
         state.has("Grappling Hook", player)
         and state.has("Spoils Bag", player)
         and (
-            state.can_reach("Ice Ring Isle - Inner Cave - Chest", "Location", player)
-            or state.can_reach("Outset Island - Savage Labyrinth - Floor 30", "Location", player)
+            state.can_reach_location("Ice Ring Isle - Inner Cave - Chest", player)
+            or state.can_reach_location("Outset Island - Savage Labyrinth - Floor 30", player)
             or (
-                state.can_reach("Earth Temple - Big Key Chest", "Location", player)
+                state.can_reach_location("Earth Temple - Big Key Chest", player)
                 and can_defeat_darknuts_easily(state, player)
             )
             or (
-                state.can_reach("Wind Temple - Big Key Chest", "Location", player)
+                state.can_reach_location("Wind Temple - Big Key Chest", player)
                 and can_defeat_darknuts_easily(state, player)
             )
-            or state.can_reach("Shark Island - Cave", "Location", player)
+            or state.can_reach_location("Shark Island - Cave", player)
             or (
-                state.can_reach("Stone Watcher Island - Cave", "Location", player)
+                state.can_reach_location("Stone Watcher Island - Cave", player)
                 and can_defeat_darknuts_easily(state, player)
             )
             or (
-                state.can_reach("Overlook Island - Cave", "Location", player)
-                and can_defeat_darknuts_easily(state, player)
+                state.can_reach_location("Overlook Island - Cave", player) and can_defeat_darknuts_easily(state, player)
             )
             or can_access_hyrule(state, player)
         )
@@ -983,7 +982,7 @@ def can_obtain_15_blue_chu_jelly(state: CollectionState, player: int):
                 can_access_secret_cave_entrance_on_shark_island(state, player)
                 and can_fly_with_deku_leaf_outdoors(state, player)
             )
-            or state.can_reach("Cliff Plateau Isles - Highest Isle", "Location", player)
+            or state.can_reach_location("Cliff Plateau Isles - Highest Isle", player)
             or can_fan_with_deku_leaf(state, player)
             or can_access_secret_cave_entrance_on_boating_course(state, player)
         )
