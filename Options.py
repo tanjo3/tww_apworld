@@ -9,7 +9,8 @@ from Options import (
     Range,
     Toggle,
 )
-from worlds.tww.Locations import DUNGEON_NAMES
+
+from .Locations import DUNGEON_NAMES
 
 
 class Dungeons(DefaultOnToggle):
@@ -204,7 +205,22 @@ class Misc(Toggle):
     display_name = "Miscellaneous"
 
 
-class RandomizeMapCompass(Choice):
+class DungeonItem(Choice):
+    value: int
+    option_startwith = 0
+    option_vanilla = 1
+    option_dungeon = 2
+    option_any_dungeon = 3
+    option_local = 4
+    option_keylunacy = 5
+    default = 2
+
+    @property
+    def in_dungeon(self):
+        return self.value in (2, 3)
+
+
+class RandomizeMapCompass(DungeonItem):
     """Controls how dungeon maps and compasses are randomized.
     Start With Maps & Compasses: You will start the game with the dungeon maps and compasses for all dungeons.
     Vanilla Maps & Compasses: Dungeon maps and compasses will be kept in their vanilla location (non-randomized).
@@ -214,17 +230,12 @@ class RandomizeMapCompass(Choice):
     Key-Lunacy: Dungeon maps and compasses can be found anywhere, without restriction.
     """
 
+    item_name_group = "Dungeon Items"
     display_name = "Randomize Maps & Compasses"
-    option_startwith = 0
-    option_vanilla = 1
-    option_dungeon = 2
-    option_any_dungeon = 3
-    option_local = 4
-    option_keylunacy = 5
     default = 2
 
 
-class RandomizeSmallKeys(Choice):
+class RandomizeSmallKeys(DungeonItem):
     """Controls how small keys are randomized.
     Start With Small Keys: You will start the game with the small keys for all dungeons.
     Vanilla Small Keys: Small keys will be kept in their vanilla location (non-randomized).
@@ -234,17 +245,12 @@ class RandomizeSmallKeys(Choice):
     Key-Lunacy: Small keys can be found in any progression location, if dungeons are randomized.
     """
 
+    item_name_group = "Small Keys"
     display_name = "Randomize Small Keys"
-    option_startwith = 0
-    option_vanilla = 1
-    option_dungeon = 2
-    option_any_dungeon = 3
-    option_local = 4
-    option_keylunacy = 5
     default = 2
 
 
-class RandomizeBigKeys(Choice):
+class RandomizeBigKeys(DungeonItem):
     """Controls how big keys are randomized.
     Start With Big Keys: You will start the game with the big keys for all dungeons.
     Vanilla Big Keys: Big keys will be kept in their vanilla location (non-randomized).
@@ -254,13 +260,8 @@ class RandomizeBigKeys(Choice):
     Key-Lunacy: Big keys can be found in any progression location, if dungeons are randomized.
     """
 
+    item_name_group = "Big Keys"
     display_name = "Randomize Big Keys"
-    option_startwith = 0
-    option_vanilla = 1
-    option_dungeon = 2
-    option_any_dungeon = 3
-    option_local = 4
-    option_keylunacy = 5
     default = 2
 
 

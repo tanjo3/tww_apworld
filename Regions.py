@@ -180,6 +180,22 @@ ENTRANCE_ACCESSIBILITY: dict[str, list[str]] = {
     ],
 }
 
+MINIBOSS_EXIT_TO_DUNGEON = {
+    "Forbidden Woods Miniboss Arena": "Forbidden Woods",
+    "Tower of the Gods Miniboss Arena": "Tower of the Gods",
+    "Earth Temple Miniboss Arena": "Earth Temple",
+    "Wind Temple Miniboss Arena": "Wind Temple",
+}
+
+BOSS_EXIT_TO_DUNGEON = {
+    "Gohma Boss Arena": "Dragon Roost Cavern",
+    "Kalle Demos Boss Arena": "Forbidden Woods",
+    "Gohdan Boss Arena": "Tower of the Gods",
+    "Helmaroc King Boss Arena": "Forsaken Fortress",
+    "Jalhalla Boss Arena": "Earth Temple",
+    "Molgera Boss Arena": "Wind Temple",
+}
+
 ALL_ENTRANCES = (
     DUNGEON_ENTRANCES
     + MINIBOSS_ENTRANCES

@@ -6,14 +6,7 @@ from typing import Any
 import dolphin_memory_engine
 
 import Utils
-from CommonClient import (
-    ClientCommandProcessor,
-    CommonContext,
-    get_base_parser,
-    gui_enabled,
-    logger,
-    server_loop,
-)
+from CommonClient import ClientCommandProcessor, CommonContext, get_base_parser, gui_enabled, logger, server_loop
 from NetUtils import ClientStatus, NetworkItem
 
 from .Items import ITEM_TABLE, LOOKUP_ID_TO_NAME
@@ -269,9 +262,8 @@ async def check_locations(ctx: TWWContext):
             checked = (sea_alt_bitfield >> data.bit) & 1
 
         if checked:
-            location_id = TWWLocation.get_apid(data.code)
-            if location_id:
-                ctx.locations_checked.add(location_id)
+            if data.code:
+                ctx.locations_checked.add(TWWLocation.get_apid(data.code))
             else:
                 if not ctx.finished_game:
                     await ctx.send_msgs([{"cmd": "StatusUpdate", "status": ClientStatus.CLIENT_GOAL}])

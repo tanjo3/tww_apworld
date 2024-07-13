@@ -55,9 +55,11 @@ class TWWLocationData(NamedTuple):
 
 class TWWLocation(Location):
     game: str = "The Wind Waker"
+    dungeon = None
 
     def __init__(self, player: int, name: str, parent: Region, data: TWWLocationData):
-        super(TWWLocation, self).__init__(player, name, address=TWWLocation.get_apid(data.code), parent=parent)
+        address = None if data.code is None else TWWLocation.get_apid(data.code)
+        super(TWWLocation, self).__init__(player, name, address=address, parent=parent)
 
         self.code = data.code
         self.flags = data.flags
@@ -68,9 +70,9 @@ class TWWLocation(Location):
         self.address = self.address
 
     @staticmethod
-    def get_apid(code: int | None):
+    def get_apid(code: int):
         base_id: int = 2326528
-        return base_id + code if code is not None else None
+        return base_id + code
 
 
 DUNGEON_NAMES = [

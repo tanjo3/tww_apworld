@@ -1,31 +1,26 @@
 import os
 from dataclasses import fields
+from typing import Type
 
 import yaml
 
-from BaseClasses import LocationProgressType, MultiWorld, Region, Tutorial
-from Fill import fill_restrictive
+from BaseClasses import LocationProgressType, Region, Tutorial
 from worlds.AutoWorld import WebWorld, World
 from worlds.generic.Rules import add_item_rule
-from worlds.LauncherComponents import (
-    Component,
-    SuffixIdentifier,
-    Type,
-    components,
-    launch_subprocess,
-)
+from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess
 
-from .Items import ISLAND_NUMBER_TO_CHART_NAME, ITEM_TABLE, TWWItem
+from . import Macros
+from .Dungeons import Dungeon, create_dungeons
+from .ItemPool import generate_itempool
+from .Items import ISLAND_NUMBER_TO_CHART_NAME, ITEM_TABLE, TWWItem, item_name_groups
 from .Locations import (
     DUNGEON_NAMES,
     ISLAND_NUMBER_TO_NAME,
     LOCATION_TABLE,
-    VANILLA_DUNGEON_ITEM_LOCATIONS,
     TWWFlag,
     TWWLocation,
     split_location_name_by_zone,
 )
-from .Macros import *
 from .Options import TWWOptions
 from .Regions import *
 from .Rules import set_rules
@@ -37,7 +32,7 @@ def run_client():
     print("Running TWW Client")
     from .TWWClient import main  # lazy import
 
-    launch_subprocess(main, name="WindWakerClient")
+    launch_subprocess(main, name="TheWindWakerClient")
 
 
 components.append(
@@ -71,11 +66,13 @@ class TWWWorld(World):
     magical conductor's baton called the Wind Waker, he will face unimaginable monsters, explore puzzling dungeons, and
     meet a cast of unforgettable characters as he searches for his kidnapped sister."""
 
-    game: str = "The Wind Waker"
     options_dataclass = TWWOptions
     options: TWWOptions
 
+    game: str = "The Wind Waker"
     topology_present: bool = True
+
+    item_name_groups = item_name_groups
 
     item_name_to_id: dict[str, int] = {
         name: TWWItem.get_apid(data.code) for name, data in ITEM_TABLE.items() if data.code is not None
@@ -84,83 +81,27 @@ class TWWWorld(World):
         name: TWWLocation.get_apid(data.code) for name, data in LOCATION_TABLE.items() if data.code is not None
     }
 
-    item_name_groups = {
-        "Pearls": {
-            "Nayru's Pearl",
-            "Din's Pearl",
-            "Farore's Pearl",
-        },
-        "Shards": {
-            "Triforce Shard 1",
-            "Triforce Shard 2",
-            "Triforce Shard 3",
-            "Triforce Shard 4",
-            "Triforce Shard 5",
-            "Triforce Shard 6",
-            "Triforce Shard 7",
-            "Triforce Shard 8",
-        },
-        "Tingle Statues": {
-            "Dragon Tingle Statue",
-            "Forbidden Tingle Statue",
-            "Goddess Tingle Statue",
-            "Earth Tingle Statue",
-            "Wind Tingle Statue",
-        },
-    }
-
     required_client_version = (0, 4, 5)
+
     web = TWWWeb()
+
+    create_items = generate_itempool
 
     set_rules = set_rules
 
     def __init__(self, *args, **kwargs):
-        super(TWWWorld, self).__init__(*args, **kwargs)
-
-        self.itempool: list[TWWItem] = []
-        self.pre_fill_items: list[TWWItem] = []
-
-        self.vanilla_dungeon_item_names: set[str] = set()
-        self.own_dungeon_item_names: set[str] = set()
-        self.any_dungeon_item_names: set[str] = set()
-
-        self.island_number_to_chart_name = ISLAND_NUMBER_TO_CHART_NAME.copy()
-
+        self.dungeon_local_item_names: set[str] = set()
+        self.dungeon_specific_item_names: set[str] = set()
+        self.dungeons: dict[str, Dungeon] = {}
         self.required_boss_item_locations: list[str] = []
         self.required_dungeons: list[str] = []
         self.banned_dungeons: list[str] = []
+        self.island_number_to_chart_name = ISLAND_NUMBER_TO_CHART_NAME.copy()
+        super(TWWWorld, self).__init__(*args, **kwargs)
 
     def _get_access_rule(self, region):
         snake_case_region = region.lower().replace("'", "").replace(" ", "_")
         return f"can_access_{snake_case_region}"
-
-    def _get_dungeon_locations(self):
-        dungeon_regions = DUNGEON_EXITS.copy()
-
-        # If miniboss entrances are not shuffled, include miniboss arenas as a dungeon regions.
-        if not self.options.randomize_miniboss_entrances:
-            dungeon_regions += [
-                "Forbidden Woods Miniboss Arena",
-                "Tower of the Gods Miniboss Arena",
-                "Earth Temple Miniboss Arena",
-                "Wind Temple Miniboss Arena",
-            ]
-
-        # Forsaken Fortress is odd as it exists on the Great Sea.
-        # Simply keep a list of all locations in the dungeon, except the boss Heart Container.
-        ff_dungeon_locations = [
-            "Forsaken Fortress - Phantom Ganon",
-            "Forsaken Fortress - Chest Outside Upper Jail Cell",
-            "Forsaken Fortress - Chest Inside Lower Jail Cell",
-            "Forsaken Fortress - Chest Guarded By Bokoblin",
-            "Forsaken Fortress - Chest on Bed",
-        ]
-
-        return [
-            location
-            for location in self.multiworld.get_locations(self.player)
-            if location.name in ff_dungeon_locations or location.region in dungeon_regions
-        ]
 
     def _randomize_charts(self):
         # This code comes straight from the base randomizer's chart randomizer.
@@ -422,79 +363,67 @@ class TWWWorld(World):
                 location.progress_type = LocationProgressType.EXCLUDED
 
     def generate_early(self):
-        # Handle randomization options for dungeon items.
-        for item, data in ITEM_TABLE.items():
-            match data.type:
-                case "Map" | "Compass":
-                    if self.options.randomize_mapcompass == "startwith":
-                        self.options.start_inventory.value[item] = data.quantity
-                    elif self.options.randomize_mapcompass == "vanilla":
-                        self.vanilla_dungeon_item_names.add(item)
-                    elif self.options.randomize_mapcompass == "dungeon":
-                        self.own_dungeon_item_names.add(item)
-                    elif self.options.randomize_mapcompass == "any_dungeon":
-                        self.any_dungeon_item_names.add(item)
-                    elif self.options.randomize_mapcompass == "local":
-                        self.options.local_items.value.add(item)
+        options = self.options
 
-                case "SKey":
-                    if self.options.randomize_smallkeys == "startwith":
-                        self.options.start_inventory.value[item] = data.quantity
-                    elif self.options.randomize_smallkeys == "vanilla":
-                        self.vanilla_dungeon_item_names.add(item)
-                    elif self.options.randomize_smallkeys == "dungeon":
-                        self.own_dungeon_item_names.add(item)
-                    elif self.options.randomize_smallkeys == "any_dungeon":
-                        self.any_dungeon_item_names.add(item)
-                    elif self.options.randomize_smallkeys == "local":
-                        self.options.local_items.value.add(item)
+        for dungeon_item in ["randomize_smallkeys", "randomize_bigkeys", "randomize_mapcompass"]:
+            option = getattr(options, dungeon_item)
+            if option == "local":
+                options.local_items.value |= self.item_name_groups[option.item_name_group]
+            elif option.in_dungeon:
+                self.dungeon_local_item_names |= self.item_name_groups[option.item_name_group]
+                if option == "dungeon":
+                    self.dungeon_specific_item_names |= self.item_name_groups[option.item_name_group]
 
-                case "BKey":
-                    if self.options.randomize_bigkeys == "startwith":
-                        self.options.start_inventory.value[item] = data.quantity
-                    elif self.options.randomize_bigkeys == "vanilla":
-                        self.vanilla_dungeon_item_names.add(item)
-                    elif self.options.randomize_bigkeys == "dungeon":
-                        self.own_dungeon_item_names.add(item)
-                    elif self.options.randomize_bigkeys == "any_dungeon":
-                        self.any_dungeon_item_names.add(item)
-                    elif self.options.randomize_bigkeys == "local":
-                        self.options.local_items.value.add(item)
-
-        # If sword mode is Start with Hero's Sword, then send the player a starting sword.
-        if self.options.sword_mode == "start_with_sword":
-            self.options.start_inventory.value["Progressive Sword"] = (
-                self.options.start_inventory.value.get("Progressive Sword", 0) + 1
-            )
-
-        # If sword mode is No Starting Sword or Swordless, then ensure the player doesn't start with a sword.
-        if self.options.sword_mode in ["no_starting_sword", "swordless"]:
-            del self.options.start_inventory.value["Progressive Sword"]
+    create_dungeons = create_dungeons
 
     def create_regions(self):
+        player = self.player
+        multiworld = self.multiworld
+        options = self.options
+
         # "Menu" is the required starting point.
-        menu_region = Region("Menu", self.player, self.multiworld)
-        self.multiworld.regions.append(menu_region)
+        menu_region = Region("Menu", player, multiworld)
+        multiworld.regions.append(menu_region)
 
         # "The Great Sea" region contains all locations not in a randomizable region.
-        great_sea_region = Region("The Great Sea", self.player, self.multiworld)
-        self.multiworld.regions.append(great_sea_region)
+        great_sea_region = Region("The Great Sea", player, multiworld)
+        multiworld.regions.append(great_sea_region)
 
         # Add all randomizable regions.
         for region in ALL_ENTRANCES + ALL_EXITS:
-            self.multiworld.regions.append(Region(region, self.player, self.multiworld))
+            multiworld.regions.append(Region(region, player, multiworld))
+
+        # Create the dungeon classes.
+        self.create_dungeons()
 
         # Assign each location to their region.
         for location, data in LOCATION_TABLE.items():
             region = self.get_region(data.region)
-            region.locations.append(TWWLocation(self.player, location, region, data))
+            location = TWWLocation(player, location, region, data)
+
+            # Additionally, assign dungeon locations to the appropriate dungeon.
+            if region.name in self.dungeons:
+                location.dungeon = self.dungeons[region.name]
+            elif region.name in MINIBOSS_EXIT_TO_DUNGEON and not options.randomize_miniboss_entrances:
+                location.dungeon = self.dungeons[MINIBOSS_EXIT_TO_DUNGEON[region.name]]
+            elif region.name in BOSS_EXIT_TO_DUNGEON and not options.randomize_boss_entrances:
+                location.dungeon = self.dungeons[BOSS_EXIT_TO_DUNGEON[region.name]]
+            elif location.name in [
+                "Forsaken Fortress - Phantom Ganon",
+                "Forsaken Fortress - Chest Outside Upper Jail Cell",
+                "Forsaken Fortress - Chest Inside Lower Jail Cell",
+                "Forsaken Fortress - Chest Guarded By Bokoblin",
+                "Forsaken Fortress - Chest on Bed",
+            ]:
+                location.dungeon = self.dungeons["Forsaken Fortress"]
+            region.locations.append(location)
 
         # Connect the "Menu" region to the "The Great Sea" region.
         menu_region.connect(great_sea_region)
 
         # Connect the dungeon, secret caves, and fairy fountain regions to the "The Great Sea" region.
         for entrance in DUNGEON_ENTRANCES + SECRET_CAVES_ENTRANCES + FAIRY_FOUNTAIN_ENTRANCES:
-            rule = lambda state, entrance=entrance: getattr(Macros, self._get_access_rule(entrance))(state, self.player)
+            rule = lambda state, entrance=entrance: getattr(Macros, self._get_access_rule(entrance))(state, player)
             great_sea_region.connect(self.get_region(entrance), rule=rule)
 
         # Connect nested regions with their parent region.
@@ -503,23 +432,9 @@ class TWWWorld(World):
             # Consider Hyrule Castle and Forsaken Fortress as part of The Great Sea (regions are not randomizable).
             if parent_region_name in ["Hyrule Castle", "Forsaken Fortress"]:
                 parent_region_name = "The Great Sea"
-            rule = lambda state, entrance=entrance: getattr(Macros, self._get_access_rule(entrance))(state, self.player)
+            rule = lambda state, entrance=entrance: getattr(Macros, self._get_access_rule(entrance))(state, player)
             parent_region = self.get_region(parent_region_name)
             parent_region.connect(self.get_region(entrance), rule=rule)
-
-    def create_item(self, item: str) -> TWWItem:
-        # TODO: calculate nonprogress items dynamically
-        set_non_progress = False
-        if not self.options.progression_dungeons and item.endswith(" Key"):
-            set_non_progress = True
-        if not self.options.progression_triforce_charts and item.startswith("Triforce Chart"):
-            set_non_progress = True
-        if not self.options.progression_treasure_charts and item.startswith("Treasure Chart"):
-            set_non_progress = True
-
-        if item in ITEM_TABLE:
-            return TWWItem(item, self.player, ITEM_TABLE[item], set_non_progress)
-        raise Exception(f"Invalid item name: {item}")
 
     def pre_fill(self):
         # Ban the Bait Bag slot from having bait.
@@ -585,138 +500,21 @@ class TWWWorld(World):
             entrance_region.connect(exit_region, rule=rule)
 
     @classmethod
-    def stage_pre_fill(cls, multiworld: MultiWorld):
-        # Reference: `fill_dungeons_restrictive()` from ALTTP
-        dungeon_shortnames: dict[str, str] = {
-            "Dragon Roost Cavern": "DRC",
-            "Forbidden Woods": "FW",
-            "Tower of the Gods": "TotG",
-            "Forsaken Fortress": "FF",
-            "Earth Temple": "ET",
-            "Wind Temple": "WT",
-        }
+    def stage_pre_fill(cls, world):
+        from .Dungeons import fill_dungeons_restrictive
 
-        in_dungeon_items: list[TWWItem] = []
-        own_dungeon_items: set[tuple[int, str]] = set()
-        for subworld in multiworld.get_game_worlds("The Wind Waker"):
-            player = subworld.player
-            if player not in multiworld.groups:
-                in_dungeon_items += [item for item in subworld.pre_fill_items]
-                own_dungeon_items |= {(player, item_name) for item_name in subworld.own_dungeon_item_names}
-
-        if in_dungeon_items:
-            locations: list[TWWLocation] = [
-                location
-                for world in multiworld.get_game_worlds("The Wind Waker")
-                for location in world._get_dungeon_locations()
-                if not location.item
-            ]
-
-            if own_dungeon_items:
-                for location in locations:
-                    dungeon = location.name.split(" - ")[0]
-                    orig_rule = location.item_rule
-                    location.item_rule = lambda item, dungeon=dungeon, orig_rule=orig_rule: (
-                        not (item.player, item.name) in own_dungeon_items
-                        or item.name.startswith(dungeon_shortnames[dungeon])
-                    ) and orig_rule(item)
-
-            multiworld.random.shuffle(locations)
-            # Dungeon-locked items have to be placed first, to not run out of spaces for dungeon-locked items.
-            # Subsort in the order Big Key, Small Key, Other before placing dungeon items.
-
-            sort_order = {"BKey": 3, "SKey": 2}
-            in_dungeon_items.sort(
-                key=lambda item: sort_order.get(item.type, 1)
-                + (5 if (item.player, item.name) in own_dungeon_items else 0)
-            )
-
-            # Construct a partial `all_state` which contains only the items from `get_pre_fill_items`, which aren't
-            # in_dungeon.
-            in_dungeon_player_ids = {item.player for item in in_dungeon_items}
-            all_state_base = CollectionState(multiworld)
-            for item in multiworld.itempool:
-                multiworld.worlds[item.player].collect(all_state_base, item)
-            pre_fill_items = []
-            for player in in_dungeon_player_ids:
-                pre_fill_items += multiworld.worlds[player].get_pre_fill_items()
-            for item in in_dungeon_items:
-                try:
-                    pre_fill_items.remove(item)
-                except ValueError:
-                    # `pre_fill_items` should be a subset of `in_dungeon_items`, but just in case.
-                    pass
-            for item in pre_fill_items:
-                multiworld.worlds[item.player].collect(all_state_base, item)
-            all_state_base.sweep_for_events()
-
-            # Remove completion condition so that minimal-accessibility worlds place keys properly.
-            for player in {item.player for item in in_dungeon_items}:
-                if all_state_base.has("Victory", player):
-                    all_state_base.remove(multiworld.worlds[player].create_item("Victory"))
-
-            fill_restrictive(
-                multiworld,
-                all_state_base,
-                locations,
-                in_dungeon_items,
-                single_player_placement=True,
-                lock=True,
-                allow_excluded=True,
-                name="TWW Dungeon Items",
-            )
-
-    def create_items(self):
-        exclude = [item.name for item in self.multiworld.precollected_items[self.player]]
-        for item, data in ITEM_TABLE.items():
-            if item == "Victory":
-                # Victory item is always on Defeat Ganondorf location.
-                self.get_location("Defeat Ganondorf").place_locked_item(self.create_item(item))
-            elif item in self.vanilla_dungeon_item_names:
-                # Place desired vanilla dungeon item in their vanilla locations.
-                for location in VANILLA_DUNGEON_ITEM_LOCATIONS[item]:
-                    self.get_location(location).place_locked_item(self.create_item(item))
-            else:
-                if item == "Progressive Sword" and self.options.sword_mode == "swordless":
-                    continue
-
-                copies_to_place = data.quantity - exclude.count(item)
-                for _ in range(copies_to_place):
-                    if item in self.own_dungeon_item_names or item in self.any_dungeon_item_names:
-                        self.pre_fill_items.append(self.create_item(item))
-                    else:
-                        self.itempool.append(self.create_item(item))
-
-        # Calculate the number of additional filler items to create to fill all locations.
-        n_locations = len(self.multiworld.get_unfilled_locations(self.player))
-        n_items = len(self.pre_fill_items) + len(self.itempool)
-        n_filler_items = n_locations - n_items
-
-        # Add filler items to the item pool.
-        for _ in range(n_filler_items):
-            self.itempool.append(self.create_item(self.get_filler_item_name()))
-
-        self.multiworld.itempool += self.itempool
-
-    def get_filler_item_name(self) -> str:
-        # Use the same weights for filler items that are used in the base rando.
-        filler_consumables = [
-            "Yellow Rupee",
-            "Red Rupee",
-            "Purple Rupee",
-            "Orange Rupee",
-            "Joy Pendant",
-        ]
-        filler_weights = [3, 7, 10, 15, 3]
-        return self.multiworld.random.choices(filler_consumables, weights=filler_weights, k=1)[0]
+        fill_dungeons_restrictive(world)
 
     def generate_output(self, output_directory: str):
+        multiworld = self.multiworld
+        player = self.player
+
         # Output seed name and slot number to seed RNG in randomizer client.
         output_data = {
             "Version": VERSION,
-            "Seed": self.multiworld.seed_name,
-            "Slot": self.player,
-            "Name": self.multiworld.get_player_name(self.player),
+            "Seed": multiworld.seed_name,
+            "Slot": player,
+            "Name": self.player_name,
             "Options": {},
             "Required Bosses": self.required_boss_item_locations,
             "Locations": {},
@@ -729,7 +527,7 @@ class TWWWorld(World):
             output_data["Options"][field.name] = getattr(self.options, field.name).value
 
         # Output which item has been placed at each location.
-        locations = self.multiworld.get_locations(self.player)
+        locations = multiworld.get_locations(player)
         for location in locations:
             if location.name != "Defeat Ganondorf":
                 if location.item:
@@ -748,15 +546,50 @@ class TWWWorld(World):
                 output_data["Locations"][location.name] = item_info
 
         # Output the mapping of entrances to exits.
-        entrances = self.multiworld.get_entrances(self.player)
+        entrances = multiworld.get_entrances(player)
         for entrance in entrances:
             if entrance.parent_region.name in ALL_ENTRANCES:
                 output_data["Entrances"][entrance.parent_region.name] = entrance.connected_region.name
 
         # Output the plando details to file.
-        file_path = os.path.join(output_directory, f"{self.multiworld.get_out_file_name_base(self.player)}.aptww")
+        file_path = os.path.join(output_directory, f"{multiworld.get_out_file_name_base(player)}.aptww")
         with open(file_path, "w") as f:
             f.write(yaml.dump(output_data, sort_keys=False))
+
+    def create_item(self, item: str) -> TWWItem:
+        # TODO: calculate nonprogress items dynamically
+        set_non_progress = False
+        if not self.options.progression_dungeons and item.endswith(" Key"):
+            set_non_progress = True
+        if not self.options.progression_triforce_charts and item.startswith("Triforce Chart"):
+            set_non_progress = True
+        if not self.options.progression_treasure_charts and item.startswith("Treasure Chart"):
+            set_non_progress = True
+
+        if item in ITEM_TABLE:
+            return TWWItem(item, self.player, ITEM_TABLE[item], set_non_progress)
+        raise Exception(f"Invalid item name: {item}")
+
+    def get_filler_item_name(self) -> str:
+        # Use the same weights for filler items that are used in the base randomizer.
+        filler_consumables = [
+            "Yellow Rupee",
+            "Red Rupee",
+            "Purple Rupee",
+            "Orange Rupee",
+            "Joy Pendant",
+        ]
+        filler_weights = [3, 7, 10, 15, 3]
+        return self.multiworld.random.choices(filler_consumables, weights=filler_weights, k=1)[0]
+
+    def get_pre_fill_items(self):
+        res = []
+        if self.dungeon_local_item_names:
+            for dungeon in self.dungeons.values():
+                for item in dungeon.all_items:
+                    if item.name in self.dungeon_local_item_names:
+                        res.append(item)
+        return res
 
     def fill_slot_data(self):
         return {
