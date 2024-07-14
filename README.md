@@ -109,7 +109,7 @@ This randomizer would not be possible without the help from:
 - Gamma / SageOfMirrors: (additional programming)
 - LagoLunatic: (base randomizer, additional assistance)
 - Lunix: (Linux support, additional programming)
-- Mysteryem: (tracker support)
+- Mysteryem: (tracker support, additional programming)
 - Necrofitz: (additional documentation)
 - Ouro: (tracker support)
 - Tubamann: (additional programming)
