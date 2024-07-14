@@ -1218,7 +1218,7 @@ def set_rules(world):
     # Tingle Island
     set_rule(
         world.get_location("Tingle Island - Ankle - Reward for All Tingle Statues"),
-        lambda state: state.has_group("Tingle Statues", player, 5),
+        lambda state: state.has_group_unique("Tingle Statues", player, 5),
     )
     set_rule(
         world.get_location("Tingle Island - Big Octo"),
