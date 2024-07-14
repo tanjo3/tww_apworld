@@ -57,11 +57,11 @@ CURR_STAGE_NAME_ADDR = 0x803C9D3C
 
 # This is an array of length 0x10 where each element is a byte and contains item IDs for items to give the player.
 # 0xFF represents no item. The array is read and cleared every frame.
-GIVE_ITEM_ARRAY_ADDR = 0x803FE868
+GIVE_ITEM_ARRAY_ADDR = 0x803FE884
 
 # This is the address that holds the player's slot name.
 # This way, the player does not have to manually authenticate their slot name.
-SLOT_NAME_ADDR = 0x803FE88C
+SLOT_NAME_ADDR = 0x803FE8A8
 
 
 class TWWCommandProcessor(ClientCommandProcessor):
