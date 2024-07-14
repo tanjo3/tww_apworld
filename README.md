@@ -47,8 +47,6 @@ server.
   random light rings or rewards from minigames, will not work.
 - Item get messages for progressive items received on locations that send earlier than intended will be incorrect. This
   does not affect gameplay.
-- Title screen Link will usually end up receiving all the items you've received, resulting in rupee and heart counter
-  sounds on the title screen. This does not affect gameplay.
 - The Heart Piece count in item get messages will be off by one. This does not affect gameplay.
 - It has been reported that sometimes you will receive an extra copy of an item you've received.
 - For some reason, sometimes Jalhalla doesn't appear in the boss rematch in Ganon's Tower. Defeating him above the sea
