@@ -143,7 +143,7 @@ def write_short(console_address: int, value: int) -> None:
 
 
 def read_string(console_address: int, strlen: int) -> str:
-    return dolphin_memory_engine.read_bytes(console_address, strlen).decode().strip("\0")
+    return dolphin_memory_engine.read_bytes(console_address, strlen).split(b"\0", 1)[0].decode()
 
 
 def _give_death(ctx: TWWContext):
