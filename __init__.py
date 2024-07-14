@@ -21,7 +21,7 @@ from .Locations import (
     TWWLocation,
     split_location_name_by_zone,
 )
-from .Options import TWWOptions
+from .Options import TWWOptions, tww_option_groups
 from .Regions import *
 from .Rules import set_rules
 
@@ -57,6 +57,7 @@ class TWWWeb(WebWorld):
             ["tanjo3", "Lunix"],
         )
     ]
+    option_groups = tww_option_groups
 
 
 class TWWWorld(World):

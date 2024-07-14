@@ -4,6 +4,7 @@ from Options import (
     Choice,
     DeathLink,
     DefaultOnToggle,
+    OptionGroup,
     OptionSet,
     PerGameCommonOptions,
     Range,
@@ -639,3 +640,98 @@ class TWWOptions(PerGameCommonOptions):
     # skip_rematch_bosses: SkipRematchBosses
     remove_music: RemoveMusic
     death_link: DeathLink
+
+
+tww_option_groups: list[OptionGroup] = [
+    OptionGroup(
+        "Progression Locations",
+        [
+            Dungeons,
+            DungeonSecrets,
+            TingleChests,
+            PuzzleSecretCaves,
+            CombatSecretCaves,
+            SavageLabyrinth,
+            IslandPuzzles,
+            GreatFairies,
+            Submarines,
+            PlatformsRafts,
+            ShortSidequests,
+            LongSidequests,
+            SpoilsTrading,
+            EyeReefChests,
+            BigOctosGunboats,
+            Misc,
+            Minigames,
+            Battlesquid,
+            FreeGifts,
+            Mail,
+            ExpensivePurchases,
+            TriforceCharts,
+            TreasureCharts,
+        ],
+    ),
+    OptionGroup(
+        "Item Randomizer Modes",
+        [
+            SwordMode,
+            RandomizeMapCompass,
+            RandomizeSmallKeys,
+            RandomizeBigKeys,
+            ChestTypeMatchesContents,
+            # TrapChests,
+        ],
+    ),
+    OptionGroup(
+        "Entrance Randomizer Options",
+        [
+            RandomizeDungeonEntrances,
+            RandomizeBossEntrances,
+            RandomizeMinibossEntrances,
+            RandomizeSecretCavesEntrances,
+            RandomizeSecretCaveInnerEntrances,
+            RandomizeFairyFountainEntrances,
+            MixEntrances,
+        ],
+    ),
+    OptionGroup(
+        "Other Randomizers",
+        [
+            RandomizeStartingIsland,
+            RandomizeCharts,
+            # RandomizeMusic,
+            RandomizeEnemies,
+        ],
+    ),
+    OptionGroup(
+        "Convenience Tweaks",
+        [
+            SwiftSail,
+            InstantTextBoxes,
+            RevealFullSeaChart,
+            # SkipRematchBosses,
+            AddShortcutWarpsBetweenDungeons,
+            RemoveMusic,
+        ],
+    ),
+    OptionGroup(
+        "Required Bosses",
+        [
+            RequiredBosses,
+            NumRequiredBosses,
+            IncludedDungeons,
+            ExcludedDungeons,
+        ],
+        start_collapsed=True,
+    ),
+    OptionGroup(
+        "Difficulty Options",
+        [
+            HeroMode,
+            LogicObscurity,
+            LogicPrecision,
+            EnableTunerLogic,
+        ],
+        start_collapsed=True,
+    ),
+]
