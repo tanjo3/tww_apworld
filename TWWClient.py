@@ -1,7 +1,7 @@
 import asyncio
 import time
 import traceback
-from typing import Any
+from typing import Any, Set, Union
 
 import dolphin_memory_engine
 
@@ -76,6 +76,10 @@ CLIFF_PLATEAU_ISLES_HIGHEST_ISLE_SPAWN_ID = 1  # As a note, the lower isle's spa
 # Dummy stage name used to identify the highest isle in Cliff Plateau Isles.
 CLIFF_PLATEAU_ISLES_HIGHEST_ISLE_DUMMY_STAGE_NAME = "CliPlaH"
 
+# Data storage key
+AP_VISITED_STAGE_NAMES_KEY_FORMAT = "tww_visited_stages_%i"
+
+
 class TWWCommandProcessor(ClientCommandProcessor):
     def __init__(self, ctx: CommonContext):
         super().__init__(ctx)
@@ -102,11 +106,19 @@ class TWWContext(CommonContext):
         # Name of the current stage as read from the game's memory. Sent to trackers whenever its value changes to
         # facilitate automatically switching to the map of the current stage.
         self.current_stage_name: str = ""
+        # Set of visited stages. A dictionary (used as a set) of all visited stages is set in the server's data storage
+        # and updated when the player visits a new stage for the first time. To track which stages are new, and need to
+        # cause the server's data storage to update, the TWW AP Client keeps track of the visited stages in a set.
+        # Trackers can request the dictionary from data storage to see which stages the player has visited.
+        # Starts off as `None` until it has been read from the server.
+        self.visited_stage_names: Union[Set[str], None] = None
 
         self.len_give_item_array = 0x10
 
     async def disconnect(self, allow_autoreconnect: bool = False):
         self.auth = None
+        self.current_stage_name = ""
+        self.visited_stage_names = None
         await super().disconnect(allow_autoreconnect)
 
     def on_package(self, cmd: str, args: dict):
@@ -115,13 +127,32 @@ class TWWContext(CommonContext):
             self.last_rcvd_index = -1
             if "death_link" in args["slot_data"]:
                 Utils.async_start(self.update_death_link(bool(args["slot_data"]["death_link"])))
-        if cmd == "ReceivedItems":
+            # Request the connected slot's dictionary (used as a set) of visited stages.
+            visited_stages_key = AP_VISITED_STAGE_NAMES_KEY_FORMAT % self.slot
+            Utils.async_start(self.send_msgs([{"cmd": "Get", "keys": [visited_stages_key]}]))
+        elif cmd == "ReceivedItems":
             if args["index"] >= self.last_rcvd_index:
                 self.last_rcvd_index = args["index"]
                 for item in args["items"]:
                     self.items_received_2.append((item, self.last_rcvd_index))
                     self.last_rcvd_index += 1
             self.items_received_2.sort(key=lambda v: v[1])
+        elif cmd == "Retrieved":
+            requested_keys_dict = args["keys"]
+            # Read the connected slot's dictionary (used as a set) of visited stages.
+            if self.slot is not None:
+                visited_stages_key = AP_VISITED_STAGE_NAMES_KEY_FORMAT % self.slot
+                if visited_stages_key in requested_keys_dict:
+                    visited_stages = requested_keys_dict[visited_stages_key]
+                    # If it has not been set before, the value in the response will be None
+                    visited_stage_names = set() if visited_stages is None else set(visited_stages.keys())
+                    # If the current stage name is not in the set, send a message to update the dictionary on the
+                    # server.
+                    current_stage_name = self.current_stage_name
+                    if current_stage_name and current_stage_name not in visited_stage_names:
+                        visited_stage_names.add(current_stage_name)
+                        Utils.async_start(self.update_visited_stages(current_stage_name))
+                    self.visited_stage_names = visited_stage_names
 
     def on_deathlink(self, data: dict[str, Any]):
         super().on_deathlink(data)
@@ -147,6 +178,20 @@ class TWWContext(CommonContext):
 
         self.ui = TWWManager(self)
         self.ui_task = asyncio.create_task(self.ui.async_run(), name="UI")
+
+    async def update_visited_stages(self, newly_visited_stage_name: str):
+        """
+        Update the server's data storage of the visited stage names to include the newly visited stage name.
+        """
+        if self.slot is not None:
+            visited_stages_key = AP_VISITED_STAGE_NAMES_KEY_FORMAT % self.slot
+            await self.send_msgs([{
+                "cmd": "Set",
+                "key": visited_stages_key,
+                "default": {},
+                "want_reply": False,
+                "operations": [{"operation": "update", "value": {newly_visited_stage_name: True}}]
+            }])
 
 
 def read_short(console_address: int) -> int:
@@ -312,6 +357,12 @@ async def check_current_stage_changed(ctx: TWWContext):
             "data": data_to_send,
         }
         await ctx.send_msgs([message])
+        # If the stage has never been visited before, update the server's data storage to include that the stage has been
+        # visited.
+        visited_stage_names = ctx.visited_stage_names
+        if visited_stage_names is not None and new_stage_name not in visited_stage_names:
+            visited_stage_names.add(new_stage_name)
+            await ctx.update_visited_stages(new_stage_name)
 
 
 async def check_alive():
