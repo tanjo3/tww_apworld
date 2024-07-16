@@ -87,6 +87,9 @@ class TWWContext(CommonContext):
         self.awaiting_rom = False
         self.last_rcvd_index = -1
         self.has_send_death = False
+        # Name of the current stage as read from the game's memory. Sent to trackers whenever its value changes to
+        # facilitate automatically switching to the map of the current stage.
+        self.current_stage_name: str = ""
 
         self.len_give_item_array = 0x10
 
@@ -275,6 +278,22 @@ async def check_locations(ctx: TWWContext):
         await ctx.send_msgs([{"cmd": "LocationChecks", "locations": locations_checked}])
 
 
+async def check_current_stage_changed(ctx: TWWContext):
+    new_stage_name = read_string(CURR_STAGE_NAME_ADDR, 8)
+    current_stage_name = ctx.current_stage_name
+    if new_stage_name != current_stage_name:
+        ctx.current_stage_name = new_stage_name
+        # Send a Bounced message, containing the new stage name, to all trackers connected to the current slot.
+        data_to_send = {"tww_stage_name": new_stage_name}
+        message = {
+            "cmd": "Bounce",
+            "slots": [ctx.slot],
+            "tags": ["Tracker"],
+            "data": data_to_send,
+        }
+        await ctx.send_msgs([message])
+
+
 async def check_alive():
     cur_health = read_short(CURR_HEALTH_ADDR)
     return cur_health > 0
@@ -310,6 +329,7 @@ async def dolphin_sync_task(ctx: TWWContext):
                         await check_death(ctx)
                     await give_items(ctx)
                     await check_locations(ctx)
+                    await check_current_stage_changed(ctx)
                 else:
                     if not ctx.auth:
                         ctx.auth = read_string(SLOT_NAME_ADDR, 0x40)
