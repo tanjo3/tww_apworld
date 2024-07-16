@@ -63,6 +63,18 @@ GIVE_ITEM_ARRAY_ADDR = 0x803FE884
 # This way, the player does not have to manually authenticate their slot name.
 SLOT_NAME_ADDR = 0x803FE8A8
 
+# This address contains the most recent spawn ID the player spawned from.
+MOST_RECENT_SPAWN_ID_ADDR = 0x803C9D44
+
+# This address contains the most recent room number the player spawned in.
+MOST_RECENT_ROOM_NUMBER_ADDR = 0x803C9D46
+
+# Values used to detect exiting onto the highest isle in Cliff Plateau Isles.
+# 42. Starting at 1 and going left to right, top to bottom, Cliff Plateau Isles is the 42nd square in the sea stage.
+CLIFF_PLATEAU_ISLES_ROOM_NUMBER = 0x2A
+CLIFF_PLATEAU_ISLES_HIGHEST_ISLE_SPAWN_ID = 1  # As a note, the lower isle's spawn ID is 2.
+# Dummy stage name used to identify the highest isle in Cliff Plateau Isles.
+CLIFF_PLATEAU_ISLES_HIGHEST_ISLE_DUMMY_STAGE_NAME = "CliPlaH"
 
 class TWWCommandProcessor(ClientCommandProcessor):
     def __init__(self, ctx: CommonContext):
@@ -280,6 +292,14 @@ async def check_locations(ctx: TWWContext):
 
 async def check_current_stage_changed(ctx: TWWContext):
     new_stage_name = read_string(CURR_STAGE_NAME_ADDR, 8)
+
+    # Special handling for the Cliff Plateau Isles Inner Cave exit that exits out onto the sea stage rather than a
+    # unique stage.
+    if (new_stage_name == "sea"
+            and dolphin_memory_engine.read_byte(MOST_RECENT_ROOM_NUMBER_ADDR) == CLIFF_PLATEAU_ISLES_ROOM_NUMBER
+            and read_short(MOST_RECENT_SPAWN_ID_ADDR) == CLIFF_PLATEAU_ISLES_HIGHEST_ISLE_SPAWN_ID):
+        new_stage_name = CLIFF_PLATEAU_ISLES_HIGHEST_ISLE_DUMMY_STAGE_NAME
+
     current_stage_name = ctx.current_stage_name
     if new_stage_name != current_stage_name:
         ctx.current_stage_name = new_stage_name
