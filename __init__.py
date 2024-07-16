@@ -4,6 +4,7 @@ from typing import Type
 
 import yaml
 
+from BaseClasses import ItemClassification as IC
 from BaseClasses import LocationProgressType, Region, Tutorial
 from worlds.AutoWorld import WebWorld, World
 from worlds.generic.Rules import add_item_rule
@@ -562,16 +563,18 @@ class TWWWorld(World):
 
     def create_item(self, item: str) -> TWWItem:
         # TODO: calculate nonprogress items dynamically
-        set_non_progress = False
+        adjusted_classification = None
+        if self.options.sword_mode == "swords_optional" and item == "Progressive Sword":
+            adjusted_classification = IC.useful
         if not self.options.progression_dungeons and item.endswith(" Key"):
-            set_non_progress = True
+            adjusted_classification = IC.filler
         if not self.options.progression_triforce_charts and item.startswith("Triforce Chart"):
-            set_non_progress = True
+            adjusted_classification = IC.filler
         if not self.options.progression_treasure_charts and item.startswith("Treasure Chart"):
-            set_non_progress = True
+            adjusted_classification = IC.filler
 
         if item in ITEM_TABLE:
-            return TWWItem(item, self.player, ITEM_TABLE[item], set_non_progress)
+            return TWWItem(item, self.player, ITEM_TABLE[item], adjusted_classification)
         raise Exception(f"Invalid item name: {item}")
 
     def get_filler_item_name(self) -> str:

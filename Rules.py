@@ -23,10 +23,10 @@ class TWWLogic(LogicMixin):
         return True
 
     def _tww_in_swordless_mode(self, player: int):
-        return self.multiworld.worlds[player].options.sword_mode == "swordless"
+        return self.multiworld.worlds[player].options.sword_mode in ("swords_optional", "swordless")
 
     def _tww_outside_swordless_mode(self, player: int):
-        return self.multiworld.worlds[player].options.sword_mode != "swordless"
+        return self.multiworld.worlds[player].options.sword_mode not in ("swords_optional", "swordless")
 
     def _tww_in_required_bosses_mode(self, player: int):
         return self.multiworld.worlds[player].options.required_bosses

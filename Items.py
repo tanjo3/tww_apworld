@@ -35,10 +35,12 @@ class TWWItem(Item):
     type: str | None
     dungeon = None
 
-    def __init__(self, name: str, player: int, data: TWWItemData, force_nonprogress: bool):
-        adjusted_classification = IC.filler if force_nonprogress else data.classification
+    def __init__(self, name: str, player: int, data: TWWItemData, classification: IC | None = None):
         super(TWWItem, self).__init__(
-            name, adjusted_classification, None if data.code is None else TWWItem.get_apid(data.code), player
+            name,
+            data.classification if classification is None else classification,
+            None if data.code is None else TWWItem.get_apid(data.code),
+            player,
         )
 
         self.type = data.type

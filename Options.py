@@ -273,6 +273,9 @@ class SwordMode(Choice):
     Start with Hero's Sword: You will start the game with the basic Hero's Sword already in your inventory.
     No Starting Sword: You will start the game with no sword, and have to find it somewhere in the world like other
     randomized items.
+    Swords Optional: You will start the game with no sword, but they'll still be randomized. However, they are not
+    necessary to beat the game as the Hyrule Barrier will be gone, Phantom Ganon in FF is vulnerable to Skull
+    Hammer, and the logic not expect you to have a sword.
     Swordless: You will start the game with no sword, and won't be able to find it anywhere. You have to beat the entire
     game using other items as weapons instead of the sword. (Note that Phantom Ganon in FF becomes vulnerable to Skull
     Hammer in this mode.)"""
@@ -280,7 +283,8 @@ class SwordMode(Choice):
     display_name = "Sword Mode"
     option_start_with_sword = 0
     option_no_starting_sword = 1
-    option_swordless = 2
+    option_swords_optional = 2
+    option_swordless = 3
     default = 0
 
 
