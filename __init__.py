@@ -661,9 +661,13 @@ class TWWWorld(World):
             "remove_music": self.options.remove_music.value,
             "death_link": self.options.death_link.value,
         }
+
         # Add entrances to slot_data. This is the same data that is written to the .aptww file.
-        entrances = {entrance.parent_region.name: entrance.connected_region.name
-                     for entrance in self.multiworld.get_entrances(self.player)
-                     if entrance.parent_region.name in ALL_ENTRANCES}
+        entrances = {
+            entrance.parent_region.name: entrance.connected_region.name
+            for entrance in self.multiworld.get_entrances(self.player)
+            if entrance.parent_region.name in ALL_ENTRANCES
+        }
         slot_data["entrances"] = entrances
+
         return slot_data
