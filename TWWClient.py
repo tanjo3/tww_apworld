@@ -201,11 +201,11 @@ class TWWContext(CommonContext):
 
 
 def read_short(console_address: int) -> int:
-    return int.from_bytes(dolphin_memory_engine.read_bytes(console_address, 2))
+    return int.from_bytes(dolphin_memory_engine.read_bytes(console_address, 2), byteorder="big")
 
 
 def write_short(console_address: int, value: int) -> None:
-    dolphin_memory_engine.write_bytes(console_address, value.to_bytes(2))
+    dolphin_memory_engine.write_bytes(console_address, value.to_bytes(2, byteorder="big"))
 
 
 def read_string(console_address: int, strlen: int) -> str:
@@ -262,10 +262,10 @@ async def check_locations(ctx: TWWContext):
     curr_stage_id = dolphin_memory_engine.read_byte(CURR_STAGE_ID_ADDR)
 
     # Read in various bitfields for the locations in the current stage.
-    charts_bitfield = int.from_bytes(dolphin_memory_engine.read_bytes(CHARTS_BITFLD_ADDR, 8))
+    charts_bitfield = int.from_bytes(dolphin_memory_engine.read_bytes(CHARTS_BITFLD_ADDR, 8), byteorder="big")
     sea_alt_bitfield = dolphin_memory_engine.read_word(SEA_ALT_BITFLD_ADDR)
     chests_bitfield = dolphin_memory_engine.read_word(CHESTS_BITFLD_ADDR)
-    switches_bitfield = int.from_bytes(dolphin_memory_engine.read_bytes(SWITCHES_BITFLD_ADDR, 10))
+    switches_bitfield = int.from_bytes(dolphin_memory_engine.read_bytes(SWITCHES_BITFLD_ADDR, 10), byteorder="big")
     pickups_bitfield = dolphin_memory_engine.read_word(PICKUPS_BITFLD_ADDR)
 
     for location, data in LOCATION_TABLE.items():
