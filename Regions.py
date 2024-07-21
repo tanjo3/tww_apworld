@@ -1,3 +1,5 @@
+from typing import Dict, List
+
 DUNGEON_ENTRANCES = [
     "Dungeon Entrance on Dragon Roost Island",
     "Dungeon Entrance in Forest Haven Sector",
@@ -117,7 +119,7 @@ FAIRY_FOUNTAIN_EXITS = [
 ]
 
 # This dictionary maps exits to entrances located in that exit.
-ENTRANCE_ACCESSIBILITY: dict[str, list[str]] = {
+ENTRANCE_ACCESSIBILITY: Dict[str, List[str]] = {
     "The Great Sea": [
         "Dungeon Entrance on Dragon Roost Island",
         "Dungeon Entrance in Forest Haven Sector",
@@ -205,10 +207,5 @@ ALL_ENTRANCES = (
     + FAIRY_FOUNTAIN_ENTRANCES
 )
 ALL_EXITS = (
-    DUNGEON_EXITS
-    + MINIBOSS_EXITS
-    + BOSS_EXITS
-    + SECRET_CAVES_EXITS
-    + SECRET_CAVES_INNER_EXITS
-    + FAIRY_FOUNTAIN_EXITS
+    DUNGEON_EXITS + MINIBOSS_EXITS + BOSS_EXITS + SECRET_CAVES_EXITS + SECRET_CAVES_INNER_EXITS + FAIRY_FOUNTAIN_EXITS
 )

@@ -1,7 +1,7 @@
 import asyncio
 import time
 import traceback
-from typing import Any, Set, Union
+from typing import Any, Dict, List, Optional, Set, Tuple, Union
 
 import dolphin_memory_engine
 
@@ -97,8 +97,8 @@ class TWWContext(CommonContext):
 
     def __init__(self, server_address, password):
         super().__init__(server_address, password)
-        self.items_received_2: list[tuple[NetworkItem, int]] = []
-        self.dolphin_sync_task: asyncio.Task | None = None
+        self.items_received_2: List[Tuple[NetworkItem, int]] = []
+        self.dolphin_sync_task: Optional[asyncio.Task] = None
         self.dolphin_status = CONNECTION_INITIAL_STATUS
         self.awaiting_rom = False
         self.last_rcvd_index = -1
@@ -154,7 +154,7 @@ class TWWContext(CommonContext):
                         Utils.async_start(self.update_visited_stages(current_stage_name))
                     self.visited_stage_names = visited_stage_names
 
-    def on_deathlink(self, data: dict[str, Any]):
+    def on_deathlink(self, data: Dict[str, Any]):
         super().on_deathlink(data)
         _give_death(self)
 
@@ -185,13 +185,17 @@ class TWWContext(CommonContext):
         """
         if self.slot is not None:
             visited_stages_key = AP_VISITED_STAGE_NAMES_KEY_FORMAT % self.slot
-            await self.send_msgs([{
-                "cmd": "Set",
-                "key": visited_stages_key,
-                "default": {},
-                "want_reply": False,
-                "operations": [{"operation": "update", "value": {newly_visited_stage_name: True}}]
-            }])
+            await self.send_msgs(
+                [
+                    {
+                        "cmd": "Set",
+                        "key": visited_stages_key,
+                        "default": {},
+                        "want_reply": False,
+                        "operations": [{"operation": "update", "value": {newly_visited_stage_name: True}}],
+                    }
+                ]
+            )
 
 
 def read_short(console_address: int) -> int:
@@ -301,20 +305,21 @@ async def check_locations(ctx: TWWContext):
 
         # Regular checks
         elif data.stage_id == curr_stage_id:
-            match data.type:
-                case TWWLocationType.CHART:
-                    checked = (charts_bitfield >> data.bit) & 1
-                case TWWLocationType.BOCTO:
-                    assert data.address is not None
-                    checked = (read_short(data.address) >> data.bit) & 1
-                case TWWLocationType.CHEST:
-                    checked = (chests_bitfield >> data.bit) & 1
-                case TWWLocationType.SWTCH:
-                    checked = (switches_bitfield >> data.bit) & 1
-                case TWWLocationType.PCKUP:
-                    checked = (pickups_bitfield >> data.bit) & 1
-                case TWWLocationType.EVENT:
-                    checked = (dolphin_memory_engine.read_byte(data.address) >> data.bit) & 1
+            if data.type == TWWLocationType.CHART:
+                checked = (charts_bitfield >> data.bit) & 1
+            elif data.type == TWWLocationType.BOCTO:
+                assert data.address is not None
+                checked = (read_short(data.address) >> data.bit) & 1
+            elif data.type == TWWLocationType.CHEST:
+                checked = (chests_bitfield >> data.bit) & 1
+            elif data.type == TWWLocationType.SWTCH:
+                checked = (switches_bitfield >> data.bit) & 1
+            elif data.type == TWWLocationType.PCKUP:
+                checked = (pickups_bitfield >> data.bit) & 1
+            elif data.type == TWWLocationType.EVENT:
+                checked = (dolphin_memory_engine.read_byte(data.address) >> data.bit) & 1
+            else:
+                raise Exception(f"Unknown location type: {data.type}")
 
         # Sea (Alt) chests
         elif curr_stage_id == 0x0 and data.stage_id == 0x1:
@@ -340,9 +345,11 @@ async def check_current_stage_changed(ctx: TWWContext):
 
     # Special handling for the Cliff Plateau Isles Inner Cave exit that exits out onto the sea stage rather than a
     # unique stage.
-    if (new_stage_name == "sea"
-            and dolphin_memory_engine.read_byte(MOST_RECENT_ROOM_NUMBER_ADDR) == CLIFF_PLATEAU_ISLES_ROOM_NUMBER
-            and read_short(MOST_RECENT_SPAWN_ID_ADDR) == CLIFF_PLATEAU_ISLES_HIGHEST_ISLE_SPAWN_ID):
+    if (
+        new_stage_name == "sea"
+        and dolphin_memory_engine.read_byte(MOST_RECENT_ROOM_NUMBER_ADDR) == CLIFF_PLATEAU_ISLES_ROOM_NUMBER
+        and read_short(MOST_RECENT_SPAWN_ID_ADDR) == CLIFF_PLATEAU_ISLES_HIGHEST_ISLE_SPAWN_ID
+    ):
         new_stage_name = CLIFF_PLATEAU_ISLES_HIGHEST_ISLE_DUMMY_STAGE_NAME
 
     current_stage_name = ctx.current_stage_name
@@ -357,8 +364,9 @@ async def check_current_stage_changed(ctx: TWWContext):
             "data": data_to_send,
         }
         await ctx.send_msgs([message])
-        # If the stage has never been visited before, update the server's data storage to include that the stage has been
-        # visited.
+
+        # If the stage has never been visited before, update the server's data storage to include that the stage has
+        # been visited.
         visited_stage_names = ctx.visited_stage_names
         if visited_stage_names is not None and new_stage_name not in visited_stage_names:
             visited_stage_names.add(new_stage_name)

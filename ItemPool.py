@@ -1,3 +1,5 @@
+from typing import Dict, List
+
 from .Items import ITEM_TABLE, item_factory
 from .Locations import VANILLA_DUNGEON_ITEM_LOCATIONS
 
@@ -26,9 +28,9 @@ def generate_itempool(world):
 def get_pool_core(world):
     options = world.options
 
-    pool: list[str] = []
-    placed_items: dict[str, str] = {}
-    precollected_items: list[str] = []
+    pool: List[str] = []
+    placed_items: Dict[str, str] = {}
+    precollected_items: List[str] = []
     n_pending_junk: int = 0
 
     def place_item(loc, item):

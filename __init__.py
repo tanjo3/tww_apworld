@@ -1,6 +1,6 @@
 import os
 from dataclasses import fields
-from typing import Type
+from typing import Dict, List, Set, Tuple, Type
 
 import yaml
 
@@ -76,10 +76,10 @@ class TWWWorld(World):
 
     item_name_groups = item_name_groups
 
-    item_name_to_id: dict[str, int] = {
+    item_name_to_id: Dict[str, int] = {
         name: TWWItem.get_apid(data.code) for name, data in ITEM_TABLE.items() if data.code is not None
     }
-    location_name_to_id: dict[str, int] = {
+    location_name_to_id: Dict[str, int] = {
         name: TWWLocation.get_apid(data.code) for name, data in LOCATION_TABLE.items() if data.code is not None
     }
 
@@ -92,12 +92,12 @@ class TWWWorld(World):
     set_rules = set_rules
 
     def __init__(self, *args, **kwargs):
-        self.dungeon_local_item_names: set[str] = set()
-        self.dungeon_specific_item_names: set[str] = set()
-        self.dungeons: dict[str, Dungeon] = {}
-        self.required_boss_item_locations: list[str] = []
-        self.required_dungeons: list[str] = []
-        self.banned_dungeons: list[str] = []
+        self.dungeon_local_item_names: Set[str] = set()
+        self.dungeon_specific_item_names: Set[str] = set()
+        self.dungeons: Dict[str, Dungeon] = {}
+        self.required_boss_item_locations: List[str] = []
+        self.required_dungeons: List[str] = []
+        self.banned_dungeons: List[str] = []
         self.island_number_to_chart_name = ISLAND_NUMBER_TO_CHART_NAME.copy()
         super(TWWWorld, self).__init__(*args, **kwargs)
 
@@ -208,7 +208,7 @@ class TWWWorld(World):
             self.options.randomize_fairy_fountain_entrances,
         ]
 
-        entrance_exit_pairs: list[tuple[Region, Region]] = []
+        entrance_exit_pairs: List[Tuple[Region, Region]] = []
 
         # Force miniboss doors to be vanilla in nonrequired dungeons.
         for miniboss_entrance, miniboss_exit in zip(entrances[1], exits[1]):
@@ -243,9 +243,9 @@ class TWWWorld(World):
             # For example, DRC boss door leading to DRC. This will cause generation failures.
 
             # Gather all the entrances and exits for selected randomization pools.
-            randomized_entrances: list[str] = []
-            randomized_exits: list[str] = []
-            non_randomized_exits: list[str] = ["The Great Sea"]
+            randomized_entrances: List[str] = []
+            randomized_exits: List[str] = []
+            non_randomized_exits: List[str] = ["The Great Sea"]
             for option, entrance_group, exit_group in zip(options, entrances, exits):
                 if option:
                     randomized_entrances += entrance_group
@@ -257,18 +257,18 @@ class TWWWorld(World):
                         entrance_exit_pairs.append((self.get_region(entrance_name), self.get_region(exit_name)))
 
             # Build a list of accessible randomized entrances, assuming the player has all items.
-            accessible_entrances: list[str] = []
+            accessible_entrances: List[str] = []
             for exit_name, entrances in ENTRANCE_ACCESSIBILITY.items():
                 if exit_name in non_randomized_exits:
                     accessible_entrances += [
                         entrance_name for entrance_name in entrances if entrance_name in randomized_entrances
                     ]
-            non_accessible_entrances: list[str] = [
+            non_accessible_entrances: List[str] = [
                 entrance_name for entrance_name in randomized_entrances if entrance_name not in accessible_entrances
             ]
 
             # Priotize exits that lead to more entrances first.
-            priority_exits: list[str] = []
+            priority_exits: List[str] = []
             for exit_name, entrances in ENTRANCE_ACCESSIBILITY.items():
                 if exit_name == "The Great Sea":
                     continue

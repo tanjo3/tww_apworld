@@ -1,5 +1,5 @@
 from enum import Enum, Flag, auto
-from typing import NamedTuple
+from typing import Dict, List, NamedTuple, Optional, Tuple
 
 from BaseClasses import Location, Region
 
@@ -44,13 +44,13 @@ class TWWLocationType(Enum):
 
 
 class TWWLocationData(NamedTuple):
-    code: int | None
+    code: Optional[int]
     flags: TWWFlag
     region: str
     stage_id: int
     type: TWWLocationType
     bit: int
-    address: int | None = None
+    address: Optional[int] = None
 
 
 class TWWLocation(Location):
@@ -84,7 +84,7 @@ DUNGEON_NAMES = [
     "Wind Temple",
 ]
 
-LOCATION_TABLE: dict[str, TWWLocationData] = {
+LOCATION_TABLE: Dict[str, TWWLocationData] = {
     # Outset Island
     "Outset Island - Underneath Link's House": TWWLocationData(
         0, TWWFlag.MISCELL, "The Great Sea", 0xB, TWWLocationType.CHEST, 5
@@ -1161,7 +1161,7 @@ LOCATION_TABLE: dict[str, TWWLocationData] = {
     ),
 }
 
-VANILLA_DUNGEON_ITEM_LOCATIONS: dict[str, list[str]] = {
+VANILLA_DUNGEON_ITEM_LOCATIONS: Dict[str, List[str]] = {
     "DRC Small Key": [
         "Dragon Roost Cavern - First Room",
         "Dragon Roost Cavern - Boarded Up Chest",
@@ -1260,7 +1260,7 @@ ISLAND_NUMBER_TO_NAME = {
 }
 
 
-def split_location_name_by_zone(location_name: str) -> tuple[str, str]:
+def split_location_name_by_zone(location_name: str) -> Tuple[str, str]:
     if " - " in location_name:
         zone_name, specific_location_name = location_name.split(" - ", 1)
     else:

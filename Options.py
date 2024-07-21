@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import List
 
 from Options import (
     Choice,
@@ -646,7 +647,7 @@ class TWWOptions(PerGameCommonOptions):
     death_link: DeathLink
 
 
-tww_option_groups: list[OptionGroup] = [
+tww_option_groups: List[OptionGroup] = [
     OptionGroup(
         "Progression Locations",
         [

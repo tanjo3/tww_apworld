@@ -1,11 +1,11 @@
-from typing import Iterable, NamedTuple
+from typing import Dict, Iterable, NamedTuple, Optional, Union
 
 from BaseClasses import Item
 from BaseClasses import ItemClassification as IC
 from worlds.AutoWorld import World
 
 
-def item_factory(items: str | Iterable[str], world: World):
+def item_factory(items: Union[str, Iterable[str]], world: World):
     ret = []
     singleton = False
     if isinstance(items, str):
@@ -25,17 +25,17 @@ def item_factory(items: str | Iterable[str], world: World):
 class TWWItemData(NamedTuple):
     type: str
     classification: IC
-    code: int | None
+    code: Optional[int]
     quantity: int
-    item_id: int | None
+    item_id: Optional[int]
 
 
 class TWWItem(Item):
     game: str = "The Wind Waker"
-    type: str | None
+    type: Optional[str]
     dungeon = None
 
-    def __init__(self, name: str, player: int, data: TWWItemData, classification: IC | None = None):
+    def __init__(self, name: str, player: int, data: TWWItemData, classification: Optional[IC] = None):
         super(TWWItem, self).__init__(
             name,
             data.classification if classification is None else classification,
@@ -68,7 +68,7 @@ class TWWItem(Item):
         return self.type == "Compass"
 
     @property
-    def dungeon_item(self) -> str | None:
+    def dungeon_item(self) -> Optional[str]:
         if self.type in ("Small Key", "Big Key", "Map", "Compass"):
             return self.type
 
@@ -77,7 +77,7 @@ class TWWItem(Item):
         return self.location and self.location.locked and self.dungeon_item
 
 
-ITEM_TABLE: dict[str, TWWItemData] = {
+ITEM_TABLE: Dict[str, TWWItemData] = {
     "Telescope":               TWWItemData("Item",      IC.filler,                       0,  1, 0x20),
   # "Boat's Sail":             TWWItemData("Item",      IC.progression,                  1,  1, 0x78),
     "Wind Waker":              TWWItemData("Item",      IC.progression,                  2,  1, 0x22),
@@ -300,7 +300,7 @@ ISLAND_NUMBER_TO_CHART_NAME = {
 }
 
 
-LOOKUP_ID_TO_NAME: dict[int, str] = {
+LOOKUP_ID_TO_NAME: Dict[int, str] = {
     TWWItem.get_apid(data.code): item for item, data in ITEM_TABLE.items() if data.code is not None
 }
 

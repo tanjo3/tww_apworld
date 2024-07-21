@@ -1,3 +1,5 @@
+from typing import Set, Tuple
+
 from BaseClasses import CollectionState, MultiWorld
 from Fill import fill_restrictive
 
@@ -119,8 +121,8 @@ def get_unfilled_dungeon_locations(multiworld: MultiWorld):
 
 
 def fill_dungeons_restrictive(multiworld: MultiWorld):
-    localized: set[tuple[int, str]] = set()
-    dungeon_specific: set[tuple[int, str]] = set()
+    localized: Set[Tuple[int, str]] = set()
+    dungeon_specific: Set[Tuple[int, str]] = set()
     for subworld in multiworld.get_game_worlds("The Wind Waker"):
         player = subworld.player
         if player not in multiworld.groups:
