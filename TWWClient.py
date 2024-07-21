@@ -13,12 +13,14 @@ from .Items import ITEM_TABLE, LOOKUP_ID_TO_NAME
 from .Locations import LOCATION_TABLE, TWWLocation, TWWLocationType
 
 CONNECTION_REFUSED_GAME_STATUS = (
-    "Dolphin failed to connect. Please load a randomized ROM for TWW. Trying again in 5 seconds..."
+    "Dolphin failed to connect. Please load a randomized ROM for The Wind Waker. Trying again in 5 seconds..."
 )
 CONNECTION_REFUSED_SAVE_STATUS = (
     "Dolphin failed to connect. Please load into the save file. Trying again in 5 seconds..."
 )
-CONNECTION_LOST_STATUS = "Dolphin connection was lost. Please restart your emulator and make sure TWW is running."
+CONNECTION_LOST_STATUS = (
+    "Dolphin connection was lost. Please restart your emulator and make sure The Wind Waker is running."
+)
 CONNECTION_CONNECTED_STATUS = "Dolphin connected successfully."
 CONNECTION_INITIAL_STATUS = "Dolphin connection has not been initiated."
 

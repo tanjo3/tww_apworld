@@ -30,7 +30,7 @@ VERSION = (2, 5, 0)
 
 
 def run_client():
-    print("Running TWW Client")
+    print("Running The Wind Waker Client")
     from .TWWClient import main  # lazy import
 
     launch_subprocess(main, name="TheWindWakerClient")
@@ -38,7 +38,7 @@ def run_client():
 
 components.append(
     Component(
-        "TWW Client",
+        "The Wind Waker Client",
         func=run_client,
         component_type=Type.CLIENT,
         file_identifier=SuffixIdentifier(".aptww"),

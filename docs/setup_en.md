@@ -90,10 +90,11 @@ player models for The Wind Waker. Follow the installation instructions there to 
 will be named `TWW AP_XXXXX_P#_<name>.iso`, where `#` is the slot number and `<name>` is the slot (player) name. Verify
 that the values are correct for the multiworld.
 5. Open Dolphin and use it to open the randomized ISO.
-6. Start `ArchipelagoLauncher.exe` (without `.exe` on Linux) and choose `TWW Client`, which will open the text client.
-If Dolphin is not already open, or you have yet to start a new file, you will be prompted to do so.
-    * Be sure to launch `TWW Client`, not `WW Client`. The latter is the name of the client's previous (pre-v2.0.0)
-    version and is no longer supported. In this case, you should delete the `ww.apworld` from your `lib/worlds` folder.
+6. Start `ArchipelagoLauncher.exe` (without `.exe` on Linux) and choose `The Wind Waker Client`, which will open the
+text client. If Dolphin is not already open, or you have yet to start a new file, you will be prompted to do so.
+    * Be sure to launch `The Wind Waker Client`, not `WW Client`. The latter is the name of the client's previous
+    (pre-v2.0.0) version and is no longer supported. In this case, you should delete the `ww.apworld` from your
+    `lib/worlds` folder.
 7. Connect to the room by entering the server name and port number at the top and pressing `Connect`. For rooms hosted
 on the website, this will be `archipelago.gg:<port>`, where `<port>` is the port number. If a game is hosted from the
 `ArchipelagoServer.exe` (without `.exe` on Linux), this will default to `38281` but may be changed in the `host.yaml`.
