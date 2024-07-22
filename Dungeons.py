@@ -20,7 +20,6 @@ class Dungeon:
         self.small_keys = small_keys
         self.dungeon_items = dungeon_items
         self.player = player
-        self.multiworld = None
 
     @property
     def keys(self):
@@ -29,9 +28,6 @@ class Dungeon:
     @property
     def all_items(self):
         return self.dungeon_items + self.keys
-
-    def is_dungeon_item(self, item) -> bool:
-        return item.player == self.player and item.name in (dungeon_item.name for dungeon_item in self.all_items)
 
     def __eq__(self, other) -> bool:
         if isinstance(other, Dungeon):

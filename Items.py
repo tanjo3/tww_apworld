@@ -52,22 +52,6 @@ class TWWItem(Item):
         return base_id + code
 
     @property
-    def smallkey(self) -> bool:
-        return self.type == "Small Key"
-
-    @property
-    def bigkey(self) -> bool:
-        return self.type == "Big Key"
-
-    @property
-    def map(self) -> bool:
-        return self.type == "Map"
-
-    @property
-    def compass(self) -> bool:
-        return self.type == "Compass"
-
-    @property
     def dungeon_item(self) -> Optional[str]:
         if self.type in ("Small Key", "Big Key", "Map", "Compass"):
             return self.type
