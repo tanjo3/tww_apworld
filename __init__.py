@@ -128,6 +128,9 @@ class TWWWorld(World):
                 island_location.flags = TWWFlag.TRE_CHT
 
     def _randomize_required_bosses(self):
+        if not self.options.progression_dungeons:
+            raise RuntimeError("Cannot make bosses required when progression dungeons are disabled.")
+
         dungeon_names = set(DUNGEON_NAMES)
 
         # Assert that the user is not including and excluding a dungeon at the same time.
