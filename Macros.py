@@ -516,6 +516,11 @@ def can_access_boss_entrance_in_forsaken_fortress(state: CollectionState, player
             or state.has("Hookshot", player)
             or (state._tww_obscure_2(player) and state._tww_precise_2(player))
         )
+        and (
+            can_defeat_bokoblins(state, player)
+            or can_fly_with_deku_leaf_outdoors(state, player)
+            or state.has("Grappling Hook", player)
+        )
     )
 
 
@@ -1222,7 +1227,7 @@ def can_defeat_wizzrobes(state: CollectionState, player: int):
 
 
 def can_defeat_wizzrobes_at_range(state: CollectionState, player: int):
-    return has_heros_bow(state, player) or state.has("Hookshot", player)
+    return has_heros_bow(state, player) or (state.has("Hookshot", player) and state._tww_precise_1(player))
 
 
 def can_defeat_armos(state: CollectionState, player: int):
