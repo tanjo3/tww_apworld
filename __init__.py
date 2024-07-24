@@ -514,6 +514,19 @@ class TWWWorld(World):
         multiworld = self.multiworld
         player = self.player
 
+        # Determine the current arrangement for charts.
+        # Create a list where the original island number is the index and the value is the new island number.
+        # Without randomized charts, this array would be just a ordered list of the numbers 1 to 49.
+        # With randomized charts, the new island number is where the chart for the original island now leads.
+        chart_name_to_island_number = {
+            chart_name: island_number for island_number, chart_name in self.island_number_to_chart_name.items()
+        }
+        charts_mapping: List[int] = []
+        for i in range(1, 49 + 1):
+            original_chart_name = ISLAND_NUMBER_TO_CHART_NAME[i]
+            new_island_number = chart_name_to_island_number[original_chart_name]
+            charts_mapping.append(new_island_number)
+
         # Output seed name and slot number to seed RNG in randomizer client.
         output_data = {
             "Version": list(VERSION),
@@ -524,7 +537,7 @@ class TWWWorld(World):
             "Required Bosses": self.required_boss_item_locations,
             "Locations": {},
             "Entrances": {},
-            "Charts": self.island_number_to_chart_name,
+            "Charts": charts_mapping,
         }
 
         # Output relevant options to file.

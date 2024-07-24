@@ -10,7 +10,7 @@ from CommonClient import ClientCommandProcessor, CommonContext, get_base_parser,
 from NetUtils import ClientStatus, NetworkItem
 
 from .Items import ITEM_TABLE, LOOKUP_ID_TO_NAME
-from .Locations import LOCATION_TABLE, TWWLocation, TWWLocationType
+from .Locations import ISLAND_NAME_TO_SALVAGE_BIT, ISLAND_NUMBER_TO_NAME, LOCATION_TABLE, TWWLocation, TWWLocationType
 
 CONNECTION_REFUSED_GAME_STATUS = (
     "Dolphin failed to connect. Please load a randomized ROM for The Wind Waker. Trying again in 5 seconds..."
@@ -65,6 +65,12 @@ GIVE_ITEM_ARRAY_ADDR = 0x803FE884
 # This way, the player does not have to manually authenticate their slot name.
 SLOT_NAME_ADDR = 0x803FE8A8
 
+# This address is the start of an array that we use to inform us of which charts lead where.
+# The array is of length 49 where each element is two bytes. The index represents the original destination of the chart
+# and the value represents the new destination.
+# The chart name is inferrable from the original destination of the chart.
+CHARTS_MAPPING_ADDR = 0x803FE8E8
+
 # This address contains the most recent spawn ID the player spawned from.
 MOST_RECENT_SPAWN_ID_ADDR = 0x803C9D44
 
@@ -105,9 +111,14 @@ class TWWContext(CommonContext):
         self.awaiting_rom = False
         self.last_rcvd_index = -1
         self.has_send_death = False
+
+        # A dictionary that maps salvage locations to their sunken treasure bit.
+        self.salvage_locations_map: Dict[str, int] = {}
+
         # Name of the current stage as read from the game's memory. Sent to trackers whenever its value changes to
         # facilitate automatically switching to the map of the current stage.
         self.current_stage_name: str = ""
+
         # Set of visited stages. A dictionary (used as a set) of all visited stages is set in the server's data storage
         # and updated when the player visits a new stage for the first time. To track which stages are new, and need to
         # cause the server's data storage to update, the TWW AP Client keeps track of the visited stages in a set.
@@ -119,14 +130,27 @@ class TWWContext(CommonContext):
 
     async def disconnect(self, allow_autoreconnect: bool = False):
         self.auth = None
+        self.salvage_locations_map = {}
         self.current_stage_name = ""
         self.visited_stage_names = None
         await super().disconnect(allow_autoreconnect)
+
+    async def server_auth(self, password_requested: bool = False):
+        if password_requested and not self.password:
+            await super(TWWContext, self).server_auth(password_requested)
+        if not self.auth:
+            if self.awaiting_rom:
+                return
+            self.awaiting_rom = True
+            logger.info("Awaiting connection to Dolphin to get player information")
+            return
+        await self.send_connect()
 
     def on_package(self, cmd: str, args: dict):
         if cmd == "Connected":
             self.items_received_2 = []
             self.last_rcvd_index = -1
+            self.update_salvage_locations_map()
             if "death_link" in args["slot_data"]:
                 Utils.async_start(self.update_death_link(bool(args["slot_data"]["death_link"])))
             # Request the connected slot's dictionary (used as a set) of visited stages.
@@ -160,17 +184,6 @@ class TWWContext(CommonContext):
         super().on_deathlink(data)
         _give_death(self)
 
-    async def server_auth(self, password_requested: bool = False):
-        if password_requested and not self.password:
-            await super(TWWContext, self).server_auth(password_requested)
-        if not self.auth:
-            if self.awaiting_rom:
-                return
-            self.awaiting_rom = True
-            logger.info("Awaiting connection to Dolphin to get player information")
-            return
-        await self.send_connect()
-
     def run_gui(self):
         from kvui import GameManager
 
@@ -198,6 +211,18 @@ class TWWContext(CommonContext):
                     }
                 ]
             )
+
+    def update_salvage_locations_map(self):
+        self.salvage_locations_map = {}
+        for offset in range(49):
+            island_name = ISLAND_NUMBER_TO_NAME[offset + 1]
+            salvage_bit = ISLAND_NAME_TO_SALVAGE_BIT[island_name]
+
+            shuffled_island_number = read_short(CHARTS_MAPPING_ADDR + offset * 2)
+            shuffled_island_name = ISLAND_NUMBER_TO_NAME[shuffled_island_number]
+            salvage_location_name = f"{shuffled_island_name} - Sunken Treasure"
+
+            self.salvage_locations_map[salvage_location_name] = salvage_bit
 
 
 def read_short(console_address: int) -> int:
@@ -308,7 +333,9 @@ async def check_locations(ctx: TWWContext):
         # Regular checks
         elif data.stage_id == curr_stage_id:
             if data.type == TWWLocationType.CHART:
-                checked = (charts_bitfield >> data.bit) & 1
+                assert location in ctx.salvage_locations_map, f'Location "{location}" salvage bit not set!'
+                salvage_bit = ctx.salvage_locations_map[location]
+                checked = (charts_bitfield >> salvage_bit) & 1
             elif data.type == TWWLocationType.BOCTO:
                 assert data.address is not None
                 checked = (read_short(data.address) >> data.bit) & 1
