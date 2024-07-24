@@ -1,3 +1,4 @@
+import copy
 import os
 from dataclasses import fields
 from typing import Dict, List, Set, Tuple, Type
@@ -98,7 +99,7 @@ class TWWWorld(World):
         self.required_boss_item_locations: List[str] = []
         self.required_dungeons: List[str] = []
         self.banned_dungeons: List[str] = []
-        self.island_number_to_chart_name = ISLAND_NUMBER_TO_CHART_NAME.copy()
+        self.island_number_to_chart_name = copy.deepcopy(ISLAND_NUMBER_TO_CHART_NAME)
         super(TWWWorld, self).__init__(*args, **kwargs)
 
     def _get_access_rule(self, region):
@@ -185,20 +186,20 @@ class TWWWorld(World):
     def _randomize_entrances(self):
         # Copy over the lists of entrances by type.
         entrances = [
-            DUNGEON_ENTRANCES.copy(),
-            MINIBOSS_ENTRANCES.copy(),
-            BOSS_ENTRANCES.copy(),
-            SECRET_CAVES_ENTRANCES.copy(),
-            SECRET_CAVES_INNER_ENTRANCES.copy(),
-            FAIRY_FOUNTAIN_ENTRANCES.copy(),
+            copy.deepcopy(DUNGEON_ENTRANCES),
+            copy.deepcopy(MINIBOSS_ENTRANCES),
+            copy.deepcopy(BOSS_ENTRANCES),
+            copy.deepcopy(SECRET_CAVES_ENTRANCES),
+            copy.deepcopy(SECRET_CAVES_INNER_ENTRANCES),
+            copy.deepcopy(FAIRY_FOUNTAIN_ENTRANCES),
         ]
         exits = [
-            DUNGEON_EXITS.copy(),
-            MINIBOSS_EXITS.copy(),
-            BOSS_EXITS.copy(),
-            SECRET_CAVES_EXITS.copy(),
-            SECRET_CAVES_INNER_EXITS.copy(),
-            FAIRY_FOUNTAIN_EXITS.copy(),
+            copy.deepcopy(DUNGEON_EXITS),
+            copy.deepcopy(MINIBOSS_EXITS),
+            copy.deepcopy(BOSS_EXITS),
+            copy.deepcopy(SECRET_CAVES_EXITS),
+            copy.deepcopy(SECRET_CAVES_INNER_EXITS),
+            copy.deepcopy(FAIRY_FOUNTAIN_EXITS),
         ]
 
         # Retrieve the entrance randomization option.
