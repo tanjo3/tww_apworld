@@ -56,10 +56,6 @@ class TWWItem(Item):
         if self.type in ("Small Key", "Big Key", "Map", "Compass"):
             return self.type
 
-    @property
-    def locked_dungeon_item(self):
-        return self.location and self.location.locked and self.dungeon_item
-
 
 ITEM_TABLE: Dict[str, TWWItemData] = {
     "Telescope":               TWWItemData("Item",      IC.filler,                       0,  1, 0x20),
