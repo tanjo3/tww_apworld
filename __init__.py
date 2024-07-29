@@ -371,6 +371,12 @@ class TWWWorld(World):
     def generate_early(self):
         options = self.options
 
+        # Force vanilla dungeon items when dungeons are not progression.
+        if not options.progression_dungeons:
+            options.randomize_smallkeys.value = 1
+            options.randomize_bigkeys.value = 1
+            options.randomize_mapcompass.value = 1
+
         for dungeon_item in ["randomize_smallkeys", "randomize_bigkeys", "randomize_mapcompass"]:
             option = getattr(options, dungeon_item)
             if option == "local":
