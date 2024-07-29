@@ -151,7 +151,8 @@ def fill_dungeons_restrictive(multiworld: MultiWorld):
             sort_order = {"Big Key": 3, "Small Key": 2}
             in_dungeon_items.sort(
                 key=lambda item: sort_order.get(item.type, 1)
-                + (5 if (item.player, item.name) in dungeon_specific else 0)
+                + (5 if (item.player, item.name) in dungeon_specific else 0),
+                reverse=True,
             )
 
             # Construct a partial `all_state` which contains only the items from `get_pre_fill_items`, which aren't
