@@ -1,7 +1,52 @@
 from typing import Dict, List
 
 from .Items import ITEM_TABLE, item_factory
-from .Locations import VANILLA_DUNGEON_ITEM_LOCATIONS
+
+
+VANILLA_DUNGEON_ITEM_LOCATIONS: Dict[str, List[str]] = {
+    "DRC Small Key": [
+        "Dragon Roost Cavern - First Room",
+        "Dragon Roost Cavern - Boarded Up Chest",
+        "Dragon Roost Cavern - Rat Room Boarded Up Chest",
+        "Dragon Roost Cavern - Bird's Nest",
+    ],
+    "FW Small Key": [
+        "Forbidden Woods - Vine Maze Right Chest"
+    ],
+    "TotG Small Key": [
+        "Tower of the Gods - Hop Across Floating Boxes",
+        "Tower of the Gods - Floating Platforms Room"
+    ],
+    "ET Small Key": [
+        "Earth Temple - Transparent Chest in First Crypt",
+        "Earth Temple - Casket in Second Crypt",
+        "Earth Temple - End of Foggy Room With Floormasters",
+    ],
+    "WT Small Key": [
+        "Wind Temple - Spike Wall Room - First Chest",
+        "Wind Temple - Chest Behind Seven Armos"
+    ],
+
+    "DRC Big Key":  ["Dragon Roost Cavern - Big Key Chest"],
+    "FW Big Key":   ["Forbidden Woods - Big Key Chest"],
+    "TotG Big Key": ["Tower of the Gods - Big Key Chest"],
+    "ET Big Key":   ["Earth Temple - Big Key Chest"],
+    "WT Big Key":   ["Wind Temple - Big Key Chest"],
+
+    "DRC Dungeon Map":  ["Dragon Roost Cavern - Alcove With Water Jugs"],
+    "FW Dungeon Map":   ["Forbidden Woods - First Room"],
+    "TotG Dungeon Map": ["Tower of the Gods - Chest Behind Bombable Walls"],
+    "FF Dungeon Map":   ["Forsaken Fortress - Chest Outside Upper Jail Cell"],
+    "ET Dungeon Map":   ["Earth Temple - Transparent Chest In Warp Pot Room"],
+    "WT Dungeon Map":   ["Wind Temple - Chest In Many Cyclones Room"],
+
+    "DRC Compass":  ["Dragon Roost Cavern - Rat Room"],
+    "FW Compass":   ["Forbidden Woods - Vine Maze Left Chest"],
+    "TotG Compass": ["Tower of the Gods - Skulls Room Chest"],
+    "FF Compass":   ["Forsaken Fortress - Chest Guarded By Bokoblin"],
+    "ET Compass":   ["Earth Temple - Chest In Three Blocks Room"],
+    "WT Compass":   ["Wind Temple - Chest In Middle Of Hub Room"],
+}
 
 
 def generate_itempool(world):
