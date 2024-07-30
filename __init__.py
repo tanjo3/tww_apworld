@@ -1,7 +1,7 @@
 import copy
 import os
 from dataclasses import fields
-from typing import Dict, List, Set, Tuple, Type
+from typing import Dict, List, Set, Type
 
 import yaml
 
@@ -13,6 +13,19 @@ from worlds.LauncherComponents import Component, SuffixIdentifier, Type, compone
 
 from . import Macros
 from .Dungeons import Dungeon, create_dungeons
+from .Entrances import (
+    ALL_ENTRANCES,
+    ALL_EXITS,
+    BOSS_ENTRANCES,
+    BOSS_EXIT_TO_DUNGEON,
+    DUNGEON_ENTRANCES,
+    FAIRY_FOUNTAIN_ENTRANCES,
+    MINIBOSS_ENTRANCES,
+    MINIBOSS_EXIT_TO_DUNGEON,
+    SECRET_CAVE_ENTRANCES,
+    SECRET_CAVE_INNER_ENTRANCES,
+    EntranceRandomizer,
+)
 from .ItemPool import generate_itempool
 from .Items import ISLAND_NUMBER_TO_CHART_NAME, ITEM_TABLE, TWWItem, item_name_groups
 from .Locations import (
@@ -24,7 +37,6 @@ from .Locations import (
     split_location_name_by_zone,
 )
 from .Options import TWWOptions, tww_option_groups
-from .Regions import *
 from .Rules import set_rules
 
 VERSION = (2, 5, 0)
@@ -96,15 +108,19 @@ class TWWWorld(World):
         self.dungeon_local_item_names: Set[str] = set()
         self.dungeon_specific_item_names: Set[str] = set()
         self.dungeons: Dict[str, Dungeon] = {}
+
         self.required_boss_item_locations: List[str] = []
         self.required_dungeons: List[str] = []
+        self.required_bosses: List[str] = []
+        self.banned_locations: List[str] = []
         self.banned_dungeons: List[str] = []
+        self.banned_bosses: List[str] = []
+
         self.island_number_to_chart_name = copy.deepcopy(ISLAND_NUMBER_TO_CHART_NAME)
+
         super(TWWWorld, self).__init__(*args, **kwargs)
 
-    def _get_access_rule(self, region):
-        snake_case_region = region.lower().replace("'", "").replace(" ", "_")
-        return f"can_access_{snake_case_region}"
+        self.entrances = EntranceRandomizer(self)
 
     def _randomize_charts(self):
         # This code comes straight from the base randomizer's chart randomizer.
@@ -161,158 +177,38 @@ class TWWWorld(World):
 
         # Exclude locations which are not in the dungeon of a required boss.
         banned_dungeons = dungeon_names - required_dungeons
-        for location_name, _ in LOCATION_TABLE.items():
+        for location_name, location_data in LOCATION_TABLE.items():
             dungeon_name, _ = split_location_name_by_zone(location_name)
-            if dungeon_name in banned_dungeons:
-                self.get_location(location_name).progress_type = LocationProgressType.EXCLUDED
-
-        # Exclude mail related to banned dungeons.
-        if "Forbidden Woods" in banned_dungeons:
-            self.get_location("Mailbox - Letter from Orca").progress_type = LocationProgressType.EXCLUDED
-        if "Forsaken Fortress" in banned_dungeons:
-            self.get_location("Mailbox - Letter from Aryll").progress_type = LocationProgressType.EXCLUDED
-            self.get_location("Mailbox - Letter from Tingle").progress_type = LocationProgressType.EXCLUDED
-        if "Earth Temple" in banned_dungeons:
-            self.get_location("Mailbox - Letter from Baito").progress_type = LocationProgressType.EXCLUDED
+            if dungeon_name in banned_dungeons and TWWFlag.DUNGEON in location_data.flags:
+                self.banned_locations.append(location_name)
+            elif location_name == "Mailbox - Letter from Orca" and "Forbidden Woods" in banned_dungeons:
+                self.banned_locations.append(location_name)
+            elif location_name == "Mailbox - Letter from Baito" and "Earth Temple" in banned_dungeons:
+                self.banned_locations.append(location_name)
+            elif location_name == "Mailbox - Letter from Aryll" and "Forsaken Fortress" in banned_dungeons:
+                self.banned_locations.append(location_name)
+            elif location_name == "Mailbox - Letter from Tingle" and "Forsaken Fortress" in banned_dungeons:
+                self.banned_locations.append(location_name)
+        for location_name in self.banned_locations:
+            self.get_location(location_name).progress_type = LocationProgressType.EXCLUDED
 
         # Record the item location names for required bosses.
+        self.required_boss_item_locations: List[str] = []
+        self.required_bosses: List[str] = []
+        self.banned_bosses: List[str] = []
         possible_boss_item_locations = [loc for loc, data in LOCATION_TABLE.items() if TWWFlag.BOSS in data.flags]
-        self.required_boss_item_locations = [
-            loc for loc in possible_boss_item_locations if split_location_name_by_zone(loc)[0] in required_dungeons
-        ]
+        for location_name in possible_boss_item_locations:
+            dungeon_name, specific_location_name = split_location_name_by_zone(location_name)
+            assert specific_location_name.endswith(" Heart Container")
+            boss_name = specific_location_name[: -len(" Heart Container")]
+
+            if dungeon_name in required_dungeons:
+                self.required_boss_item_locations.append(location_name)
+                self.required_bosses.append(boss_name)
+            else:
+                self.banned_bosses.append(boss_name)
         self.required_dungeons = list(required_dungeons)
         self.banned_dungeons = list(banned_dungeons)
-
-    def _randomize_entrances(self):
-        # Copy over the lists of entrances by type.
-        entrances = [
-            copy.deepcopy(DUNGEON_ENTRANCES),
-            copy.deepcopy(MINIBOSS_ENTRANCES),
-            copy.deepcopy(BOSS_ENTRANCES),
-            copy.deepcopy(SECRET_CAVES_ENTRANCES),
-            copy.deepcopy(SECRET_CAVES_INNER_ENTRANCES),
-            copy.deepcopy(FAIRY_FOUNTAIN_ENTRANCES),
-        ]
-        exits = [
-            copy.deepcopy(DUNGEON_EXITS),
-            copy.deepcopy(MINIBOSS_EXITS),
-            copy.deepcopy(BOSS_EXITS),
-            copy.deepcopy(SECRET_CAVES_EXITS),
-            copy.deepcopy(SECRET_CAVES_INNER_EXITS),
-            copy.deepcopy(FAIRY_FOUNTAIN_EXITS),
-        ]
-
-        # Retrieve the entrance randomization option.
-        options = [
-            self.options.randomize_dungeon_entrances,
-            self.options.randomize_miniboss_entrances,
-            self.options.randomize_boss_entrances,
-            self.options.randomize_secret_cave_entrances,
-            self.options.randomize_secret_cave_inner_entrances,
-            self.options.randomize_fairy_fountain_entrances,
-        ]
-
-        entrance_exit_pairs: List[Tuple[Region, Region]] = []
-
-        # Force miniboss doors to be vanilla in nonrequired dungeons.
-        for miniboss_entrance, miniboss_exit in zip(entrances[1], exits[1]):
-            assert miniboss_entrance.startswith("Miniboss Entrance in ")
-            dungeon_name = miniboss_entrance[len("Miniboss Entrance in ") :]
-            if dungeon_name in self.banned_dungeons:
-                entrances[1].remove(miniboss_entrance)
-                exits[1].remove(miniboss_exit)
-                entrance_exit_pairs.append((self.get_region(miniboss_entrance), self.get_region(miniboss_exit)))
-
-        # Force boss doors to be vanilla in nonrequired dungeons.
-        for boss_entrance, boss_exit in zip(entrances[2], exits[2]):
-            assert boss_entrance.startswith("Boss Entrance in ")
-            dungeon_name = boss_entrance[len("Boss Entrance in ") :]
-            if dungeon_name in self.banned_dungeons:
-                entrances[2].remove(boss_entrance)
-                exits[2].remove(boss_exit)
-                entrance_exit_pairs.append((self.get_region(boss_entrance), self.get_region(boss_exit)))
-
-        if self.options.mix_entrances == "separate_pools":
-            # Connect entrances to exits of the same type.
-            for option, entrance_group, exit_group in zip(options, entrances, exits):
-                # If the entrance group is randomized, shuffle their order.
-                if option:
-                    self.multiworld.random.shuffle(entrance_group)
-                    self.multiworld.random.shuffle(exit_group)
-
-                for entrance_name, exit_name in zip(entrance_group, exit_group):
-                    entrance_exit_pairs.append((self.get_region(entrance_name), self.get_region(exit_name)))
-        elif self.options.mix_entrances == "mix_pools":
-            # We do a bit of extra work here in order to prevent unreachable "islands" of regions.
-            # For example, DRC boss door leading to DRC. This will cause generation failures.
-
-            # Gather all the entrances and exits for selected randomization pools.
-            randomized_entrances: List[str] = []
-            randomized_exits: List[str] = []
-            non_randomized_exits: List[str] = ["The Great Sea"]
-            for option, entrance_group, exit_group in zip(options, entrances, exits):
-                if option:
-                    randomized_entrances += entrance_group
-                    randomized_exits += exit_group
-                else:
-                    # If not randomized, then just connect the entrance-exit pairs now.
-                    for entrance_name, exit_name in zip(entrance_group, exit_group):
-                        non_randomized_exits.append(exit_name)
-                        entrance_exit_pairs.append((self.get_region(entrance_name), self.get_region(exit_name)))
-
-            # Build a list of accessible randomized entrances, assuming the player has all items.
-            accessible_entrances: List[str] = []
-            for exit_name, entrances in ENTRANCE_ACCESSIBILITY.items():
-                if exit_name in non_randomized_exits:
-                    accessible_entrances += [
-                        entrance_name for entrance_name in entrances if entrance_name in randomized_entrances
-                    ]
-            non_accessible_entrances: List[str] = [
-                entrance_name for entrance_name in randomized_entrances if entrance_name not in accessible_entrances
-            ]
-
-            # Priotize exits that lead to more entrances first.
-            priority_exits: List[str] = []
-            for exit_name, entrances in ENTRANCE_ACCESSIBILITY.items():
-                if exit_name == "The Great Sea":
-                    continue
-                if exit_name in randomized_exits and any(
-                    entrance_name in randomized_entrances for entrance_name in entrances
-                ):
-                    priority_exits.append(exit_name)
-
-            # Assign each priority exit to an accessible entrance.
-            for exit_name in priority_exits:
-                # Choose an accessible entrance at random.
-                self.multiworld.random.shuffle(accessible_entrances)
-                entrance_name = accessible_entrances.pop()
-
-                # Connect the pair.
-                entrance_exit_pairs.append((self.get_region(entrance_name), self.get_region(exit_name)))
-
-                # Remove the pair from the list of entrance/exits to be connected.
-                randomized_entrances.remove(entrance_name)
-                randomized_exits.remove(exit_name)
-
-                # Consider entrances in that exit as accessible now.
-                for newly_accessible_entrance in ENTRANCE_ACCESSIBILITY[exit_name]:
-                    if newly_accessible_entrance in non_accessible_entrances:
-                        accessible_entrances.append(newly_accessible_entrance)
-                        non_accessible_entrances.remove(newly_accessible_entrance)
-
-            # With all entrances either assigned or accessible, we should have an equal number of unassigned entrances
-            # and exits to pair.
-            assert len(randomized_entrances) == len(randomized_exits)
-
-            # Join the remaining entrance/exits randomly.
-            self.multiworld.random.shuffle(randomized_entrances)
-            self.multiworld.random.shuffle(randomized_exits)
-            for entrance_name, exit_name in zip(randomized_entrances, randomized_exits):
-                entrance_exit_pairs.append((self.get_region(entrance_name), self.get_region(exit_name)))
-        else:
-            raise Exception(f"Invalid entrance randomization option: {self.options.mix_entrances}")
-
-        return entrance_exit_pairs
 
     def _set_nonprogress_locations(self):
         enabled_flags = TWWFlag.ALWAYS
@@ -320,6 +216,7 @@ class TWWWorld(World):
         # Set the flags for progression location by checking player's settings.
         if self.options.progression_dungeons:
             enabled_flags |= TWWFlag.DUNGEON
+            enabled_flags |= TWWFlag.BOSS
         if self.options.progression_tingle_chests:
             enabled_flags |= TWWFlag.TNGL_CT
         if self.options.progression_dungeon_secrets:
@@ -389,12 +286,20 @@ class TWWWorld(World):
                 if option == "dungeon":
                     self.dungeon_specific_item_names |= self.item_name_groups[option.item_name_group]
 
+        # Randomize which chart points to each sector, if the option is enabled.
+        if self.options.randomize_charts:
+            self._randomize_charts()
+
     create_dungeons = create_dungeons
 
-    def create_regions(self):
-        player = self.player
-        multiworld = self.multiworld
-        options = self.options
+    def create_regions(world):
+        def get_access_rule(region: str) -> str:
+            snake_case_region = region.lower().replace("'", "").replace(" ", "_")
+            return f"can_access_{snake_case_region}"
+
+        multiworld = world.multiworld
+        player = world.player
+        options = world.options
 
         # "Menu" is the required starting point.
         menu_region = Region("Menu", player, multiworld)
@@ -405,24 +310,26 @@ class TWWWorld(World):
         multiworld.regions.append(great_sea_region)
 
         # Add all randomizable regions.
-        for region in ALL_ENTRANCES + ALL_EXITS:
-            multiworld.regions.append(Region(region, player, multiworld))
+        for region in ALL_ENTRANCES:
+            multiworld.regions.append(Region(region.entrance_name, player, multiworld))
+        for region in ALL_EXITS:
+            multiworld.regions.append(Region(region.unique_name, player, multiworld))
 
         # Create the dungeon classes.
-        self.create_dungeons()
+        world.create_dungeons()
 
         # Assign each location to their region.
         for location, data in LOCATION_TABLE.items():
-            region = self.get_region(data.region)
+            region = world.get_region(data.region)
             location = TWWLocation(player, location, region, data)
 
             # Additionally, assign dungeon locations to the appropriate dungeon.
-            if region.name in self.dungeons:
-                location.dungeon = self.dungeons[region.name]
+            if region.name in world.dungeons:
+                location.dungeon = world.dungeons[region.name]
             elif region.name in MINIBOSS_EXIT_TO_DUNGEON and not options.randomize_miniboss_entrances:
-                location.dungeon = self.dungeons[MINIBOSS_EXIT_TO_DUNGEON[region.name]]
+                location.dungeon = world.dungeons[MINIBOSS_EXIT_TO_DUNGEON[region.name]]
             elif region.name in BOSS_EXIT_TO_DUNGEON and not options.randomize_boss_entrances:
-                location.dungeon = self.dungeons[BOSS_EXIT_TO_DUNGEON[region.name]]
+                location.dungeon = world.dungeons[BOSS_EXIT_TO_DUNGEON[region.name]]
             elif location.name in [
                 "Forsaken Fortress - Phantom Ganon",
                 "Forsaken Fortress - Chest Outside Upper Jail Cell",
@@ -430,26 +337,40 @@ class TWWWorld(World):
                 "Forsaken Fortress - Chest Guarded By Bokoblin",
                 "Forsaken Fortress - Chest on Bed",
             ]:
-                location.dungeon = self.dungeons["Forsaken Fortress"]
+                location.dungeon = world.dungeons["Forsaken Fortress"]
             region.locations.append(location)
 
         # Connect the "Menu" region to the "The Great Sea" region.
         menu_region.connect(great_sea_region)
 
         # Connect the dungeon, secret caves, and fairy fountain regions to the "The Great Sea" region.
-        for entrance in DUNGEON_ENTRANCES + SECRET_CAVES_ENTRANCES + FAIRY_FOUNTAIN_ENTRANCES:
-            rule = lambda state, entrance=entrance: getattr(Macros, self._get_access_rule(entrance))(state, player)
-            great_sea_region.connect(self.get_region(entrance), rule=rule)
+        for entrance in DUNGEON_ENTRANCES + SECRET_CAVE_ENTRANCES + FAIRY_FOUNTAIN_ENTRANCES:
+            rule = lambda state, entrance=entrance.entrance_name: getattr(Macros, get_access_rule(entrance))(
+                state, player
+            )
+            great_sea_region.connect(world.get_region(entrance.entrance_name), rule=rule)
 
         # Connect nested regions with their parent region.
-        for entrance in MINIBOSS_ENTRANCES + BOSS_ENTRANCES + SECRET_CAVES_INNER_ENTRANCES:
-            parent_region_name = entrance.split(" in ")[-1]
+        for entrance in MINIBOSS_ENTRANCES + BOSS_ENTRANCES + SECRET_CAVE_INNER_ENTRANCES:
+            parent_region_name = entrance.entrance_name.split(" in ")[-1]
             # Consider Hyrule Castle and Forsaken Fortress as part of The Great Sea (regions are not randomizable).
             if parent_region_name in ["Hyrule Castle", "Forsaken Fortress"]:
                 parent_region_name = "The Great Sea"
-            rule = lambda state, entrance=entrance: getattr(Macros, self._get_access_rule(entrance))(state, player)
-            parent_region = self.get_region(parent_region_name)
-            parent_region.connect(self.get_region(entrance), rule=rule)
+            rule = lambda state, entrance=entrance.entrance_name: getattr(Macros, get_access_rule(entrance))(
+                state, player
+            )
+            parent_region = world.get_region(parent_region_name)
+            parent_region.connect(world.get_region(entrance.entrance_name), rule=rule)
+
+        # Set nonprogress location from options.
+        world._set_nonprogress_locations()
+
+        # Select required bosses.
+        if world.options.required_bosses:
+            world._randomize_required_bosses()
+
+        # Connect the regions together in the multiworld. Randomize entrances to exits, if the option is set.
+        world.entrances.randomize_entrances()
 
     def pre_fill(self):
         # Ban the Bait Bag slot from having bait.
@@ -492,27 +413,6 @@ class TWWWorld(World):
                 )
             ),
         )
-
-        # Randomize which chart points to each sector, if the option is enabled.
-        if self.options.randomize_charts:
-            self._randomize_charts()
-
-        # Set nonprogress location from options.
-        self._set_nonprogress_locations()
-
-        # Select required bosses.
-        if self.options.required_bosses:
-            self._randomize_required_bosses()
-
-        # Randomize entrances to exits, if the option is set.
-        entrance_exit_pairs = self._randomize_entrances()
-
-        # Connect entrances to exits.
-        for entrance_region, exit_region in entrance_exit_pairs:
-            rule = lambda state, entrance=entrance_region.name: getattr(Macros, self._get_access_rule(entrance))(
-                state, self.player
-            )
-            entrance_region.connect(exit_region, rule=rule)
 
     @classmethod
     def stage_pre_fill(cls, world):
@@ -577,9 +477,10 @@ class TWWWorld(World):
                 output_data["Locations"][location.name] = item_info
 
         # Output the mapping of entrances to exits.
+        all_entrance_names = [en.entrance_name for en in ALL_ENTRANCES]
         entrances = multiworld.get_entrances(player)
         for entrance in entrances:
-            if entrance.parent_region.name in ALL_ENTRANCES:
+            if entrance.parent_region.name in all_entrance_names:
                 output_data["Entrances"][entrance.parent_region.name] = entrance.connected_region.name
 
         # Output the plando details to file.
@@ -692,10 +593,11 @@ class TWWWorld(World):
         }
 
         # Add entrances to slot_data. This is the same data that is written to the .aptww file.
+        all_entrance_names = [en.entrance_name for en in ALL_ENTRANCES]
         entrances = {
             entrance.parent_region.name: entrance.connected_region.name
             for entrance in self.multiworld.get_entrances(self.player)
-            if entrance.parent_region.name in ALL_ENTRANCES
+            if entrance.parent_region.name in all_entrance_names
         }
         slot_data["entrances"] = entrances
 
