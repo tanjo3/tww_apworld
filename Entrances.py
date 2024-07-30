@@ -398,9 +398,9 @@ class EntranceRandomizer:
 
         self.randomize_one_set_of_exits(remaining_entrances, remaining_exits, terminal_exits)
 
-    def check_if_one_exit_is_progress(self, exit: ZoneExit) -> bool:
-        locs_for_exit = self.zone_exit_to_logically_dependent_item_locations[exit]
-        assert locs_for_exit, f"Could not find any item locations corresponding to zone exit: {exit.unique_name}"
+    def check_if_one_exit_is_progress(self, zone_exit: ZoneExit) -> bool:
+        locs_for_exit = self.zone_exit_to_logically_dependent_item_locations[zone_exit]
+        assert locs_for_exit, f"Could not find any item locations corresponding to zone exit: {zone_exit.unique_name}"
 
         # Banned required bosses mode dungeons still technically count as progress locations, so filter them out
         # separately first.
