@@ -705,7 +705,6 @@ tww_option_groups: List[OptionGroup] = [
             RandomizeStartingIsland,
             RandomizeCharts,
             # RandomizeMusic,
-            RandomizeEnemies,
         ],
     ),
     OptionGroup(
@@ -736,6 +735,13 @@ tww_option_groups: List[OptionGroup] = [
             LogicObscurity,
             LogicPrecision,
             EnableTunerLogic,
+        ],
+        start_collapsed=True,
+    ),
+    OptionGroup(
+        "Work-in-Progress Options",
+        [
+            RandomizeEnemies,
         ],
         start_collapsed=True,
     ),
