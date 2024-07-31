@@ -285,36 +285,43 @@ LOOKUP_ID_TO_NAME: Dict[int, str] = {
 }
 
 item_name_groups = {
-    "Pearls": {
-        "Nayru's Pearl",
-        "Din's Pearl",
-        "Farore's Pearl",
+    "Songs": {
+        "Wind's Requiem",
+        "Ballad of Gales",
+        "Command Melody",
+        "Earth God's Lyric",
+        "Wind God's Aria",
+        "Song of Passing",
     },
-    "Shards": {
-        "Triforce Shard 1",
-        "Triforce Shard 2",
-        "Triforce Shard 3",
-        "Triforce Shard 4",
-        "Triforce Shard 5",
-        "Triforce Shard 6",
-        "Triforce Shard 7",
-        "Triforce Shard 8",
+    "Mail": {
+        "Note to Mom",
+        "Maggie's Letter",
+        "Moblin's Letter",
     },
-    "Tingle Statues": {
-        "Dragon Tingle Statue",
-        "Forbidden Tingle Statue",
-        "Goddess Tingle Statue",
-        "Earth Tingle Statue",
-        "Wind Tingle Statue",
+    "Special Charts": {
+        "Tingle's Chart",
+        "Ghost Ship Chart",
+        "Octo Chart",
+        "Great Fairy Chart",
+        "Secret Cave Chart",
+        "Light Ring Chart",
+        "Platform Chart",
+        "Beedle's Chart",
+        "Submarine Chart",
     },
 }
 # generic groups, (Name, substring)
 _simple_groups = {
+    ("Tingle Statues", "Tingle Statue"),
+    ("Shards", "Shard"),
+    ("Pearls", "Pearl"),
+    ("Triforce Charts", "Triforce Chart"),
+    ("Treasure Charts", "Treasure Chart"),
     ("Small Keys", "Small Key"),
     ("Big Keys", "Big Key"),
+    ("Rupees", "Rupee"),
     ("Dungeon Items", "Compass"),
     ("Dungeon Items", "Map"),
-    ("Rupees", "Rupee"),
 }
 for basename, substring in _simple_groups:
     if basename not in item_name_groups:
