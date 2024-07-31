@@ -18,6 +18,7 @@ from .Locations import DUNGEON_NAMES
 
 class Dungeons(DefaultOnToggle):
     """This controls whether dungeons can contain progress items.
+
     If off, dungeons will still be randomized, but will only contain optional items you don't need to beat the game.
     """
 
@@ -27,6 +28,7 @@ class Dungeons(DefaultOnToggle):
 class TingleChests(Toggle):
     """Tingle Chests that are hidden in dungeons and must be bombed to make them appear. (2 in DRC, 1 each in FW, TotG,
     ET, and WT).
+
     If off, they will still be randomized, but will only contain optional items you don't need to beat the game.
     """
 
@@ -35,8 +37,11 @@ class TingleChests(Toggle):
 
 class DungeonSecrets(Toggle):
     """DRC, FW, TotG, ET, and WT each have 2-3 secret items within them (11 in total). This controls whether they can be
-    progress items. The items are fairly well-hidden (they aren't in chests), so don't select this option unless you're
+    progress items.
+
+    The items are fairly well-hidden (they aren't in chests), so don't select this option unless you're
     prepared to search each dungeon high and low!
+
     For a list of the dungeon secrets, refer to this Google doc:
     https://docs.google.com/document/d/1LrjGr6W9970XEA-pzl8OhwnqMqTbQaxCX--M-kdsLos/edit
     """
@@ -46,6 +51,7 @@ class DungeonSecrets(Toggle):
 
 class PuzzleSecretCaves(DefaultOnToggle):
     """This controls whether puzzle-focused secret caves can contain progress items.
+
     If off, they will still be randomized, but will only contain optional items you don't need to beat the game.
     """
 
@@ -54,6 +60,7 @@ class PuzzleSecretCaves(DefaultOnToggle):
 
 class CombatSecretCaves(Toggle):
     """This controls whether combat-focused secret caves (besides Savage Labyrinth) can contain progress items.
+
     If off, they will still be randomized, but will only contain optional items you don't need to beat the game.
     """
 
@@ -62,6 +69,7 @@ class CombatSecretCaves(Toggle):
 
 class SavageLabyrinth(Toggle):
     """This controls whether the Savage Labyrinth can contain progress items.
+
     If off, it will still be randomized, but will only contain optional items you don't need to beat the game.
     """
 
@@ -70,6 +78,7 @@ class SavageLabyrinth(Toggle):
 
 class GreatFairies(DefaultOnToggle):
     """This controls whether the items given by Great Fairies can be progress items.
+
     If off, they will still be randomized, but will only contain optional items you don't need to beat the game.
     """
 
@@ -78,6 +87,7 @@ class GreatFairies(DefaultOnToggle):
 
 class ShortSidequests(Toggle):
     """This controls whether sidequests that can be completed quickly can reward progress items.
+
     If off, they will still be randomized, but will only reward optional items you don't need to beat the game.
     """
 
@@ -87,6 +97,7 @@ class ShortSidequests(Toggle):
 class LongSidequests(Toggle):
     """This controls whether long sidequests (e.g. Lenzo's assistant, withered trees, goron trading) can reward progress
     items.
+
     If off, they will still be randomized, but will only reward optional items you don't need to beat the game.
     """
 
@@ -95,6 +106,7 @@ class LongSidequests(Toggle):
 
 class SpoilsTrading(Toggle):
     """This controls whether the items you get by trading in spoils to NPCs can be progress items.
+
     If off, they will still be randomized</u>, but will only reward optional items you don't need to beat the game.
     """
 
@@ -104,6 +116,7 @@ class SpoilsTrading(Toggle):
 class Minigames(Toggle):
     """This controls whether most minigames can reward progress items (auctions, mail sorting, barrel shooting, bird-man
     contest).
+
     If off, minigames will still be randomized, but will only reward optional items you don't need to beat the game.
     """
 
@@ -112,6 +125,7 @@ class Minigames(Toggle):
 
 class Battlesquid(Toggle):
     """This controls whether the Windfall battleship minigame can reward progress items.
+
     If off, it will still be randomized, but will only reward optional items you don't need to beat the game.
     """
 
@@ -120,6 +134,7 @@ class Battlesquid(Toggle):
 
 class FreeGifts(DefaultOnToggle):
     """This controls whether gifts freely given by NPCs can be progress items (Tott, Salvage Corp, imprisoned Tingle).
+
     If off, they will still be randomized, but will only be optional items you don't need to beat the game.
     """
 
@@ -128,6 +143,7 @@ class FreeGifts(DefaultOnToggle):
 
 class Mail(Toggle):
     """This controls whether mail can contain progress items.
+
     If off, mail will still be randomized, but will only contain optional items you don't need to beat the game.
     """
 
@@ -136,6 +152,7 @@ class Mail(Toggle):
 
 class PlatformsRafts(Toggle):
     """This controls whether lookout platforms and rafts can contain progress items.
+
     If off, they will still be randomized, but will only contain optional items you don't need to beat the game.
     """
 
@@ -144,6 +161,7 @@ class PlatformsRafts(Toggle):
 
 class Submarines(Toggle):
     """This controls whether submarines can contain progress items.
+
     If off, submarines will still be randomized, but will only contain optional items you don't need to beat the
     game."""
 
@@ -152,6 +170,7 @@ class Submarines(Toggle):
 
 class EyeReefChests(Toggle):
     """This controls whether the chests that appear after clearing out the eye reefs can contain progress items.
+
     If off, they will still be randomized, but will only contain optional items you don't need to beat the game.
     """
 
@@ -160,6 +179,7 @@ class EyeReefChests(Toggle):
 
 class BigOctosGunboats(Toggle):
     """This controls whether the items dropped by Big Octos and Gunboats can contain progress items.
+
     If off, they will still be randomized, but will only contain optional items you don't need to beat the game.
     """
 
@@ -168,6 +188,7 @@ class BigOctosGunboats(Toggle):
 
 class TriforceCharts(Toggle):
     """This controls whether the sunken treasure chests marked on Triforce Charts can contain progress items.
+
     If off, they will still be randomized, but will only contain optional items you don't need to beat the game.
     """
 
@@ -176,6 +197,7 @@ class TriforceCharts(Toggle):
 
 class TreasureCharts(Toggle):
     """This controls whether the sunken treasure chests marked on Treasure Charts can contain progress items.
+
     If off, they will still be randomized, but will only contain optional items you don't need to beat the game.
     """
 
@@ -185,6 +207,7 @@ class TreasureCharts(Toggle):
 class ExpensivePurchases(DefaultOnToggle):
     """This controls whether items that cost a lot of rupees can be progress items (Rock Spire shop, auctions, Tingle's
     letter, trading quest).
+
     If off, they will still be randomized, but will only be optional items you don't need to beat the game.
     """
 
@@ -193,6 +216,7 @@ class ExpensivePurchases(DefaultOnToggle):
 
 class IslandPuzzles(Toggle):
     """This controls whether various island puzzles can contain progress items (e.g. chests hidden in unusual places).
+
     If off, they will still be randomized, but will only contain optional items you don't need to beat the game.
     """
 
@@ -202,6 +226,7 @@ class IslandPuzzles(Toggle):
 class Misc(Toggle):
     """Miscellaneous locations that don't fit into any of the above categories (outdoors chests, wind shrine, Cyclos,
     etc).
+
     If off, they will still be randomized, but will only contain optional items you don't need to beat the game.
     """
 
@@ -225,12 +250,13 @@ class DungeonItem(Choice):
 
 class RandomizeMapCompass(DungeonItem):
     """Controls how dungeon maps and compasses are randomized.
-    Start With Maps & Compasses: You will start the game with the dungeon maps and compasses for all dungeons.
-    Vanilla Maps & Compasses: Dungeon maps and compasses will be kept in their vanilla location (non-randomized).
-    Own Dungeon Maps & Compasses: Dungeon maps and compasses will be randomized locally within their own dungeon.
-    Any Dungeon Maps & Compasses: Dungeon maps and compasses will be randomized locally within any dungeon.
-    Local Maps & Compasses: Dungeon maps and compasses will be randomized locally anywhere.
-    Key-Lunacy: Dungeon maps and compasses can be found anywhere, without restriction.
+
+    - **Start With Maps & Compasses:** You will start the game with the dungeon maps and compasses for all dungeons.
+    - **Vanilla Maps & Compasses:** Dungeon maps and compasses will be kept in their vanilla location (non-randomized).
+    - **Own Dungeon Maps & Compasses:** Dungeon maps and compasses will be randomized locally within their own dungeon.
+    - **Any Dungeon Maps & Compasses:** Dungeon maps and compasses will be randomized locally within any dungeon.
+    - **Local Maps & Compasses:** Dungeon maps and compasses will be randomized locally anywhere.
+    - **Key-Lunacy:** Dungeon maps and compasses can be found anywhere, without restriction.
     """
 
     item_name_group = "Dungeon Items"
@@ -240,12 +266,13 @@ class RandomizeMapCompass(DungeonItem):
 
 class RandomizeSmallKeys(DungeonItem):
     """Controls how small keys are randomized.
-    Start With Small Keys: You will start the game with the small keys for all dungeons.
-    Vanilla Small Keys: Small keys will be kept in their vanilla location (non-randomized).
-    Own Dungeon Small Keys: Small keys will be randomized locally within their own dungeon.
-    Any Dungeon Small Keys: Small keys will be randomized locally within any dungeon.
-    Local Small Keys: Small keys will be randomized locally anywhere.
-    Key-Lunacy: Small keys can be found in any progression location, if dungeons are randomized.
+
+    - **Start With Small Keys:** You will start the game with the small keys for all dungeons.
+    - **Vanilla Small Keys:** Small keys will be kept in their vanilla location (non-randomized).
+    - **Own Dungeon Small Keys:** Small keys will be randomized locally within their own dungeon.
+    - **Any Dungeon Small Keys:** Small keys will be randomized locally within any dungeon.
+    - **Local Small Keys:** Small keys will be randomized locally anywhere.
+    - **Key-Lunacy:** Small keys can be found in any progression location, if dungeons are randomized.
     """
 
     item_name_group = "Small Keys"
@@ -255,12 +282,13 @@ class RandomizeSmallKeys(DungeonItem):
 
 class RandomizeBigKeys(DungeonItem):
     """Controls how big keys are randomized.
-    Start With Big Keys: You will start the game with the big keys for all dungeons.
-    Vanilla Big Keys: Big keys will be kept in their vanilla location (non-randomized).
-    Own Dungeon Big Keys: Big keys will be randomized locally within their own dungeon.
-    Any Dungeon Big Keys: Big keys will be randomized locally within any dungeon.
-    Local Big Keys: Big keys will be randomized locally anywhere.
-    Key-Lunacy: Big keys can be found in any progression location, if dungeons are randomized.
+
+    - **Start With Big Keys:** You will start the game with the big keys for all dungeons.
+    - **Vanilla Big Keys:** Big keys will be kept in their vanilla location (non-randomized).
+    - **Own Dungeon Big Keys:** Big keys will be randomized locally within their own dungeon.
+    - **Any Dungeon Big Keys:** Big keys will be randomized locally within any dungeon.
+    - **Local Big Keys:** Big keys will be randomized locally anywhere.
+    - **Key-Lunacy:** Big keys can be found in any progression location, if dungeons are randomized.
     """
 
     item_name_group = "Big Keys"
@@ -271,15 +299,16 @@ class RandomizeBigKeys(DungeonItem):
 class SwordMode(Choice):
     """Controls whether you start with the Hero's Sword, the Hero's Sword is randomized, or if there are no swords in
     the entire game.
-    Start with Hero's Sword: You will start the game with the basic Hero's Sword already in your inventory.
-    No Starting Sword: You will start the game with no sword, and have to find it somewhere in the world like other
-    randomized items.
-    Swords Optional: You will start the game with no sword, but they'll still be randomized. However, they are not
-    necessary to beat the game as the Hyrule Barrier will be gone, Phantom Ganon in FF is vulnerable to Skull
-    Hammer, and the logic not expect you to have a sword.
-    Swordless: You will start the game with no sword, and won't be able to find it anywhere. You have to beat the entire
-    game using other items as weapons instead of the sword. (Note that Phantom Ganon in FF becomes vulnerable to Skull
-    Hammer in this mode.)"""
+
+    - **Start with Hero's Sword:** You will start the game with the basic Hero's Sword already in your inventory.
+    - **No Starting Sword:** You will start the game with no sword, and have to find it somewhere in the world like
+      other randomized items.
+    - **Swords Optional:** You will start the game with no sword, but they'll still be randomized. However, they are not
+      necessary to beat the game. The Hyrule Barrier will be gone, Phantom Ganon in FF is vulnerable to Skull Hammer,
+      and the logic does not expect you to have a sword.
+    - **Swordless:** You will start the game with no sword, and won't be able to find it anywhere. You have to beat the
+      entire game using other items as weapons instead of the sword. (Note that Phantom Ganon in FF becomes vulnerable
+      to Skull Hammer in this mode.)"""
 
     display_name = "Sword Mode"
     option_start_with_sword = 0
@@ -292,6 +321,7 @@ class SwordMode(Choice):
 class RequiredBosses(Toggle):
     """In this mode, you will not be allowed to beat the game until certain randomly-chosen bosses are defeated. Nothing
     in dungeons for other bosses will ever be required.
+
     You can see which islands have the required bosses on them by opening the sea chart and checking which islands have
     blue quest markers."""
 
@@ -300,6 +330,7 @@ class RequiredBosses(Toggle):
 
 class NumRequiredBosses(Range):
     """Select the number of randomly-chosen bosses that are required in Required Bosses Mode.
+
     The door to Puppet Ganon will not unlock until you've defeated all of these bosses. Nothing in dungeons for other
     bosses will ever be required."""
 
@@ -332,7 +363,8 @@ class ChestTypeMatchesContents(Toggle):
 
 
 class TrapChests(Toggle):
-    """DEV NOTE: This option is currently unimplemented and will be ignored.
+    """**DEV NOTE:** This option is currently unimplemented and will be ignored.
+
     Allows the randomizer to place several trapped chests across the game that do not give you items. Perfect for
     spicing up any run!"""
 
@@ -347,6 +379,7 @@ class HeroMode(Toggle):
 
 class LogicObscurity(Choice):
     """Obscure tricks are ways of obtaining items that are not obvious and may involve thinking outside the box.
+
     This option controls the maximum difficulty of obscure tricks the randomizer will require you to do to beat the
     game."""
 
@@ -361,6 +394,7 @@ class LogicObscurity(Choice):
 class LogicPrecision(Choice):
     """Precise tricks are ways of obtaining items that involve difficult inputs such as accurate aiming or perfect
     timing.
+
     This option controls the maximum difficulty of precise tricks the randomizer will require you to do to beat the
     game."""
 
@@ -374,6 +408,7 @@ class LogicPrecision(Choice):
 
 class EnableTunerLogic(Toggle):
     """If enabled, the randomizer can logically expect the Tingle Tuner for Tingle chests.
+
     The randomizer behavior of logically expecting Bombs/bomb flowers to spawn in Tingle chests remains unchanged.
     """
 
@@ -382,6 +417,7 @@ class EnableTunerLogic(Toggle):
 
 class RandomizeDungeonEntrances(Toggle):
     """Shuffles around which dungeon entrances take you into which dungeons.
+
     (No effect on Forsaken Fortress or Ganon's Tower.)"""
 
     display_name = "Randomize Dungeons"
@@ -395,6 +431,7 @@ class RandomizeSecretCavesEntrances(Toggle):
 
 class RandomizeMinibossEntrances(Toggle):
     """Allows dungeon miniboss doors to act as entrances to be randomized.
+
     If on with random dungeon entrances, dungeons may nest within each other, forming chains of connected dungeons.
     """
 
@@ -403,6 +440,7 @@ class RandomizeMinibossEntrances(Toggle):
 
 class RandomizeBossEntrances(Toggle):
     """Allows dungeon boss doors to act as entrances to be randomized.
+
     If on with random dungeon entrances, dungeons may nest within each other, forming chains of connected dungeons.
     """
 
@@ -424,8 +462,9 @@ class RandomizeFairyFountainEntrances(Toggle):
 
 class MixEntrances(Choice):
     """Controls how the different types (pools) of randomized entrances should be shuffled.
-    Separate Pools: Each pool of randomized entrances with shuffle into itself (e.g., dungeons into dungeons).
-    Mix Pools: All pools of randomized entrances will be combined into one pool to be shuffled.
+
+    - **Separate Pools:** Each pool of randomized entrances with shuffle into itself (e.g., dungeons into dungeons).
+    - **Mix Pools:** All pools of randomized entrances will be combined into one pool to be shuffled.
     """
 
     display_name = "Mix Entrances"
@@ -435,8 +474,10 @@ class MixEntrances(Choice):
 
 
 class RandomizeEnemies(Toggle):
-    """Randomizes the placement of non-boss enemies. This option is an incomplete option from the base randomizer and
-    may result in unbeatable seeds! Use at your own risk!"""
+    """Randomizes the placement of non-boss enemies.
+    
+    This option is an *incomplete* option from the base randomizer and **may result in unbeatable seeds! Use at your own
+    risk!**"""
 
     display_name = "Randomize Enemies"
 
@@ -460,7 +501,8 @@ class RandomizeCharts(Toggle):
 
 
 class HoHoHints(DefaultOnToggle):
-    """DEV NOTE: This option is currently unimplemented and will be ignored.
+    """**DEV NOTE:** This option is currently unimplemented and will be ignored.
+
     Places hints on Old Man Ho Ho. Old Man Ho Ho appears at 10 different islands in the game. Talk to Old Man Ho Ho to
     get hints."""
 
@@ -468,7 +510,8 @@ class HoHoHints(DefaultOnToggle):
 
 
 class FishmenHints(DefaultOnToggle):
-    """DEV NOTE: This option is currently unimplemented and will be ignored.
+    """**DEV NOTE:** This option is currently unimplemented and will be ignored.
+
     Places hints on the fishmen. There is one fishman at each of the 49 islands of the Great Sea. Each fishman must be
     fed an All-Purpose Bait before he will give a hint."""
 
@@ -476,7 +519,8 @@ class FishmenHints(DefaultOnToggle):
 
 
 class KoRLHints(Toggle):
-    """DEV NOTE: This option is currently unimplemented and will be ignored.
+    """**DEV NOTE:** This option is currently unimplemented and will be ignored.
+
     Places hints on the King of Red Lions. Talk to the King of Red Lions to get hints.
     """
 
@@ -484,10 +528,12 @@ class KoRLHints(Toggle):
 
 
 class NumItemHints(Range):
-    """DEV NOTE: This option is currently unimplemented and will be ignored.
+    """**DEV NOTE:** This option is currently unimplemented and will be ignored.
+
     The number of item hints that will be placed. Item hints tell you which area contains a particular progress item in
-    this seed. If multiple hint placement options are selected, the hint count will be split evenly among the placement
-    options."""
+    this seed.
+
+    If multiple hint placement options are selected, the hint count will be split evenly among the placement options."""
 
     display_name = "Item Hints"
     range_start = 0
@@ -496,10 +542,12 @@ class NumItemHints(Range):
 
 
 class NumLocationHints(Range):
-    """DEV NOTE: This option is currently unimplemented and will be ignored.
+    """**DEV NOTE:** This option is currently unimplemented and will be ignored.
+
     The number of location hints that will be placed. Location hints tell you what item is at a specific location in
-    this seed. If multiple hint placement options are selected, the hint count will be split evenly among the placement
-    options."""
+    this seed.
+
+    If multiple hint placement options are selected, the hint count will be split evenly among the placement options."""
 
     display_name = "Location Hints"
     range_start = 0
@@ -508,10 +556,12 @@ class NumLocationHints(Range):
 
 
 class NumBarrenHints(Range):
-    """DEV NOTE: This option is currently unimplemented and will be ignored.
+    """**DEV NOTE:** This option is currently unimplemented and will be ignored.
+
     The number of barren hints that will be placed. Barren hints tell you that an area does not contain any required
-    items in this seed. If multiple hint placement options are selected, the hint count will be split evenly among the
-    placement options."""
+    items in this seed.
+
+    If multiple hint placement options are selected, the hint count will be split evenly among the placement options."""
 
     display_name = "Barren Hints"
     range_start = 0
@@ -520,10 +570,12 @@ class NumBarrenHints(Range):
 
 
 class NumPathHints(Range):
-    """DEV NOTE: This option is currently unimplemented and will be ignored.
+    """**DEV NOTE:** This option is currently unimplemented and will be ignored.
+
     The number of path hints that will be placed. Path hints tell you that an area contains an item that is required to
-    reach a particular goal in this seed. If multiple hint placement options are selected, the hint count will be split
-    evenly among the placement options."""
+    reach a particular goal in this seed.
+
+    If multiple hint placement options are selected, the hint count will be split evenly among the placement options."""
 
     display_name = "Path Hints"
     range_start = 0
@@ -532,7 +584,8 @@ class NumPathHints(Range):
 
 
 class PrioritizeRemoteHints(Toggle):
-    """DEV NOTE: This option is currently unimplemented and will be ignored.
+    """**DEV NOTE:** This option is currently unimplemented and will be ignored.
+
     When this option is selected, certain locations that are out of the way and time-consuming to complete will take
     precedence over normal location hints."""
 
@@ -560,7 +613,9 @@ class RevealFullSeaChart(DefaultOnToggle):
 
 class AddShortcutWarpsBetweenDungeons(Toggle):
     """Adds new warp pots that act as shortcuts connecting dungeons to each other directly. (DRC, FW, TotG, and
-    separately FF, ET, WT.) Each pot must be unlocked before it can be used, so you cannot use them to access dungeons
+    separately FF, ET, WT.)
+
+    Each pot must be unlocked before it can be used, so you cannot use them to access dungeons
     you wouldn't already have access to."""
 
     display_name = "Add Shortcut Warps Between Dungeons"

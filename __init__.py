@@ -1,7 +1,7 @@
 import copy
 import os
 from dataclasses import fields
-from typing import Dict, List, Set, Type
+from typing import ClassVar, Dict, List, Set, Tuple, Type
 
 import yaml
 
@@ -39,7 +39,7 @@ from .Locations import (
 from .Options import TWWOptions, tww_option_groups
 from .Rules import set_rules
 
-VERSION = (2, 5, 0)
+VERSION: Tuple[int, int, int] = (2, 5, 0)
 
 
 def run_client():
@@ -60,7 +60,6 @@ components.append(
 
 
 class TWWWeb(WebWorld):
-    theme = "ocean"
     tutorials = [
         Tutorial(
             "Multiworld Setup Guide",
@@ -71,7 +70,9 @@ class TWWWeb(WebWorld):
             ["tanjo3", "Lunix"],
         )
     ]
+    theme = "ocean"
     option_groups = tww_option_groups
+    rich_text_options_doc = True
 
 
 class TWWWorld(World):
@@ -84,21 +85,21 @@ class TWWWorld(World):
     options_dataclass = TWWOptions
     options: TWWOptions
 
-    game: str = "The Wind Waker"
+    game: ClassVar[str] = "The Wind Waker"
     topology_present: bool = True
 
-    item_name_groups = item_name_groups
-
-    item_name_to_id: Dict[str, int] = {
+    item_name_to_id: ClassVar[Dict[str, int]] = {
         name: TWWItem.get_apid(data.code) for name, data in ITEM_TABLE.items() if data.code is not None
     }
-    location_name_to_id: Dict[str, int] = {
+    location_name_to_id: ClassVar[Dict[str, int]] = {
         name: TWWLocation.get_apid(data.code) for name, data in LOCATION_TABLE.items() if data.code is not None
     }
 
-    required_client_version = (0, 5, 0)
+    item_name_groups: ClassVar[Dict[str, Set[str]]] = item_name_groups
 
-    web = TWWWeb()
+    required_client_version: Tuple[int, int, int] = (0, 5, 0)
+
+    web: ClassVar[TWWWeb] = TWWWeb()
 
     create_items = generate_itempool
 
