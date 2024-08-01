@@ -1,5 +1,5 @@
 from enum import Enum, Flag, auto
-from typing import Dict, List, NamedTuple, Optional, Tuple
+from typing import Dict, NamedTuple, Optional, Tuple
 
 from BaseClasses import Location, Region
 

@@ -356,12 +356,12 @@ async def check_locations(ctx: TWWContext):
             checked = (sea_alt_bitfield >> data.bit) & 1
 
         if checked:
-            if data.code:
-                ctx.locations_checked.add(TWWLocation.get_apid(data.code))
-            else:
+            if data.code is None:
                 if not ctx.finished_game:
                     await ctx.send_msgs([{"cmd": "StatusUpdate", "status": ClientStatus.CLIENT_GOAL}])
                     ctx.finished_game = True
+            else:
+                ctx.locations_checked.add(TWWLocation.get_apid(data.code))
 
     # Send the list of newly-checked locations to the server.
     locations_checked = ctx.locations_checked.difference(ctx.checked_locations)

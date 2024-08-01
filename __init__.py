@@ -39,7 +39,7 @@ from .Locations import (
 from .Options import TWWOptions, tww_option_groups
 from .Rules import set_rules
 
-VERSION: Tuple[int, int, int] = (2, 5, 0)
+VERSION: Tuple[int, int, int] = (2, 5, 1)
 
 
 def run_client():
