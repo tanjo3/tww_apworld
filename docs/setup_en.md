@@ -87,7 +87,7 @@ will be named `TWW AP_XXXXX_P# (<name>).iso`, where `#` is the slot number and `
 Verify that the values are correct for the multiworld.
     * If nothing happens when you click `Randomize`, ensure that you are using the correct build version for the
     `aptww` you have provided.
-    * v2.5.0 APWorlds should use the 2.3.0 build, v2.4.0 APWorlds should use the 2.2.0 build, v2.3.x APWorlds should use
+    * v2.5.x APWorlds should use the 2.3.0 build, v2.4.0 APWorlds should use the 2.2.0 build, v2.3.x APWorlds should use
     the 2.1.0 build, and older APWorlds should use 2.0.0.
 5. Open Dolphin and use it to open the randomized ISO.
 6. Start `ArchipelagoLauncher.exe` (without `.exe` on Linux) and choose `The Wind Waker Client`, which will open the
@@ -114,7 +114,7 @@ exist, delete them. Finally, ensure that the content of the `lib` folder from th
 your Archipelago installation's `lib` folder.
 * If you press Randomize in the build and nothing happens, ensure that you are using the correct version of the build
 for the `aptww` file you are using.
-    * v2.5.0 APWorlds should use the 2.3.0 build, v2.4.0 APWorlds should use the 2.2.0 build, v2.3.x APWorlds should use
+    * v2.5.x APWorlds should use the 2.3.0 build, v2.4.0 APWorlds should use the 2.2.0 build, v2.3.x APWorlds should use
     the 2.1.0 build, and older APWorlds should use 2.0.0.
     * Remember that you should use the same APWorld version with which the `aptww` was generated; ask the multiworld
     generator if you're unsure which version was used.
