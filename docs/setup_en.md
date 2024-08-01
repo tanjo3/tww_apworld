@@ -16,7 +16,7 @@ You'll need the following components to be able to play/generate with The Wind W
 If you're playing The Wind Waker, you'll also need:
 * Install [Dolphin Emulator](https://dolphin-emu.org/download/).\
     **We recommend using the latest release.**
-* The latest version of the [TWW AP Client](https://github.com/tanjo3/wwrando/releases/latest).
+* The latest version of the [TWW AP Randomizer Build](https://github.com/tanjo3/wwrando/releases/latest).
 * A The Wind Waker ISO (North American version), probably named "Legend of Zelda, The - The Wind Waker (USA).iso".
 
 If you intend to play under Linux, you will need to consider the following information.
@@ -36,7 +36,7 @@ little dialog window telling you it has been installed successfully.
 3. Place the content of the `lib` folder of the downloaded TWW APWorld zip file into your Archipelago installation's
 `lib` folder.
 
-If you're playing The Wind Waker, you must also unzip the TWW AP Client downloaded from the release page.
+If you're playing The Wind Waker, you must also unzip the TWW AP Randomizer Build downloaded from the release page.
 
 ## Setting Up a YAML
 
@@ -75,9 +75,9 @@ You should have the `.aptww` file provided to you by the multiworld generator. Y
 name and port number from the room's host.
 
 Once you do, follow these steps to connect to the room:
-1. Run the TWW AP Randomizer Client. If this is the first time you've opened the randomizer, you'll need to specify the
+1. Run the TWW AP Randomizer Build. If this is the first time you've opened the randomizer, you'll need to specify the
 path to your The Wind Waker ISO and the output folder for the randomized ISO. These will be saved for the next time you
-open the client.
+open the program.
 2. Modify any cosmetic convenience tweaks and player customization options as desired.
 [This repository](https://github.com/Sage-of-Mirrors/Custom-Wind-Waker-Player-Models) contains a collection of custom
 player models for The Wind Waker. Follow the installation instructions there to set up custom player models.
@@ -85,7 +85,7 @@ player models for The Wind Waker. Follow the installation instructions there to 
 4. Click `Randomize` at the bottom. This randomizes the ISO and puts it in the output folder you specified. The file
 will be named `TWW AP_XXXXX_P# (<name>).iso`, where `#` is the slot number and `<name>` is the slot (player) name.
 Verify that the values are correct for the multiworld.
-    * If nothing happens when you click `Randomize`, ensure that you are using the correct client version for the
+    * If nothing happens when you click `Randomize`, ensure that you are using the correct build version for the
     `aptww` you have provided.
     * v2.5.0 APWorlds should use the 2.3.0 build, v2.4.0 APWorlds should use the 2.2.0 build, v2.3.x APWorlds should use
     the 2.1.0 build, and older APWorlds should use 2.0.0.
