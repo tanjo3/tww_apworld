@@ -15,7 +15,7 @@ def item_factory(items: Union[str, Iterable[str]], world: World):
         if item in ITEM_TABLE:
             ret.append(world.create_item(item))
         else:
-            raise Exception(f"Unknown item {item}")
+            raise KeyError(f"Unknown item {item}")
 
     if singleton:
         return ret[0]

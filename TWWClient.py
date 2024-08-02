@@ -348,7 +348,7 @@ async def check_locations(ctx: TWWContext):
             elif data.type == TWWLocationType.EVENT:
                 checked = (dolphin_memory_engine.read_byte(data.address) >> data.bit) & 1
             else:
-                raise Exception(f"Unknown location type: {data.type}")
+                raise NotImplementedError(f"Unknown location type: {data.type}")
 
         # Sea (Alt) chests
         elif curr_stage_id == 0x0 and data.stage_id == 0x1:
