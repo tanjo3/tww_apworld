@@ -7,6 +7,7 @@ import yaml
 
 from BaseClasses import ItemClassification as IC
 from BaseClasses import LocationProgressType, Region, Tutorial
+from Options import OptionError
 from worlds.AutoWorld import WebWorld, World
 from worlds.generic.Rules import add_item_rule
 from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess
@@ -147,13 +148,13 @@ class TWWWorld(World):
 
     def _randomize_required_bosses(self):
         if not self.options.progression_dungeons:
-            raise RuntimeError("Cannot make bosses required when progression dungeons are disabled.")
+            raise OptionError("Cannot make bosses required when progression dungeons are disabled.")
 
         dungeon_names = set(DUNGEON_NAMES)
 
         # Assert that the user is not including and excluding a dungeon at the same time.
         if len(self.options.included_dungeons.value & self.options.excluded_dungeons.value) != 0:
-            raise RuntimeError("Conflict found in the lists of required and banned dungeons for required bosses mode")
+            raise OptionError("Conflict found in the lists of required and banned dungeons for required bosses mode.")
 
         # If the user enforces a dungeon location to be priority, consider that when selecting required bosses.
         required_dungeons = self.options.included_dungeons.value
@@ -165,13 +166,13 @@ class TWWWorld(World):
         # Ensure that we aren't prioritizing more dungeon locations than requested number of required bosses.
         num_required_bosses = self.options.num_required_bosses
         if len(required_dungeons) > num_required_bosses:
-            raise RuntimeError("Could not select required bosses to satisfy options set by user")
+            raise OptionError("Could not select required bosses to satisfy options set by user.")
 
         # Ensure that after removing excluded dungeons that we still have enough dungeons to satisfy user options.
         num_remaining = num_required_bosses - len(required_dungeons)
         remaining_dungeon_options = dungeon_names - required_dungeons - self.options.excluded_dungeons.value
         if len(remaining_dungeon_options) < num_remaining:
-            raise RuntimeError("Could not select required bosses to satisfy options set by user")
+            raise OptionError("Could not select required bosses to satisfy options set by user.")
 
         # Finish selecting required bosses.
         required_dungeons.update(self.multiworld.random.sample(list(remaining_dungeon_options), num_remaining))
@@ -503,7 +504,7 @@ class TWWWorld(World):
 
         if item in ITEM_TABLE:
             return TWWItem(item, self.player, ITEM_TABLE[item], adjusted_classification)
-        raise Exception(f"Invalid item name: {item}")
+        raise KeyError(f"Invalid item name: {item}")
 
     def get_filler_item_name(self) -> str:
         # Use the same weights for filler items that are used in the base randomizer.
