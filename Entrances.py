@@ -209,19 +209,19 @@ ITEM_LOCATION_NAME_TO_EXIT_OVERRIDES = {
   "Earth Temple - Stalfos Miniboss Room"             : ZoneExit.all["Earth Temple Miniboss Arena"],
   "Wind Temple - Wizzrobe Miniboss Room"             : ZoneExit.all["Wind Temple Miniboss Arena"],
   "Hyrule - Master Sword Chamber"                    : ZoneExit.all["Master Sword Chamber"],
-  
+
   "Dragon Roost Cavern - Gohma Heart Container"      : ZoneExit.all["Gohma Boss Arena"],
   "Forbidden Woods - Kalle Demos Heart Container"    : ZoneExit.all["Kalle Demos Boss Arena"],
   "Tower of the Gods - Gohdan Heart Container"       : ZoneExit.all["Gohdan Boss Arena"],
   "Forsaken Fortress - Helmaroc King Heart Container": ZoneExit.all["Helmaroc King Boss Arena"],
   "Earth Temple - Jalhalla Heart Container"          : ZoneExit.all["Jalhalla Boss Arena"],
   "Wind Temple - Molgera Heart Container"            : ZoneExit.all["Molgera Boss Arena"],
-  
+
   "Pawprint Isle - Wizzrobe Cave"                    : ZoneExit.all["Pawprint Isle Wizzrobe Cave"],
-  
+
   "Ice Ring Isle - Inner Cave - Chest"               : ZoneExit.all["Ice Ring Isle Inner Cave"],
   "Cliff Plateau Isles - Highest Isle"               : ZoneExit.all["Cliff Plateau Isles Inner Cave"],
-  
+
   "Outset Island - Great Fairy"                      : ZoneExit.all["Outset Fairy Fountain"],
 }
 
