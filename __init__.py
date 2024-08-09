@@ -40,7 +40,7 @@ from .Locations import (
 from .Options import TWWOptions, tww_option_groups
 from .Rules import set_rules
 
-VERSION: Tuple[int, int, int] = (2, 5, 1)
+VERSION: Tuple[int, int, int] = (2, 5, 2)
 
 
 def run_client():
@@ -288,10 +288,6 @@ class TWWWorld(World):
                 if option == "dungeon":
                     self.dungeon_specific_item_names |= self.item_name_groups[option.item_name_group]
 
-        # Randomize which chart points to each sector, if the option is enabled.
-        if self.options.randomize_charts:
-            self._randomize_charts()
-
     create_dungeons = create_dungeons
 
     def create_regions(world):
@@ -363,6 +359,10 @@ class TWWWorld(World):
             )
             parent_region = world.get_region(parent_region_name)
             parent_region.connect(world.get_region(entrance.entrance_name), rule=rule)
+
+        # Randomize which chart points to each sector, if the option is enabled.
+        if world.options.randomize_charts:
+            world._randomize_charts()
 
         # Set nonprogress location from options.
         world._set_nonprogress_locations()
