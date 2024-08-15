@@ -49,9 +49,8 @@ server.
   does not affect gameplay.
 - The Heart Piece count in item get messages will be off by one. This does not affect gameplay.
 - It has been reported that sometimes you will receive an extra copy of an item you've received.
-- For some reason, sometimes Jalhalla doesn't appear in the boss rematch in Ganon's Tower. Defeating him above the sea
-  may spawn him in, but it has also been reported that this doesn't work.
-- It has been reported that the client sometimes fails to give out Progressive Magic Meter properly.
+- For some reason, sometimes Jalhalla doesn't appear in the boss rematch in Ganon's Tower. For this reason, the option
+  to enable boss rematches has been disabled until the bug is fixed.
 - It has been reported that item links can be buggy. Nothing game-breaking, but do be aware of it.
 
 Feel free to report any other issues in the Wind Waker thread in the Archipelago server! I'll take a look and see what I

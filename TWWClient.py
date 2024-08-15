@@ -59,17 +59,17 @@ CURR_STAGE_NAME_ADDR = 0x803C9D3C
 
 # This is an array of length 0x10 where each element is a byte and contains item IDs for items to give the player.
 # 0xFF represents no item. The array is read and cleared every frame.
-GIVE_ITEM_ARRAY_ADDR = 0x803FE884
+GIVE_ITEM_ARRAY_ADDR = 0x803FE87C
 
 # This is the address that holds the player's slot name.
 # This way, the player does not have to manually authenticate their slot name.
-SLOT_NAME_ADDR = 0x803FE8A8
+SLOT_NAME_ADDR = 0x803FE8A0
 
 # This address is the start of an array that we use to inform us of which charts lead where.
 # The array is of length 49 where each element is two bytes. The index represents the original destination of the chart
 # and the value represents the new destination.
 # The chart name is inferrable from the original destination of the chart.
-CHARTS_MAPPING_ADDR = 0x803FE8E8
+CHARTS_MAPPING_ADDR = 0x803FE8E0
 
 # This address contains the most recent spawn ID the player spawned from.
 MOST_RECENT_SPAWN_ID_ADDR = 0x803C9D44
@@ -111,6 +111,9 @@ class TWWContext(CommonContext):
         self.awaiting_rom = False
         self.last_rcvd_index = -1
         self.has_send_death = False
+
+        # Keep track of whether the player has received their first progressive magic meter yet.
+        self.received_magic = False
 
         # A dictionary that maps salvage locations to their sunken treasure bit.
         self.salvage_locations_map: Dict[str, int] = {}
@@ -258,6 +261,12 @@ def _give_item(ctx: TWWContext, item_name: str) -> bool:
     for idx in range(ctx.len_give_item_array):
         slot = dolphin_memory_engine.read_byte(GIVE_ITEM_ARRAY_ADDR + idx)
         if slot == 0xFF:
+            # Special case: use a different item ID for second progressive magic meter.
+            if item_name == "Progressive Magic Meter":
+                if ctx.received_magic:
+                    item_id = 0xB2
+                else:
+                    ctx.received_magic = True
             dolphin_memory_engine.write_byte(GIVE_ITEM_ARRAY_ADDR + idx, item_id)
             return True
 
