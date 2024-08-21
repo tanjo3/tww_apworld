@@ -59,7 +59,7 @@ class TWWItem(Item):
 
 ITEM_TABLE: Dict[str, TWWItemData] = {
     "Telescope":               TWWItemData("Item",      IC.filler,                       0,  1, 0x20),
-  # "Boat's Sail":             TWWItemData("Item",      IC.progression,                  1,  1, 0x78),
+  # "Boat's Sail":             TWWItemData("Item",      IC.progression,                  1,  1, 0x78),  # noqa: E131
     "Wind Waker":              TWWItemData("Item",      IC.progression,                  2,  1, 0x22),
     "Grappling Hook":          TWWItemData("Item",      IC.progression,                  3,  1, 0x25),
     "Spoils Bag":              TWWItemData("Item",      IC.progression,                  4,  1, 0x24),

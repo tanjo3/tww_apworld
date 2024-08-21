@@ -204,25 +204,25 @@ ENTRANCE_RANDOMIZABLE_ITEM_LOCATION_TYPES = [
     TWWFlag.GRT_FRY,
 ]
 ITEM_LOCATION_NAME_TO_EXIT_OVERRIDES = {
-  "Forbidden Woods - Mothula Miniboss Room"          : ZoneExit.all["Forbidden Woods Miniboss Arena"],
-  "Tower of the Gods - Darknut Miniboss Room"        : ZoneExit.all["Tower of the Gods Miniboss Arena"],
-  "Earth Temple - Stalfos Miniboss Room"             : ZoneExit.all["Earth Temple Miniboss Arena"],
-  "Wind Temple - Wizzrobe Miniboss Room"             : ZoneExit.all["Wind Temple Miniboss Arena"],
-  "Hyrule - Master Sword Chamber"                    : ZoneExit.all["Master Sword Chamber"],
+  "Forbidden Woods - Mothula Miniboss Room":           ZoneExit.all["Forbidden Woods Miniboss Arena"],
+  "Tower of the Gods - Darknut Miniboss Room":         ZoneExit.all["Tower of the Gods Miniboss Arena"],
+  "Earth Temple - Stalfos Miniboss Room":              ZoneExit.all["Earth Temple Miniboss Arena"],
+  "Wind Temple - Wizzrobe Miniboss Room":              ZoneExit.all["Wind Temple Miniboss Arena"],
+  "Hyrule - Master Sword Chamber":                     ZoneExit.all["Master Sword Chamber"],
 
-  "Dragon Roost Cavern - Gohma Heart Container"      : ZoneExit.all["Gohma Boss Arena"],
-  "Forbidden Woods - Kalle Demos Heart Container"    : ZoneExit.all["Kalle Demos Boss Arena"],
-  "Tower of the Gods - Gohdan Heart Container"       : ZoneExit.all["Gohdan Boss Arena"],
+  "Dragon Roost Cavern - Gohma Heart Container":       ZoneExit.all["Gohma Boss Arena"],
+  "Forbidden Woods - Kalle Demos Heart Container":     ZoneExit.all["Kalle Demos Boss Arena"],
+  "Tower of the Gods - Gohdan Heart Container":        ZoneExit.all["Gohdan Boss Arena"],
   "Forsaken Fortress - Helmaroc King Heart Container": ZoneExit.all["Helmaroc King Boss Arena"],
-  "Earth Temple - Jalhalla Heart Container"          : ZoneExit.all["Jalhalla Boss Arena"],
-  "Wind Temple - Molgera Heart Container"            : ZoneExit.all["Molgera Boss Arena"],
+  "Earth Temple - Jalhalla Heart Container":           ZoneExit.all["Jalhalla Boss Arena"],
+  "Wind Temple - Molgera Heart Container":             ZoneExit.all["Molgera Boss Arena"],
 
-  "Pawprint Isle - Wizzrobe Cave"                    : ZoneExit.all["Pawprint Isle Wizzrobe Cave"],
+  "Pawprint Isle - Wizzrobe Cave":                     ZoneExit.all["Pawprint Isle Wizzrobe Cave"],
 
-  "Ice Ring Isle - Inner Cave - Chest"               : ZoneExit.all["Ice Ring Isle Inner Cave"],
-  "Cliff Plateau Isles - Highest Isle"               : ZoneExit.all["Cliff Plateau Isles Inner Cave"],
+  "Ice Ring Isle - Inner Cave - Chest":                ZoneExit.all["Ice Ring Isle Inner Cave"],
+  "Cliff Plateau Isles - Highest Isle":                ZoneExit.all["Cliff Plateau Isles Inner Cave"],
 
-  "Outset Island - Great Fairy"                      : ZoneExit.all["Outset Fairy Fountain"],
+  "Outset Island - Great Fairy":                       ZoneExit.all["Outset Fairy Fountain"],
 }
 
 MINIBOSS_EXIT_TO_DUNGEON: Dict[str, str] = {
@@ -240,7 +240,6 @@ BOSS_EXIT_TO_DUNGEON: Dict[str, str] = {
     "Jalhalla Boss Arena":      "Earth Temple",
     "Molgera Boss Arena":       "Wind Temple",
 }
-
 
 
 class EntranceRandomizer:
@@ -535,7 +534,7 @@ class EntranceRandomizer:
                     possible_remaining_exits = [
                         ex
                         for ex in possible_remaining_exits
-                        if ex in terminal_exits and not ex in (DUNGEON_EXITS + BOSS_EXITS)
+                        if ex in terminal_exits and ex not in (DUNGEON_EXITS + BOSS_EXITS)
                     ]
 
             if not possible_remaining_exits:
@@ -735,7 +734,8 @@ class EntranceRandomizer:
             return possible_exits[0]
         else:
             raise Exception(
-                f"Multiple zone exits share the same zone name: {loc_zone_name!r}. Use a location exit override instead."
+                f"Multiple zone exits share the same zone name: {loc_zone_name!r}. "
+                "Use a location exit override instead."
             )
 
     def get_entrance_zone_for_boss(self, boss_name: str) -> str:

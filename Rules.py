@@ -1,3 +1,5 @@
+# flake8: noqa
+
 from worlds.AutoWorld import LogicMixin
 from worlds.generic.Rules import set_rule
 
@@ -70,7 +72,7 @@ class TWWLogic(LogicMixin):
         return self.multiworld.worlds[player].options.enable_tuner_logic
 
 
-def set_rules(world):
+def set_rules(world):  # noqa: F405
     player = world.player
 
     # Outset Island

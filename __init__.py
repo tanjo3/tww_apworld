@@ -1,7 +1,7 @@
 import copy
 import os
 from dataclasses import fields
-from typing import ClassVar, Dict, List, Set, Tuple, Type
+from typing import ClassVar, Dict, List, Set, Tuple
 
 import yaml
 
@@ -387,31 +387,40 @@ class TWWWorld(World):
         )
         add_item_rule(
             beedle_500,
-            lambda item, locs=[beedle_950, beedle_900]: (
-                (item.game == "The Wind Waker" and all(l.item is None or item.name != l.item.name for l in locs))
+            lambda item, locations=[beedle_950, beedle_900]: (
+                (
+                    item.game == "The Wind Waker"
+                    and all(location.item is None or item.name != location.item.name for location in locations)
+                )
                 or (
                     item.game != "The Wind Waker"
-                    and all(l.item is None or l.item.game == "The Wind Waker" for l in locs)
+                    and all(location.item is None or location.item.game == "The Wind Waker" for location in locations)
                 )
             ),
         )
         add_item_rule(
             beedle_950,
-            lambda item, locs=[beedle_500, beedle_900]: (
-                (item.game == "The Wind Waker" and all(l.item is None or item.name != l.item.name for l in locs))
+            lambda item, locations=[beedle_500, beedle_900]: (
+                (
+                    item.game == "The Wind Waker"
+                    and all(location.item is None or item.name != location.item.name for location in locations)
+                )
                 or (
                     item.game != "The Wind Waker"
-                    and all(l.item is None or l.item.game == "The Wind Waker" for l in locs)
+                    and all(location.item is None or location.item.game == "The Wind Waker" for location in locations)
                 )
             ),
         )
         add_item_rule(
             beedle_900,
-            lambda item, locs=[beedle_500, beedle_950]: (
-                (item.game == "The Wind Waker" and all(l.item is None or item.name != l.item.name for l in locs))
+            lambda item, locations=[beedle_500, beedle_950]: (
+                (
+                    item.game == "The Wind Waker"
+                    and all(location.item is None or item.name != location.item.name for location in locations)
+                )
                 or (
                     item.game != "The Wind Waker"
-                    and all(l.item is None or l.item.game == "The Wind Waker" for l in locs)
+                    and all(location.item is None or location.item.game == "The Wind Waker" for location in locations)
                 )
             ),
         )
