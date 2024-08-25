@@ -10,7 +10,14 @@ from CommonClient import ClientCommandProcessor, CommonContext, get_base_parser,
 from NetUtils import ClientStatus, NetworkItem
 
 from .Items import ITEM_TABLE, LOOKUP_ID_TO_NAME
-from .Locations import ISLAND_NAME_TO_SALVAGE_BIT, ISLAND_NUMBER_TO_NAME, LOCATION_TABLE, TWWLocation, TWWLocationType
+from .Locations import (
+    ISLAND_NAME_TO_SALVAGE_BIT,
+    ISLAND_NUMBER_TO_NAME,
+    LOCATION_TABLE,
+    TWWLocation,
+    TWWLocationData,
+    TWWLocationType,
+)
 
 CONNECTION_REFUSED_GAME_STATUS = (
     "Dolphin failed to connect. Please load a randomized ROM for The Wind Waker. Trying again in 5 seconds..."
@@ -291,77 +298,100 @@ async def give_items(ctx: TWWContext):
                 write_short(EXPECTED_INDEX_ADDR, idx + 1)
 
 
+def check_special_location(location_name: str, data: TWWLocationData) -> bool:
+    checked = False
+
+    # The flag for "Windfall Island - Maggie - Delivery Reward" is still unknown.
+    # However, as a temporary workaround, we can just check if the player had Moblin's letter at some point,
+    # but it's no longer in their Delivery Bag.
+    if location_name == "Windfall Island - Maggie - Delivery Reward":
+        was_moblins_owned = (dolphin_memory_engine.read_word(LETTER_OWND_ADDR) >> 15) & 1
+        dbag_contents = [dolphin_memory_engine.read_byte(LETTER_BASE_ADDR + offset) for offset in range(8)]
+        checked = was_moblins_owned and 0x9B not in dbag_contents
+
+    # For Letter from Baito's Mother, we need to check two bytes.
+    # 0x1 = Note to Mom sent, 0x2 = Mail sent by Baito's Mother, 0x3 = Mail read by Link
+    elif location_name == "Mailbox - Letter from Baito's Mother":
+        checked = dolphin_memory_engine.read_byte(data.address) & 0x3 == 0x3
+
+    # For Letter from Grandma, we need to check two bytes.
+    # 0x1 = Grandma saved, 0x2 = Mail sent by Grandma, 0x3 = Mail read by Link
+    elif location_name == "Mailbox - Letter from Grandma":
+        checked = dolphin_memory_engine.read_byte(data.address) & 0x3 == 0x3
+
+    # For the Ankle's reward, we check if the bits for turning all five statues are set.
+    # For some reason, the bit for the Dragon Tingle Statue is located in a separate location than the rest.
+    elif location_name == "Tingle Island - Ankle - Reward for All Tingle Statues":
+        dragon_tingle_statue_rewarded = dolphin_memory_engine.read_byte(TINGLE_STATUE_1_ADDR) & 0x40 == 0x40
+        other_tingle_statues_rewarded = dolphin_memory_engine.read_byte(TINGLE_STATUE_2_ADDR) & 0x0F == 0x0F
+        checked = dragon_tingle_statue_rewarded and other_tingle_statues_rewarded
+
+    # For the Bird-Man Contest, we check if the high score is greater than 250 yards.
+    elif location_name == "Flight Control Platform - Bird-Man Contest - First Prize":
+        high_score = dolphin_memory_engine.read_byte(FCP_SCORE_LO_ADDR) + (
+            dolphin_memory_engine.read_byte(FCP_SCORE_HI_ADDR) << 8
+        )
+        checked = high_score > 250
+
+    else:
+        raise NotImplementedError(f"Unknown special location: {location_name}")
+
+    return checked
+
+
+def check_regular_location(ctx: TWWContext, location_name: str, data: TWWLocationData):
+    checked = False
+
+    if data.type == TWWLocationType.CHART:
+        assert location_name in ctx.salvage_locations_map, f'Location "{location_name}" salvage bit not set!'
+        charts_bitfield = int.from_bytes(dolphin_memory_engine.read_bytes(CHARTS_BITFLD_ADDR, 8), byteorder="big")
+        salvage_bit = ctx.salvage_locations_map[location_name]
+        checked = (charts_bitfield >> salvage_bit) & 1
+
+    elif data.type == TWWLocationType.BOCTO:
+        assert data.address is not None
+        checked = (read_short(data.address) >> data.bit) & 1
+
+    elif data.type == TWWLocationType.CHEST:
+        chests_bitfield = dolphin_memory_engine.read_word(CHESTS_BITFLD_ADDR)
+        checked = (chests_bitfield >> data.bit) & 1
+
+    elif data.type == TWWLocationType.SWTCH:
+        switches_bitfield = int.from_bytes(dolphin_memory_engine.read_bytes(SWITCHES_BITFLD_ADDR, 10), byteorder="big")
+        checked = (switches_bitfield >> data.bit) & 1
+
+    elif data.type == TWWLocationType.PCKUP:
+        pickups_bitfield = dolphin_memory_engine.read_word(PICKUPS_BITFLD_ADDR)
+        checked = (pickups_bitfield >> data.bit) & 1
+
+    elif data.type == TWWLocationType.EVENT:
+        checked = (dolphin_memory_engine.read_byte(data.address) >> data.bit) & 1
+
+    else:
+        raise NotImplementedError(f"Unknown location type: {data.type}")
+
+    return checked
+
+
 async def check_locations(ctx: TWWContext):
     # We check which locations are currently checked on the current stage.
     curr_stage_id = dolphin_memory_engine.read_byte(CURR_STAGE_ID_ADDR)
-
-    # Read in various bitfields for the locations in the current stage.
-    charts_bitfield = int.from_bytes(dolphin_memory_engine.read_bytes(CHARTS_BITFLD_ADDR, 8), byteorder="big")
-    sea_alt_bitfield = dolphin_memory_engine.read_word(SEA_ALT_BITFLD_ADDR)
-    chests_bitfield = dolphin_memory_engine.read_word(CHESTS_BITFLD_ADDR)
-    switches_bitfield = int.from_bytes(dolphin_memory_engine.read_bytes(SWITCHES_BITFLD_ADDR, 10), byteorder="big")
-    pickups_bitfield = dolphin_memory_engine.read_word(PICKUPS_BITFLD_ADDR)
 
     for location, data in LOCATION_TABLE.items():
         checked = False
 
         # Special-case checks
         if data.type == TWWLocationType.SPECL:
-            # The flag for "Windfall Island - Maggie - Delivery Reward" is still unknown.
-            # However, as a temporary workaround, we can just check if the player had Moblin's letter at some point,
-            # but it's no longer in their Delivery Bag.
-            if location == "Windfall Island - Maggie - Delivery Reward":
-                was_moblins_owned = (dolphin_memory_engine.read_word(LETTER_OWND_ADDR) >> 15) & 1
-                dbag_contents = [dolphin_memory_engine.read_byte(LETTER_BASE_ADDR + offset) for offset in range(8)]
-                checked = was_moblins_owned and 0x9B not in dbag_contents
-
-            # For Letter from Baito's Mother, we need to check two bytes.
-            # 0x1 = Note to Mom sent, 0x2 = Mail sent by Baito's Mother, 0x3 = Mail read by Link
-            if location == "Mailbox - Letter from Baito's Mother":
-                checked = dolphin_memory_engine.read_byte(data.address) & 0x3 == 0x3
-
-            # For Letter from Grandma, we need to check two bytes.
-            # 0x1 = Grandma saved, 0x2 = Mail sent by Grandma, 0x3 = Mail read by Link
-            if location == "Mailbox - Letter from Grandma":
-                checked = dolphin_memory_engine.read_byte(data.address) & 0x3 == 0x3
-
-            # For the Ankle's reward, we check if the bits for turning all five statues are set.
-            # For some reason, the bit for the Dragon Tingle Statue is located in a separate location than the rest.
-            if location == "Tingle Island - Ankle - Reward for All Tingle Statues":
-                dragon_tingle_statue_rewarded = dolphin_memory_engine.read_byte(TINGLE_STATUE_1_ADDR) & 0x40 == 0x40
-                other_tingle_statues_rewarded = dolphin_memory_engine.read_byte(TINGLE_STATUE_2_ADDR) & 0x0F == 0x0F
-                checked = dragon_tingle_statue_rewarded and other_tingle_statues_rewarded
-
-            # For the Bird-Man Contest, we check if the high score is greater than 250 yards.
-            if location == "Flight Control Platform - Bird-Man Contest - First Prize":
-                high_score = dolphin_memory_engine.read_byte(FCP_SCORE_LO_ADDR) + (
-                    dolphin_memory_engine.read_byte(FCP_SCORE_HI_ADDR) << 8
-                )
-                checked = high_score > 250
+            checked = check_special_location(location, data)
 
         # Regular checks
         elif data.stage_id == curr_stage_id:
-            if data.type == TWWLocationType.CHART:
-                assert location in ctx.salvage_locations_map, f'Location "{location}" salvage bit not set!'
-                salvage_bit = ctx.salvage_locations_map[location]
-                checked = (charts_bitfield >> salvage_bit) & 1
-            elif data.type == TWWLocationType.BOCTO:
-                assert data.address is not None
-                checked = (read_short(data.address) >> data.bit) & 1
-            elif data.type == TWWLocationType.CHEST:
-                checked = (chests_bitfield >> data.bit) & 1
-            elif data.type == TWWLocationType.SWTCH:
-                checked = (switches_bitfield >> data.bit) & 1
-            elif data.type == TWWLocationType.PCKUP:
-                checked = (pickups_bitfield >> data.bit) & 1
-            elif data.type == TWWLocationType.EVENT:
-                checked = (dolphin_memory_engine.read_byte(data.address) >> data.bit) & 1
-            else:
-                raise NotImplementedError(f"Unknown location type: {data.type}")
+            checked = check_regular_location(ctx, location, data)
 
         # Sea (Alt) chests
         elif curr_stage_id == 0x0 and data.stage_id == 0x1:
             assert data.type == TWWLocationType.CHEST
+            sea_alt_bitfield = dolphin_memory_engine.read_word(SEA_ALT_BITFLD_ADDR)
             checked = (sea_alt_bitfield >> data.bit) & 1
 
         if checked:

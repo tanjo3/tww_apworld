@@ -84,37 +84,22 @@ def get_pool_core(world):
 
     # Properly categorize each item in the item table.
     for item, data in ITEM_TABLE.items():
-        # Big Key
-        if data.type == "Big Key":
-            if options.randomize_bigkeys == "startwith":
-                precollected_items.extend([item] * data.quantity)
-                n_pending_junk += data.quantity
-            elif options.randomize_bigkeys == "vanilla":
-                for loc in VANILLA_DUNGEON_ITEM_LOCATIONS[item]:
-                    place_item(loc, item)
-            elif not options.randomize_bigkeys.in_dungeon:
-                pool.extend([item] * data.quantity)
+        # Dungeon items
+        if data.type in ("Small Key", "Big Key", "Map", "Compass"):
+            if data.type == "Big Key":
+                option = options.randomize_bigkeys
+            elif data.type == "Small Key":
+                option = options.randomize_smallkeys
+            else:
+                option = options.randomize_mapcompass
 
-        # Small Key
-        elif data.type == "Small Key":
-            if options.randomize_smallkeys == "startwith":
+            if option == "startwith":
                 precollected_items.extend([item] * data.quantity)
                 n_pending_junk += data.quantity
-            elif options.randomize_smallkeys == "vanilla":
+            elif option == "vanilla":
                 for loc in VANILLA_DUNGEON_ITEM_LOCATIONS[item]:
                     place_item(loc, item)
-            elif not options.randomize_smallkeys.in_dungeon:
-                pool.extend([item] * data.quantity)
-
-        # Dungeon Map or Compass
-        elif data.type in ("Map", "Compass"):
-            if options.randomize_mapcompass == "startwith":
-                precollected_items.extend([item] * data.quantity)
-                n_pending_junk += data.quantity
-            elif options.randomize_mapcompass == "vanilla":
-                for loc in VANILLA_DUNGEON_ITEM_LOCATIONS[item]:
-                    place_item(loc, item)
-            elif not options.randomize_mapcompass.in_dungeon:
+            elif not option.in_dungeon:
                 pool.extend([item] * data.quantity)
 
         # The rest of the items

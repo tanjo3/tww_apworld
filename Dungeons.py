@@ -1,6 +1,6 @@
-from typing import Set, Tuple
+from typing import List, Set, Tuple
 
-from BaseClasses import CollectionState, MultiWorld
+from BaseClasses import CollectionState, Location, MultiWorld
 from Fill import fill_restrictive
 
 from .Items import item_factory
@@ -116,6 +116,23 @@ def get_unfilled_dungeon_locations(multiworld: MultiWorld):
     ]
 
 
+def modify_dungeon_location_rules(locations: List[Location], dungeon_specific: Set[Tuple[int, str]]):
+    for location in locations:
+        orig_rule = location.item_rule
+        if dungeon_specific:
+            # Restrict dungeon items to be in their own dungeons.
+            dungeon = location.dungeon
+            location.item_rule = lambda item, dungeon=dungeon, orig_rule=orig_rule: (
+                not (item.player, item.name) in dungeon_specific or item.dungeon is dungeon
+            ) and orig_rule(item)
+        else:
+            # Restrict dungeon items to be in any dungeon in the player's local world.
+            player = location.player
+            location.item_rule = lambda item, player=player, orig_rule=orig_rule: (item.player == player) and orig_rule(
+                item
+            )
+
+
 def fill_dungeons_restrictive(multiworld: MultiWorld):
     localized: Set[Tuple[int, str]] = set()
     dungeon_specific: Set[Tuple[int, str]] = set()
@@ -129,20 +146,7 @@ def fill_dungeons_restrictive(multiworld: MultiWorld):
         in_dungeon_items = [item for item in get_dungeon_item_pool(multiworld) if (item.player, item.name) in localized]
         if in_dungeon_items:
             locations = [location for location in get_unfilled_dungeon_locations(multiworld)]
-            for location in locations:
-                orig_rule = location.item_rule
-                if dungeon_specific:
-                    # Restrict dungeon items to be in their own dungeons.
-                    dungeon = location.dungeon
-                    location.item_rule = lambda item, dungeon=dungeon, orig_rule=orig_rule: (
-                        not (item.player, item.name) in dungeon_specific or item.dungeon is dungeon
-                    ) and orig_rule(item)
-                else:
-                    # Restrict dungeon items to be in any dungeon in the player's local world.
-                    player = location.player
-                    location.item_rule = lambda item, player=player, orig_rule=orig_rule: (
-                        item.player == player
-                    ) and orig_rule(item)
+            modify_dungeon_location_rules(locations, dungeon_specific)
 
             multiworld.random.shuffle(locations)
 

@@ -7,7 +7,7 @@ import yaml
 
 from BaseClasses import ItemClassification as IC
 from BaseClasses import LocationProgressType, Region, Tutorial
-from Options import OptionError
+from Options import OptionError, Toggle
 from worlds.AutoWorld import WebWorld, World
 from worlds.generic.Rules import add_item_rule
 from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess
@@ -146,17 +146,19 @@ class TWWWorld(World):
             else:
                 island_location.flags = TWWFlag.TRE_CHT
 
-    def _randomize_required_bosses(self):
+    def _validate_boss_options(self):
         if not self.options.progression_dungeons:
             raise OptionError("Cannot make bosses required when progression dungeons are disabled.")
 
-        dungeon_names = set(DUNGEON_NAMES)
-
-        # Assert that the user is not including and excluding a dungeon at the same time.
         if len(self.options.included_dungeons.value & self.options.excluded_dungeons.value) != 0:
             raise OptionError("Conflict found in the lists of required and banned dungeons for required bosses mode.")
 
+    def _randomize_required_bosses(self):
+        # Validate constraints on required bosses options.
+        self._validate_boss_options()
+
         # If the user enforces a dungeon location to be priority, consider that when selecting required bosses.
+        dungeon_names = set(DUNGEON_NAMES)
         required_dungeons = self.options.included_dungeons.value
         for location_name in self.options.priority_locations.value:
             dungeon_name, _ = split_location_name_by_zone(location_name)
@@ -213,54 +215,34 @@ class TWWWorld(World):
         self.banned_dungeons = list(banned_dungeons)
 
     def _set_nonprogress_locations(self):
-        enabled_flags = TWWFlag.ALWAYS
+        def add_flag(option: Toggle, flag: TWWFlag) -> TWWFlag:
+            return flag if option else TWWFlag.ALWAYS
 
-        # Set the flags for progression location by checking player's settings.
-        if self.options.progression_dungeons:
-            enabled_flags |= TWWFlag.DUNGEON
-            enabled_flags |= TWWFlag.BOSS
-        if self.options.progression_tingle_chests:
-            enabled_flags |= TWWFlag.TNGL_CT
-        if self.options.progression_dungeon_secrets:
-            enabled_flags |= TWWFlag.DG_SCRT
-        if self.options.progression_puzzle_secret_caves:
-            enabled_flags |= TWWFlag.PZL_CVE
-        if self.options.progression_combat_secret_caves:
-            enabled_flags |= TWWFlag.CBT_CVE
-        if self.options.progression_savage_labyrinth:
-            enabled_flags |= TWWFlag.SAVAGE
-        if self.options.progression_great_fairies:
-            enabled_flags |= TWWFlag.GRT_FRY
-        if self.options.progression_short_sidequests:
-            enabled_flags |= TWWFlag.SHRT_SQ
-        if self.options.progression_long_sidequests:
-            enabled_flags |= TWWFlag.LONG_SQ
-        if self.options.progression_spoils_trading:
-            enabled_flags |= TWWFlag.SPOILS
-        if self.options.progression_minigames:
-            enabled_flags |= TWWFlag.MINIGME
-        if self.options.progression_battlesquid:
-            enabled_flags |= TWWFlag.SPLOOSH
-        if self.options.progression_free_gifts:
-            enabled_flags |= TWWFlag.FREE_GF
-        if self.options.progression_platforms_rafts:
-            enabled_flags |= TWWFlag.PLTFRMS
-        if self.options.progression_submarines:
-            enabled_flags |= TWWFlag.SUBMRIN
-        if self.options.progression_eye_reef_chests:
-            enabled_flags |= TWWFlag.EYE_RFS
-        if self.options.progression_big_octos_gunboats:
-            enabled_flags |= TWWFlag.BG_OCTO
-        if self.options.progression_triforce_charts:
-            enabled_flags |= TWWFlag.TRI_CHT
-        if self.options.progression_treasure_charts:
-            enabled_flags |= TWWFlag.TRE_CHT
-        if self.options.progression_expensive_purchases:
-            enabled_flags |= TWWFlag.XPENSVE
-        if self.options.progression_island_puzzles:
-            enabled_flags |= TWWFlag.ISLND_P
-        if self.options.progression_misc:
-            enabled_flags |= TWWFlag.MISCELL
+        options = self.options
+
+        enabled_flags = TWWFlag.ALWAYS
+        enabled_flags |= add_flag(options.progression_dungeons, TWWFlag.DUNGEON | TWWFlag.BOSS)
+        enabled_flags |= add_flag(options.progression_tingle_chests, TWWFlag.TNGL_CT)
+        enabled_flags |= add_flag(options.progression_dungeon_secrets, TWWFlag.DG_SCRT)
+        enabled_flags |= add_flag(options.progression_puzzle_secret_caves, TWWFlag.PZL_CVE)
+        enabled_flags |= add_flag(options.progression_combat_secret_caves, TWWFlag.CBT_CVE)
+        enabled_flags |= add_flag(options.progression_savage_labyrinth, TWWFlag.SAVAGE)
+        enabled_flags |= add_flag(options.progression_great_fairies, TWWFlag.GRT_FRY)
+        enabled_flags |= add_flag(options.progression_short_sidequests, TWWFlag.SHRT_SQ)
+        enabled_flags |= add_flag(options.progression_long_sidequests, TWWFlag.LONG_SQ)
+        enabled_flags |= add_flag(options.progression_spoils_trading, TWWFlag.SPOILS)
+        enabled_flags |= add_flag(options.progression_minigames, TWWFlag.MINIGME)
+        enabled_flags |= add_flag(options.progression_battlesquid, TWWFlag.SPLOOSH)
+        enabled_flags |= add_flag(options.progression_free_gifts, TWWFlag.FREE_GF)
+        enabled_flags |= add_flag(options.progression_platforms_rafts, TWWFlag.PLTFRMS)
+        enabled_flags |= add_flag(options.progression_submarines, TWWFlag.SUBMRIN)
+        enabled_flags |= add_flag(options.progression_eye_reef_chests, TWWFlag.EYE_RFS)
+        enabled_flags |= add_flag(options.progression_big_octos_gunboats, TWWFlag.BG_OCTO)
+        enabled_flags |= add_flag(options.progression_triforce_charts, TWWFlag.TRI_CHT)
+        enabled_flags |= add_flag(options.progression_treasure_charts, TWWFlag.TRE_CHT)
+        enabled_flags |= add_flag(options.progression_expensive_purchases, TWWFlag.XPENSVE)
+        enabled_flags |= add_flag(options.progression_island_puzzles, TWWFlag.ISLND_P)
+        enabled_flags |= add_flag(options.progression_misc, TWWFlag.MISCELL)
 
         for location in self.multiworld.get_locations(self.player):
             # If not all the flags for a location are set, then force that location to have a non-progress item.
