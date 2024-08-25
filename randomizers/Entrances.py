@@ -188,7 +188,12 @@ ALL_ENTRANCES = (
     + FAIRY_FOUNTAIN_ENTRANCES
 )
 ALL_EXITS = (
-    DUNGEON_EXITS + MINIBOSS_EXITS + BOSS_EXITS + SECRET_CAVE_EXITS + SECRET_CAVE_INNER_EXITS + FAIRY_FOUNTAIN_EXITS
+    DUNGEON_EXITS
+    + MINIBOSS_EXITS
+    + BOSS_EXITS
+    + SECRET_CAVE_EXITS
+    + SECRET_CAVE_INNER_EXITS
+    + FAIRY_FOUNTAIN_EXITS
 )
 
 ENTRANCE_RANDOMIZABLE_ITEM_LOCATION_TYPES = [
@@ -199,37 +204,41 @@ ENTRANCE_RANDOMIZABLE_ITEM_LOCATION_TYPES = [
     TWWFlag.GRT_FRY,
 ]
 ITEM_LOCATION_NAME_TO_EXIT_OVERRIDES = {
-    "Forbidden Woods - Mothula Miniboss Room": ZoneExit.all["Forbidden Woods Miniboss Arena"],
-    "Tower of the Gods - Darknut Miniboss Room": ZoneExit.all["Tower of the Gods Miniboss Arena"],
-    "Earth Temple - Stalfos Miniboss Room": ZoneExit.all["Earth Temple Miniboss Arena"],
-    "Wind Temple - Wizzrobe Miniboss Room": ZoneExit.all["Wind Temple Miniboss Arena"],
-    "Hyrule - Master Sword Chamber": ZoneExit.all["Master Sword Chamber"],
-    "Dragon Roost Cavern - Gohma Heart Container": ZoneExit.all["Gohma Boss Arena"],
-    "Forbidden Woods - Kalle Demos Heart Container": ZoneExit.all["Kalle Demos Boss Arena"],
-    "Tower of the Gods - Gohdan Heart Container": ZoneExit.all["Gohdan Boss Arena"],
-    "Forsaken Fortress - Helmaroc King Heart Container": ZoneExit.all["Helmaroc King Boss Arena"],
-    "Earth Temple - Jalhalla Heart Container": ZoneExit.all["Jalhalla Boss Arena"],
-    "Wind Temple - Molgera Heart Container": ZoneExit.all["Molgera Boss Arena"],
-    "Pawprint Isle - Wizzrobe Cave": ZoneExit.all["Pawprint Isle Wizzrobe Cave"],
-    "Ice Ring Isle - Inner Cave - Chest": ZoneExit.all["Ice Ring Isle Inner Cave"],
-    "Cliff Plateau Isles - Highest Isle": ZoneExit.all["Cliff Plateau Isles Inner Cave"],
-    "Outset Island - Great Fairy": ZoneExit.all["Outset Fairy Fountain"],
+  "Forbidden Woods - Mothula Miniboss Room":           ZoneExit.all["Forbidden Woods Miniboss Arena"],
+  "Tower of the Gods - Darknut Miniboss Room":         ZoneExit.all["Tower of the Gods Miniboss Arena"],
+  "Earth Temple - Stalfos Miniboss Room":              ZoneExit.all["Earth Temple Miniboss Arena"],
+  "Wind Temple - Wizzrobe Miniboss Room":              ZoneExit.all["Wind Temple Miniboss Arena"],
+  "Hyrule - Master Sword Chamber":                     ZoneExit.all["Master Sword Chamber"],
+
+  "Dragon Roost Cavern - Gohma Heart Container":       ZoneExit.all["Gohma Boss Arena"],
+  "Forbidden Woods - Kalle Demos Heart Container":     ZoneExit.all["Kalle Demos Boss Arena"],
+  "Tower of the Gods - Gohdan Heart Container":        ZoneExit.all["Gohdan Boss Arena"],
+  "Forsaken Fortress - Helmaroc King Heart Container": ZoneExit.all["Helmaroc King Boss Arena"],
+  "Earth Temple - Jalhalla Heart Container":           ZoneExit.all["Jalhalla Boss Arena"],
+  "Wind Temple - Molgera Heart Container":             ZoneExit.all["Molgera Boss Arena"],
+
+  "Pawprint Isle - Wizzrobe Cave":                     ZoneExit.all["Pawprint Isle Wizzrobe Cave"],
+
+  "Ice Ring Isle - Inner Cave - Chest":                ZoneExit.all["Ice Ring Isle Inner Cave"],
+  "Cliff Plateau Isles - Highest Isle":                ZoneExit.all["Cliff Plateau Isles Inner Cave"],
+
+  "Outset Island - Great Fairy":                       ZoneExit.all["Outset Fairy Fountain"],
 }
 
 MINIBOSS_EXIT_TO_DUNGEON: Dict[str, str] = {
-    "Forbidden Woods Miniboss Arena": "Forbidden Woods",
+    "Forbidden Woods Miniboss Arena":   "Forbidden Woods",
     "Tower of the Gods Miniboss Arena": "Tower of the Gods",
-    "Earth Temple Miniboss Arena": "Earth Temple",
-    "Wind Temple Miniboss Arena": "Wind Temple",
+    "Earth Temple Miniboss Arena":      "Earth Temple",
+    "Wind Temple Miniboss Arena":       "Wind Temple",
 }
 
 BOSS_EXIT_TO_DUNGEON: Dict[str, str] = {
-    "Gohma Boss Arena": "Dragon Roost Cavern",
-    "Kalle Demos Boss Arena": "Forbidden Woods",
-    "Gohdan Boss Arena": "Tower of the Gods",
+    "Gohma Boss Arena":         "Dragon Roost Cavern",
+    "Kalle Demos Boss Arena":   "Forbidden Woods",
+    "Gohdan Boss Arena":        "Tower of the Gods",
     "Helmaroc King Boss Arena": "Forsaken Fortress",
-    "Jalhalla Boss Arena": "Earth Temple",
-    "Molgera Boss Arena": "Wind Temple",
+    "Jalhalla Boss Arena":      "Earth Temple",
+    "Molgera Boss Arena":       "Wind Temple",
 }
 
 
@@ -256,17 +265,20 @@ class EntranceRandomizer:
             "Dungeon Entrance in Tower of the Gods Sector": "Tower of the Gods",
             "Dungeon Entrance on Headstone Island": "Earth Temple",
             "Dungeon Entrance on Gale Isle": "Wind Temple",
+
             "Miniboss Entrance in Forbidden Woods": "Forbidden Woods Miniboss Arena",
             "Miniboss Entrance in Tower of the Gods": "Tower of the Gods Miniboss Arena",
             "Miniboss Entrance in Earth Temple": "Earth Temple Miniboss Arena",
             "Miniboss Entrance in Wind Temple": "Wind Temple Miniboss Arena",
             "Miniboss Entrance in Hyrule Castle": "Master Sword Chamber",
+
             "Boss Entrance in Dragon Roost Cavern": "Gohma Boss Arena",
             "Boss Entrance in Forbidden Woods": "Kalle Demos Boss Arena",
             "Boss Entrance in Tower of the Gods": "Gohdan Boss Arena",
             "Boss Entrance in Forsaken Fortress": "Helmaroc King Boss Arena",
             "Boss Entrance in Earth Temple": "Jalhalla Boss Arena",
             "Boss Entrance in Wind Temple": "Molgera Boss Arena",
+
             "Secret Cave Entrance on Outset Island": "Savage Labyrinth",
             "Secret Cave Entrance on Dragon Roost Island": "Dragon Roost Island Secret Cave",
             "Secret Cave Entrance on Fire Mountain": "Fire Mountain Secret Cave",
@@ -287,8 +299,10 @@ class EntranceRandomizer:
             "Secret Cave Entrance on Cliff Plateau Isles": "Cliff Plateau Isles Secret Cave",
             "Secret Cave Entrance on Horseshoe Island": "Horseshoe Island Secret Cave",
             "Secret Cave Entrance on Star Island": "Star Island Secret Cave",
+
             "Inner Entrance in Ice Ring Isle Secret Cave": "Ice Ring Isle Inner Cave",
             "Inner Entrance in Cliff Plateau Isles Secret Cave": "Cliff Plateau Isles Inner Cave",
+
             "Fairy Fountain Entrance on Outset Island": "Outset Fairy Fountain",
             "Fairy Fountain Entrance on Thorned Fairy Island": "Thorned Fairy Fountain",
             "Fairy Fountain Entrance on Eastern Fairy Island": "Eastern Fairy Fountain",
