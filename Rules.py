@@ -8,7 +8,7 @@ from .Macros import *
 
 class TWWLogic(LogicMixin):
     def _tww_has_chart_for_island(self, player: int, island_number: int):
-        chart_item_name = self.multiworld.worlds[player].island_number_to_chart_name[island_number]
+        chart_item_name = self.multiworld.worlds[player].charts.island_number_to_chart_name[island_number]
 
         if "Triforce Chart" in chart_item_name:
             return self.has(chart_item_name, player) and has_any_wallet_upgrade(self, player)
@@ -16,9 +16,8 @@ class TWWLogic(LogicMixin):
             return self.has(chart_item_name, player)
 
     def _tww_can_defeat_all_required_bosses(self, player: int):
-        return all(
-            self.can_reach_location(loc, player) for loc in self.multiworld.worlds[player].required_boss_item_locations
-        )
+        required_boss_item_locations = self.multiworld.worlds[player].boss_reqs.required_boss_item_locations
+        return all(self.can_reach_location(loc, player) for loc in required_boss_item_locations)
 
     def _tww_rematch_bosses_skipped(self, player: int):
         # return self.multiworld.worlds[player].options.skip_rematch_bosses

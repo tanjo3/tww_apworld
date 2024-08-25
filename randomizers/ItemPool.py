@@ -1,7 +1,6 @@
 from typing import Dict, List
 
-from .Items import ITEM_TABLE, item_factory
-
+from ..Items import ITEM_TABLE, item_factory
 
 VANILLA_DUNGEON_ITEM_LOCATIONS: Dict[str, List[str]] = {
     "DRC Small Key": [

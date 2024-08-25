@@ -10,14 +10,8 @@ from CommonClient import ClientCommandProcessor, CommonContext, get_base_parser,
 from NetUtils import ClientStatus, NetworkItem
 
 from .Items import ITEM_TABLE, LOOKUP_ID_TO_NAME
-from .Locations import (
-    ISLAND_NAME_TO_SALVAGE_BIT,
-    ISLAND_NUMBER_TO_NAME,
-    LOCATION_TABLE,
-    TWWLocation,
-    TWWLocationData,
-    TWWLocationType,
-)
+from .Locations import ISLAND_NAME_TO_SALVAGE_BIT, LOCATION_TABLE, TWWLocation, TWWLocationData, TWWLocationType
+from .randomizers.Charts import ISLAND_NUMBER_TO_NAME
 
 CONNECTION_REFUSED_GAME_STATUS = (
     "Dolphin failed to connect. Please load a randomized ROM for The Wind Waker. Trying again in 5 seconds..."

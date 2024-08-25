@@ -1,4 +1,3 @@
-import copy
 import os
 from dataclasses import fields
 from typing import ClassVar, Dict, List, Set, Tuple
@@ -7,37 +6,29 @@ import yaml
 
 from BaseClasses import ItemClassification as IC
 from BaseClasses import LocationProgressType, Region, Tutorial
-from Options import OptionError, Toggle
+from Options import Toggle
 from worlds.AutoWorld import WebWorld, World
 from worlds.generic.Rules import add_item_rule
-from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess
+from worlds.LauncherComponents import (Component, SuffixIdentifier, Type,
+                                       components, launch_subprocess)
 
 from . import Macros
-from .Dungeons import Dungeon, create_dungeons
-from .Entrances import (
-    ALL_ENTRANCES,
-    ALL_EXITS,
-    BOSS_ENTRANCES,
-    BOSS_EXIT_TO_DUNGEON,
-    DUNGEON_ENTRANCES,
-    FAIRY_FOUNTAIN_ENTRANCES,
-    MINIBOSS_ENTRANCES,
-    MINIBOSS_EXIT_TO_DUNGEON,
-    SECRET_CAVE_ENTRANCES,
-    SECRET_CAVE_INNER_ENTRANCES,
-    EntranceRandomizer,
-)
-from .ItemPool import generate_itempool
-from .Items import ISLAND_NUMBER_TO_CHART_NAME, ITEM_TABLE, TWWItem, item_name_groups
-from .Locations import (
-    DUNGEON_NAMES,
-    ISLAND_NUMBER_TO_NAME,
-    LOCATION_TABLE,
-    TWWFlag,
-    TWWLocation,
-    split_location_name_by_zone,
-)
+from .Items import (ISLAND_NUMBER_TO_CHART_NAME, ITEM_TABLE, TWWItem,
+                    item_name_groups)
+from .Locations import LOCATION_TABLE, TWWFlag, TWWLocation
 from .Options import TWWOptions, tww_option_groups
+from .randomizers.Charts import ChartRandomizer
+from .randomizers.Dungeons import Dungeon, create_dungeons
+from .randomizers.Entrances import (ALL_ENTRANCES, ALL_EXITS, BOSS_ENTRANCES,
+                                    BOSS_EXIT_TO_DUNGEON, DUNGEON_ENTRANCES,
+                                    FAIRY_FOUNTAIN_ENTRANCES,
+                                    MINIBOSS_ENTRANCES,
+                                    MINIBOSS_EXIT_TO_DUNGEON,
+                                    SECRET_CAVE_ENTRANCES,
+                                    SECRET_CAVE_INNER_ENTRANCES,
+                                    EntranceRandomizer)
+from .randomizers.ItemPool import generate_itempool
+from .randomizers.RequiredBosses import RequiredBossesRandomizer
 from .Rules import set_rules
 
 VERSION: Tuple[int, int, int] = (2, 5, 2)
@@ -111,108 +102,11 @@ class TWWWorld(World):
         self.dungeon_specific_item_names: Set[str] = set()
         self.dungeons: Dict[str, Dungeon] = {}
 
-        self.required_boss_item_locations: List[str] = []
-        self.required_dungeons: List[str] = []
-        self.required_bosses: List[str] = []
-        self.banned_locations: List[str] = []
-        self.banned_dungeons: List[str] = []
-        self.banned_bosses: List[str] = []
-
-        self.island_number_to_chart_name = copy.deepcopy(ISLAND_NUMBER_TO_CHART_NAME)
-
         super(TWWWorld, self).__init__(*args, **kwargs)
 
+        self.charts = ChartRandomizer(self)
         self.entrances = EntranceRandomizer(self)
-
-    def _randomize_charts(self):
-        # This code comes straight from the base randomizer's chart randomizer.
-
-        original_item_names = list(self.island_number_to_chart_name.values())
-
-        # Shuffles the list of island numbers.
-        # The shuffled island numbers determine which sector each chart points to.
-        shuffled_island_numbers = list(self.island_number_to_chart_name.keys())
-        self.multiworld.random.shuffle(shuffled_island_numbers)
-
-        for original_item_name in original_item_names:
-            shuffled_island_number = shuffled_island_numbers.pop()
-            self.island_number_to_chart_name[shuffled_island_number] = original_item_name
-
-            # Properly adjust the flags for sunken treasure locations.
-            island_name = ISLAND_NUMBER_TO_NAME[shuffled_island_number]
-            island_location = self.get_location(f"{island_name} - Sunken Treasure")
-            if original_item_name.startswith("Triforce Chart "):
-                island_location.flags = TWWFlag.TRI_CHT
-            else:
-                island_location.flags = TWWFlag.TRE_CHT
-
-    def _validate_boss_options(self):
-        if not self.options.progression_dungeons:
-            raise OptionError("Cannot make bosses required when progression dungeons are disabled.")
-
-        if len(self.options.included_dungeons.value & self.options.excluded_dungeons.value) != 0:
-            raise OptionError("Conflict found in the lists of required and banned dungeons for required bosses mode.")
-
-    def _randomize_required_bosses(self):
-        # Validate constraints on required bosses options.
-        self._validate_boss_options()
-
-        # If the user enforces a dungeon location to be priority, consider that when selecting required bosses.
-        dungeon_names = set(DUNGEON_NAMES)
-        required_dungeons = self.options.included_dungeons.value
-        for location_name in self.options.priority_locations.value:
-            dungeon_name, _ = split_location_name_by_zone(location_name)
-            if dungeon_name in dungeon_names:
-                required_dungeons.add(dungeon_name)
-
-        # Ensure that we aren't prioritizing more dungeon locations than requested number of required bosses.
-        num_required_bosses = self.options.num_required_bosses
-        if len(required_dungeons) > num_required_bosses:
-            raise OptionError("Could not select required bosses to satisfy options set by user.")
-
-        # Ensure that after removing excluded dungeons that we still have enough dungeons to satisfy user options.
-        num_remaining = num_required_bosses - len(required_dungeons)
-        remaining_dungeon_options = dungeon_names - required_dungeons - self.options.excluded_dungeons.value
-        if len(remaining_dungeon_options) < num_remaining:
-            raise OptionError("Could not select required bosses to satisfy options set by user.")
-
-        # Finish selecting required bosses.
-        required_dungeons.update(self.multiworld.random.sample(list(remaining_dungeon_options), num_remaining))
-
-        # Exclude locations which are not in the dungeon of a required boss.
-        banned_dungeons = dungeon_names - required_dungeons
-        for location_name, location_data in LOCATION_TABLE.items():
-            dungeon_name, _ = split_location_name_by_zone(location_name)
-            if dungeon_name in banned_dungeons and TWWFlag.DUNGEON in location_data.flags:
-                self.banned_locations.append(location_name)
-            elif location_name == "Mailbox - Letter from Orca" and "Forbidden Woods" in banned_dungeons:
-                self.banned_locations.append(location_name)
-            elif location_name == "Mailbox - Letter from Baito" and "Earth Temple" in banned_dungeons:
-                self.banned_locations.append(location_name)
-            elif location_name == "Mailbox - Letter from Aryll" and "Forsaken Fortress" in banned_dungeons:
-                self.banned_locations.append(location_name)
-            elif location_name == "Mailbox - Letter from Tingle" and "Forsaken Fortress" in banned_dungeons:
-                self.banned_locations.append(location_name)
-        for location_name in self.banned_locations:
-            self.get_location(location_name).progress_type = LocationProgressType.EXCLUDED
-
-        # Record the item location names for required bosses.
-        self.required_boss_item_locations: List[str] = []
-        self.required_bosses: List[str] = []
-        self.banned_bosses: List[str] = []
-        possible_boss_item_locations = [loc for loc, data in LOCATION_TABLE.items() if TWWFlag.BOSS in data.flags]
-        for location_name in possible_boss_item_locations:
-            dungeon_name, specific_location_name = split_location_name_by_zone(location_name)
-            assert specific_location_name.endswith(" Heart Container")
-            boss_name = specific_location_name[: -len(" Heart Container")]
-
-            if dungeon_name in required_dungeons:
-                self.required_boss_item_locations.append(location_name)
-                self.required_bosses.append(boss_name)
-            else:
-                self.banned_bosses.append(boss_name)
-        self.required_dungeons = list(required_dungeons)
-        self.banned_dungeons = list(banned_dungeons)
+        self.boss_reqs = RequiredBossesRandomizer(self)
 
     def _set_nonprogress_locations(self):
         def add_flag(option: Toggle, flag: TWWFlag) -> TWWFlag:
@@ -344,14 +238,14 @@ class TWWWorld(World):
 
         # Randomize which chart points to each sector, if the option is enabled.
         if world.options.randomize_charts:
-            world._randomize_charts()
+            world.charts.randomize_charts()
 
         # Set nonprogress location from options.
         world._set_nonprogress_locations()
 
         # Select required bosses.
         if world.options.required_bosses:
-            world._randomize_required_bosses()
+            world.boss_reqs.randomize_required_bosses()
 
         # Connect the regions together in the multiworld. Randomize entrances to exits, if the option is set.
         world.entrances.randomize_entrances()
@@ -409,7 +303,7 @@ class TWWWorld(World):
 
     @classmethod
     def stage_pre_fill(cls, world):
-        from .Dungeons import fill_dungeons_restrictive
+        from .randomizers.Dungeons import fill_dungeons_restrictive
 
         fill_dungeons_restrictive(world)
 
@@ -422,7 +316,7 @@ class TWWWorld(World):
         # Without randomized charts, this array would be just a ordered list of the numbers 1 to 49.
         # With randomized charts, the new island number is where the chart for the original island now leads.
         chart_name_to_island_number = {
-            chart_name: island_number for island_number, chart_name in self.island_number_to_chart_name.items()
+            chart_name: island_number for island_number, chart_name in self.charts.island_number_to_chart_name.items()
         }
         charts_mapping: List[int] = []
         for i in range(1, 49 + 1):
@@ -437,7 +331,7 @@ class TWWWorld(World):
             "Slot": player,
             "Name": self.player_name,
             "Options": {},
-            "Required Bosses": self.required_boss_item_locations,
+            "Required Bosses": self.boss_reqs.required_boss_item_locations,
             "Locations": {},
             "Entrances": {},
             "Charts": charts_mapping,

@@ -3,7 +3,7 @@ from typing import List, Set, Tuple
 from BaseClasses import CollectionState, Location, MultiWorld
 from Fill import fill_restrictive
 
-from .Items import item_factory
+from ..Items import item_factory
 
 
 class Dungeon:
