@@ -150,7 +150,9 @@ def set_rules(world):  # noqa: F405
     set_rule(world.get_location("Windfall Island - Mrs. Marie - Catch Killer Bees"), lambda state: True)
     set_rule(
         world.get_location("Windfall Island - Mrs. Marie - Give 1 Joy Pendant"),
-        lambda state: state.has("Spoils Bag", player),
+        # In Archipelago, the non-randomized Joy Pendant on Windfall is not obtainable, so require the player to have
+        # a way to collect Joy Pendants.
+        lambda state: state.has("Spoils Bag", player) and can_farm_joy_pendants(state, player),
     )
     set_rule(
         world.get_location("Windfall Island - Mrs. Marie - Give 21 Joy Pendants"),
