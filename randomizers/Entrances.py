@@ -571,10 +571,12 @@ class EntranceRandomizer:
         for zone_entrance, zone_exit in self.done_entrances_to_exits.items():
             entrance_region = self.world.get_region(zone_entrance.entrance_name)
             exit_region = self.world.get_region(zone_exit.unique_name)
-            rule = lambda state, entrance=entrance_region.name: getattr(Macros, get_access_rule(entrance))(
-                state, self.player
+            entrance_region.connect(
+                exit_region,
+                rule=lambda state, entrance=entrance_region.name: getattr(Macros, get_access_rule(entrance))(
+                    state, self.player
+                ),
             )
-            entrance_region.connect(exit_region, rule=rule)
 
         if self.world.options.required_bosses:
             # Make sure we didn't accidentally place a banned boss and a required boss on the same island.

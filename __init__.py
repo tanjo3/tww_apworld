@@ -219,10 +219,12 @@ class TWWWorld(World):
 
         # Connect the dungeon, secret caves, and fairy fountain regions to the "The Great Sea" region.
         for entrance in DUNGEON_ENTRANCES + SECRET_CAVE_ENTRANCES + FAIRY_FOUNTAIN_ENTRANCES:
-            rule = lambda state, entrance=entrance.entrance_name: getattr(Macros, get_access_rule(entrance))(
-                state, player
+            great_sea_region.connect(
+                world.get_region(entrance.entrance_name),
+                rule=lambda state, entrance=entrance.entrance_name: getattr(Macros, get_access_rule(entrance))(
+                    state, player
+                ),
             )
-            great_sea_region.connect(world.get_region(entrance.entrance_name), rule=rule)
 
         # Connect nested regions with their parent region.
         for entrance in MINIBOSS_ENTRANCES + BOSS_ENTRANCES + SECRET_CAVE_INNER_ENTRANCES:
@@ -230,11 +232,13 @@ class TWWWorld(World):
             # Consider Hyrule Castle and Forsaken Fortress as part of The Great Sea (regions are not randomizable).
             if parent_region_name in ["Hyrule Castle", "Forsaken Fortress"]:
                 parent_region_name = "The Great Sea"
-            rule = lambda state, entrance=entrance.entrance_name: getattr(Macros, get_access_rule(entrance))(
-                state, player
-            )
             parent_region = world.get_region(parent_region_name)
-            parent_region.connect(world.get_region(entrance.entrance_name), rule=rule)
+            parent_region.connect(
+                world.get_region(entrance.entrance_name),
+                rule=lambda state, entrance=entrance.entrance_name: getattr(Macros, get_access_rule(entrance))(
+                    state, player
+                ),
+            )
 
         # Randomize which chart points to each sector, if the option is enabled.
         if world.options.randomize_charts:
