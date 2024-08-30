@@ -1,6 +1,10 @@
 from typing import Dict, List
 
+from BaseClasses import ItemClassification
+from Fill import FillError
+
 from ..Items import ITEM_TABLE, item_factory
+from .Dungeons import get_dungeon_item_pool_player
 
 VANILLA_DUNGEON_ITEM_LOCATIONS: Dict[str, List[str]] = {
     "DRC Small Key": [
@@ -52,15 +56,14 @@ def generate_itempool(world):
     multiworld = world.multiworld
 
     # Get the core pool of items.
-    pool, placed_items, precollected_items = get_pool_core(world)
+    pool, precollected_items = get_pool_core(world)
 
     # Add precollected items to the multiworld's `precollected_items` list.
     for item in precollected_items:
         multiworld.push_precollected(item_factory(item, world))
 
-    # Set placed items to their location and lock that item to that location.
-    for location, item in placed_items.items():
-        world.get_location(location).place_locked_item(item_factory(item, world))
+    # Place a "Victory" item on "Defeat Ganondorf" for the spoiler log.
+    world.get_location("Defeat Ganondorf").place_locked_item(item_factory("Victory", world))
 
     # Create the pool of the remaining shuffled items.
     items = item_factory(pool, world)
@@ -68,41 +71,18 @@ def generate_itempool(world):
 
     multiworld.itempool += items
 
+    # Dungeon items should already be created, so handle those separately.
+    handle_dungeon_items(world)
+
 
 def get_pool_core(world):
-    options = world.options
-
     pool: List[str] = []
-    placed_items: Dict[str, str] = {}
     precollected_items: List[str] = []
     n_pending_junk: int = 0
 
-    def place_item(loc, item):
-        assert loc not in placed_items, f"Item {item.name} has already been placed!"
-        placed_items[loc] = item
-
-    # Properly categorize each item in the item table.
+    # Add regular items to the item pool.
     for item, data in ITEM_TABLE.items():
-        # Dungeon items
-        if data.type in ("Small Key", "Big Key", "Map", "Compass"):
-            if data.type == "Big Key":
-                option = options.randomize_bigkeys
-            elif data.type == "Small Key":
-                option = options.randomize_smallkeys
-            else:
-                option = options.randomize_mapcompass
-
-            if option == "startwith":
-                precollected_items.extend([item] * data.quantity)
-                n_pending_junk += data.quantity
-            elif option == "vanilla":
-                for loc in VANILLA_DUNGEON_ITEM_LOCATIONS[item]:
-                    place_item(loc, item)
-            elif not option.in_dungeon:
-                pool.extend([item] * data.quantity)
-
-        # The rest of the items
-        elif data.type == "Item":
+        if data.type == "Item":
             pool.extend([item] * data.quantity)
 
     # If the player starts with a sword, add one to the precollected items list and remove one from the item pool.
@@ -119,7 +99,46 @@ def get_pool_core(world):
     # Place filler items to replace the items we've removed from the pool core.
     pool.extend([world.get_filler_item_name() for _ in range(n_pending_junk)])
 
-    # Place a "Victory" item on "Defeat Ganondorf" for the spoiler log.
-    place_item("Defeat Ganondorf", "Victory")
+    return pool, precollected_items
 
-    return pool, placed_items, precollected_items
+
+def handle_dungeon_items(world):
+    player = world.player
+    multiworld = world.multiworld
+    options = world.options
+
+    dungeon_items = [
+        item
+        for item in get_dungeon_item_pool_player(world)
+        if item.name not in multiworld.worlds[player].dungeon_local_item_names
+    ]
+
+    for x in range(len(dungeon_items) - 1, -1, -1):
+        item = dungeon_items[x]
+
+        # Consider dungeon items in non-required dungeons as filler
+        if item.dungeon.name in world.boss_reqs.banned_dungeons:
+            item.classification = ItemClassification.filler
+
+        if item.type == "Big Key":
+            option = options.randomize_bigkeys
+        elif item.type == "Small Key":
+            option = options.randomize_smallkeys
+        else:
+            option = options.randomize_mapcompass
+
+        if option == "startwith":
+            dungeon_items.pop(x)
+            multiworld.push_precollected(item)
+            multiworld.itempool.append(item_factory(world.get_filler_item_name(), world))
+        elif option == "vanilla":
+            for location_name in VANILLA_DUNGEON_ITEM_LOCATIONS[item.name]:
+                location = world.get_location(location_name)
+                if location.item is None:
+                    dungeon_items.pop(x)
+                    location.place_locked_item(item)
+                    break
+            else:
+                raise FillError(f"Could not place dungeon item in vanilla location: {item}")
+
+    multiworld.itempool.extend([item for item in dungeon_items])

@@ -98,6 +98,8 @@ class TWWWorld(World):
     set_rules = set_rules
 
     def __init__(self, *args, **kwargs):
+        super(TWWWorld, self).__init__(*args, **kwargs)
+
         self.dungeon_local_item_names: Set[str] = set()
         self.dungeon_specific_item_names: Set[str] = set()
         self.dungeons: Dict[str, Dungeon] = {}
@@ -163,6 +165,8 @@ class TWWWorld(World):
                 self.dungeon_local_item_names |= self.item_name_groups[option.item_name_group]
                 if option == "dungeon":
                     self.dungeon_specific_item_names |= self.item_name_groups[option.item_name_group]
+                else:
+                    self.options.local_items.value |= self.dungeon_local_item_names
 
     create_dungeons = create_dungeons
 

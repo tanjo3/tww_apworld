@@ -7,14 +7,7 @@ from ..Items import item_factory
 
 
 class Dungeon:
-    def __init__(
-        self,
-        name: str,
-        big_key,
-        small_keys,
-        dungeon_items,
-        player: int,
-    ):
+    def __init__(self, name: str, big_key, small_keys, dungeon_items, player: int):
         self.name = name
         self.big_key = big_key
         self.small_keys = small_keys
@@ -45,13 +38,7 @@ def create_dungeons(world):
     player = world.player
 
     def make_dungeon(name, big_key, small_keys, dungeon_items):
-        dungeon = Dungeon(
-            name,
-            big_key,
-            small_keys,
-            dungeon_items,
-            player,
-        )
+        dungeon = Dungeon(name, big_key, small_keys, dungeon_items, player)
         for item in dungeon.all_items:
             item.dungeon = dungeon
         return dungeon
