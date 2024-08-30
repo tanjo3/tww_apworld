@@ -417,7 +417,7 @@ LOCATION_TABLE: Dict[str, TWWLocationData] = {
         104, TWWFlag.DUNGEON, "Tower of the Gods", 0x5, TWWLocationType.CHEST, 6
     ),
     "Tower of the Gods - Stone Tablet": TWWLocationData(
-        105, TWWFlag.DUNGEON, "Tower of the Gods", 0x5, TWWLocationType.SWTCH, 25
+        105, TWWFlag.DUNGEON, "Tower of the Gods", 0x5, TWWLocationType.EVENT, 4, 0x803C5251
     ),
     "Tower of the Gods - Darknut Miniboss Room": TWWLocationData(
         106, TWWFlag.DUNGEON, "Tower of the Gods Miniboss Arena", 0x5, TWWLocationType.CHEST, 5

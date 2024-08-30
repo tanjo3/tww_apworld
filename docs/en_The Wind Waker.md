@@ -42,8 +42,6 @@ server.
 
 - Randomized freestanding rupees, spoils, and bait will also be given to the player picking up the item. The item will
   be sent properly, but the collecting player will receive an extra copy.
-- Some locations have been reported to be sent earlier or later than intended:
-  - Tower of the Gods - Stone Tablet
 - Demo items (items which are held over Link's head) which are **not** randomized, such as rupees from salvages from
   random light rings or rewards from minigames, will not work.
 - Item get messages for progressive items received on locations that send earlier than intended will be incorrect. This
