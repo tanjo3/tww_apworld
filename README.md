@@ -36,9 +36,6 @@ server.
 - Randomized freestanding rupees, spoils, and bait will also be given to the player picking up the item. The item will
   be sent properly, but the collecting player will receive an extra copy.
 - Some locations have been reported to be sent earlier or later than intended:
-  - Windfall Island - Mrs. Marie - Give 40 Joy Pendants
-  - Windfall Island - Lenzo's House - Become Lenzo's Assistant
-  - Windfall Island - Linda and Anton
   - Dragon Roost Island - Wind Shrine
   - Tower of the Gods - Stone Tablet
   - Mailbox - Letter from Hoskit's Girlfriend
@@ -48,9 +45,6 @@ server.
 - Item get messages for progressive items received on locations that send earlier than intended will be incorrect. This
   does not affect gameplay.
 - The Heart Piece count in item get messages will be off by one. This does not affect gameplay.
-- It has been reported that sometimes you will receive an extra copy of an item you've received.
-- For some reason, sometimes Jalhalla doesn't appear in the boss rematch in Ganon's Tower. For this reason, the option
-  to enable boss rematches has been disabled until the bug is fixed.
 - It has been reported that item links can be buggy. Nothing game-breaking, but do be aware of it.
 
 Feel free to report any other issues in the Wind Waker thread in the Archipelago server! I'll take a look and see what I
