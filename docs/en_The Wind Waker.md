@@ -34,9 +34,9 @@ randomizers, Link **will not** hold the item above his head.
 
 ## I need help! What do I do?
 
-Refer to the [FAQ](https://lagolunatic.github.io/wwrando/faq/) first. Then, try the troubleshooting steps in the [setup
-guide](../setup/en). If you are still stuck, please ask in the Wind Waker thread (under `future-game-design`) in the
-Archipelago server.
+Refer to the [FAQ](https://lagolunatic.github.io/wwrando/faq/) first. Then, try the troubleshooting steps in the setup
+guide. If you are still stuck, please ask in the Wind Waker thread (under `future-game-design`) in the Archipelago
+server.
 
 ## Known issues
 
