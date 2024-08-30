@@ -617,7 +617,7 @@ LOCATION_TABLE: Dict[str, TWWLocationData] = {
 
     # Mailbox
     "Mailbox - Letter from Hoskit's Girlfriend": TWWLocationData(
-        165, TWWFlag.MAILBOX | TWWFlag.SPOILS, "The Great Sea", 0x0, TWWLocationType.EVENT, 0, 0x803C52DA
+        165, TWWFlag.MAILBOX | TWWFlag.SPOILS, "The Great Sea", 0x0, TWWLocationType.SPECL, 0, 0x803C52DA
     ),
     "Mailbox - Letter from Baito's Mother": TWWLocationData(
         166, TWWFlag.MAILBOX, "The Great Sea", 0x0, TWWLocationType.SPECL, 0, 0x803C52D8

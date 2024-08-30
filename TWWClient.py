@@ -303,6 +303,11 @@ def check_special_location(location_name: str, data: TWWLocationData) -> bool:
         dbag_contents = [dolphin_memory_engine.read_byte(LETTER_BASE_ADDR + offset) for offset in range(8)]
         checked = was_moblins_owned and 0x9B not in dbag_contents
 
+    # For Letter from Hoskit's Girlfriend, we need to check two bytes.
+    # 0x1 = Golden Feathers delivered, 0x2 = Mail sent by Hoskit's Girlfriend, 0x3 = Mail read by Link
+    elif location_name == "Mailbox - Letter from Hoskit's Girlfriend":
+        checked = dolphin_memory_engine.read_byte(data.address) & 0x3 == 0x3
+
     # For Letter from Baito's Mother, we need to check two bytes.
     # 0x1 = Note to Mom sent, 0x2 = Mail sent by Baito's Mother, 0x3 = Mail read by Link
     elif location_name == "Mailbox - Letter from Baito's Mother":
