@@ -1,6 +1,5 @@
 from typing import List
 
-from BaseClasses import LocationProgressType
 from Options import OptionError
 
 from ..Locations import DUNGEON_NAMES, LOCATION_TABLE, TWWFlag, split_location_name_by_zone
@@ -68,7 +67,7 @@ class RequiredBossesRandomizer:
             elif location_name == "Mailbox - Letter from Tingle" and "Forsaken Fortress" in banned_dungeons:
                 self.banned_locations.append(location_name)
         for location_name in self.banned_locations:
-            self.world.get_location(location_name).progress_type = LocationProgressType.EXCLUDED
+            self.world.nonprogress_locations.add(location_name)
 
         # Record the item location names for required bosses.
         self.required_boss_item_locations: List[str] = []

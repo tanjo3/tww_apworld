@@ -2,7 +2,6 @@ from collections import defaultdict
 from dataclasses import dataclass
 from typing import ClassVar, Dict, List, Optional, Set
 
-from BaseClasses import LocationProgressType
 from Fill import FillError
 from Options import OptionError
 
@@ -101,18 +100,12 @@ SECRET_CAVE_ENTRANCES = [
     ZoneEntrance("Secret Cave Entrance on Private Oasis", "Private Oasis"),
     ZoneEntrance("Secret Cave Entrance on Needle Rock Isle", "Needle Rock Isle"),
     ZoneEntrance("Secret Cave Entrance on Angular Isles", "Angular Isles"),
-    ZoneEntrance(
-        "Secret Cave Entrance on Boating Course",
-        "Boating Course",
-    ),
+    ZoneEntrance("Secret Cave Entrance on Boating Course", "Boating Course"),
     ZoneEntrance("Secret Cave Entrance on Stone Watcher Island", "Stone Watcher Island"),
     ZoneEntrance("Secret Cave Entrance on Overlook Island", "Overlook Island"),
     ZoneEntrance("Secret Cave Entrance on Bird's Peak Rock", "Bird's Peak Rock"),
     ZoneEntrance("Secret Cave Entrance on Pawprint Isle", "Pawprint Isle"),
-    ZoneEntrance(
-        "Secret Cave Entrance on Pawprint Isle Side Isle",
-        "Pawprint Isle",
-    ),
+    ZoneEntrance("Secret Cave Entrance on Pawprint Isle Side Isle", "Pawprint Isle"),
     ZoneEntrance("Secret Cave Entrance on Diamond Steppe Island", "Diamond Steppe Island"),
     ZoneEntrance("Secret Cave Entrance on Bomb Island", "Bomb Island"),
     ZoneEntrance("Secret Cave Entrance on Rock Spire Isle", "Rock Spire Isle"),
@@ -145,13 +138,9 @@ SECRET_CAVE_EXITS = [
 ]
 
 SECRET_CAVE_INNER_ENTRANCES = [
+    ZoneEntrance("Inner Entrance in Ice Ring Isle Secret Cave", nested_in=ZoneExit.all["Ice Ring Isle Secret Cave"]),
     ZoneEntrance(
-        "Inner Entrance in Ice Ring Isle Secret Cave",
-        nested_in=ZoneExit.all["Ice Ring Isle Secret Cave"],
-    ),
-    ZoneEntrance(
-        "Inner Entrance in Cliff Plateau Isles Secret Cave",
-        nested_in=ZoneExit.all["Cliff Plateau Isles Secret Cave"],
+        "Inner Entrance in Cliff Plateau Isles Secret Cave", nested_in=ZoneExit.all["Cliff Plateau Isles Secret Cave"]
     ),
 ]
 SECRET_CAVE_INNER_EXITS = [
@@ -162,10 +151,7 @@ SECRET_CAVE_INNER_EXITS = [
 FAIRY_FOUNTAIN_ENTRANCES = [
     ZoneEntrance("Fairy Fountain Entrance on Outset Island", "Outset Island"),
     ZoneEntrance("Fairy Fountain Entrance on Thorned Fairy Island", "Thorned Fairy Island"),
-    ZoneEntrance(
-        "Fairy Fountain Entrance on Eastern Fairy Island",
-        "Eastern Fairy Island",
-    ),
+    ZoneEntrance("Fairy Fountain Entrance on Eastern Fairy Island", "Eastern Fairy Island"),
     ZoneEntrance("Fairy Fountain Entrance on Western Fairy Island", "Western Fairy Island"),
     ZoneEntrance("Fairy Fountain Entrance on Southern Fairy Island", "Southern Fairy Island"),
     ZoneEntrance("Fairy Fountain Entrance on Northern Fairy Island", "Northern Fairy Island"),
@@ -406,9 +392,7 @@ class EntranceRandomizer:
         # Banned required bosses mode dungeons still technically count as progress locations, so filter them out
         # separately first.
         nonbanned_locs = [loc for loc in locs_for_exit if loc not in self.world.boss_reqs.banned_locations]
-        progress_locs = [
-            loc for loc in nonbanned_locs if self.world.get_location(loc).progress_type != LocationProgressType.EXCLUDED
-        ]
+        progress_locs = [loc for loc in nonbanned_locs if loc not in self.world.nonprogress_locations]
         return bool(progress_locs)
 
     def split_nonprogress_entrances_and_exits(
