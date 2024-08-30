@@ -20,8 +20,7 @@ class TWWLogic(LogicMixin):
         return all(self.can_reach_location(loc, player) for loc in required_boss_item_locations)
 
     def _tww_rematch_bosses_skipped(self, player: int):
-        # return self.multiworld.worlds[player].options.skip_rematch_bosses
-        return True
+        return self.multiworld.worlds[player].options.skip_rematch_bosses
 
     def _tww_in_swordless_mode(self, player: int):
         return self.multiworld.worlds[player].options.sword_mode in ("swords_optional", "swordless")

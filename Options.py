@@ -697,7 +697,7 @@ class TWWOptions(PerGameCommonOptions):
     instant_text_boxes: InstantTextBoxes
     reveal_full_sea_chart: RevealFullSeaChart
     add_shortcut_warps_between_dungeons: AddShortcutWarpsBetweenDungeons
-    # skip_rematch_bosses: SkipRematchBosses
+    skip_rematch_bosses: SkipRematchBosses
     remove_music: RemoveMusic
     death_link: DeathLink
 
