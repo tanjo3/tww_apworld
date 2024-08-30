@@ -242,7 +242,7 @@ LOCATION_TABLE: Dict[str, TWWLocationData] = {
 
     # Dragon Roost Island
     "Dragon Roost Island - Wind Shrine": TWWLocationData(
-        50, TWWFlag.MISCELL, "The Great Sea", 0x0, TWWLocationType.SWTCH, 32
+        50, TWWFlag.MISCELL, "The Great Sea", 0x0, TWWLocationType.EVENT, 3, 0x803C5253
     ),
     "Dragon Roost Island - Rito Aerie - Give Hoskit 20 Golden Feathers": TWWLocationData(
         51, TWWFlag.SPOILS, "The Great Sea", 0xB, TWWLocationType.EVENT, 7, 0x803C524D
