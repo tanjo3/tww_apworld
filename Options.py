@@ -244,7 +244,7 @@ class DungeonItem(Choice):
     default = 2
 
     @property
-    def in_dungeon(self):
+    def in_dungeon(self) -> bool:
         return self.value in (2, 3)
 
 

@@ -1,9 +1,13 @@
 import copy
+from typing import TYPE_CHECKING, Dict
 
 from ..Items import ISLAND_NUMBER_TO_CHART_NAME
-from ..Locations import TWWFlag
+from ..Locations import TWWFlag, TWWLocation
 
-ISLAND_NUMBER_TO_NAME = {
+if TYPE_CHECKING:
+    from .. import TWWWorld
+
+ISLAND_NUMBER_TO_NAME: Dict[int, str] = {
     1: "Forsaken Fortress Sector",
     2: "Star Island",
     3: "Northern Fairy Island",
@@ -58,13 +62,13 @@ ISLAND_NUMBER_TO_NAME = {
 
 class ChartRandomizer:
 
-    def __init__(self, world):
+    def __init__(self, world: "TWWWorld"):
         self.world = world
         self.multiworld = world.multiworld
 
         self.island_number_to_chart_name = copy.deepcopy(ISLAND_NUMBER_TO_CHART_NAME)
 
-    def randomize_charts(self):
+    def randomize_charts(self) -> None:
         # This code comes straight from the base randomizer's chart randomizer.
 
         original_item_names = list(self.island_number_to_chart_name.values())
@@ -81,6 +85,7 @@ class ChartRandomizer:
             # Properly adjust the flags for sunken treasure locations.
             island_name = ISLAND_NUMBER_TO_NAME[shuffled_island_number]
             island_location = self.world.get_location(f"{island_name} - Sunken Treasure")
+            assert isinstance(island_location, TWWLocation)
             if original_item_name.startswith("Triforce Chart "):
                 island_location.flags = TWWFlag.TRI_CHT
             else:

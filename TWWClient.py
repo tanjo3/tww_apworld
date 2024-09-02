@@ -1,7 +1,7 @@
 import asyncio
 import time
 import traceback
-from typing import Any, Dict, List, Optional, Set, Tuple, Union
+from typing import Any, Dict, List, Optional, Set, Tuple
 
 import dolphin_memory_engine
 
@@ -90,10 +90,10 @@ AP_VISITED_STAGE_NAMES_KEY_FORMAT = "tww_visited_stages_%i"
 
 
 class TWWCommandProcessor(ClientCommandProcessor):
-    def __init__(self, ctx: CommonContext):
+    def __init__(self, ctx: CommonContext) -> None:
         super().__init__(ctx)
 
-    def _cmd_dolphin(self):
+    def _cmd_dolphin(self) -> None:
         """Prints the current Dolphin status to the client."""
         if isinstance(self.ctx, TWWContext):
             logger.info(f"Dolphin Status: {self.ctx.dolphin_status}")
@@ -101,20 +101,20 @@ class TWWCommandProcessor(ClientCommandProcessor):
 
 class TWWContext(CommonContext):
     command_processor = TWWCommandProcessor
-    game = "The Wind Waker"
-    items_handling = 0b111
+    game: str = "The Wind Waker"
+    items_handling: int = 0b111
 
-    def __init__(self, server_address, password):
+    def __init__(self, server_address: Optional[str], password: Optional[str]) -> None:
         super().__init__(server_address, password)
         self.items_received_2: List[Tuple[NetworkItem, int]] = []
         self.dolphin_sync_task: Optional[asyncio.Task] = None
-        self.dolphin_status = CONNECTION_INITIAL_STATUS
-        self.awaiting_rom = False
-        self.last_rcvd_index = -1
-        self.has_send_death = False
+        self.dolphin_status: str = CONNECTION_INITIAL_STATUS
+        self.awaiting_rom: bool = False
+        self.last_rcvd_index: int = -1
+        self.has_send_death: bool = False
 
         # Keep track of whether the player has received their first progressive magic meter yet.
-        self.received_magic = False
+        self.received_magic: bool = False
 
         # A dictionary that maps salvage locations to their sunken treasure bit.
         self.salvage_locations_map: Dict[str, int] = {}
@@ -128,18 +128,19 @@ class TWWContext(CommonContext):
         # cause the server's data storage to update, the TWW AP Client keeps track of the visited stages in a set.
         # Trackers can request the dictionary from data storage to see which stages the player has visited.
         # Starts off as `None` until it has been read from the server.
-        self.visited_stage_names: Union[Set[str], None] = None
+        self.visited_stage_names: Optional[Set[str]] = None
 
-        self.len_give_item_array = 0x10
+        # Length of the item get array in memory.
+        self.len_give_item_array: int = 0x10
 
-    async def disconnect(self, allow_autoreconnect: bool = False):
+    async def disconnect(self, allow_autoreconnect: bool = False) -> None:
         self.auth = None
         self.salvage_locations_map = {}
         self.current_stage_name = ""
         self.visited_stage_names = None
         await super().disconnect(allow_autoreconnect)
 
-    async def server_auth(self, password_requested: bool = False):
+    async def server_auth(self, password_requested: bool = False) -> None:
         if password_requested and not self.password:
             await super(TWWContext, self).server_auth(password_requested)
         if not self.auth:
@@ -150,7 +151,7 @@ class TWWContext(CommonContext):
             return
         await self.send_connect()
 
-    def on_package(self, cmd: str, args: dict):
+    def on_package(self, cmd: str, args: Dict[str, Any]) -> None:
         if cmd == "Connected":
             self.items_received_2 = []
             self.last_rcvd_index = -1
@@ -184,11 +185,11 @@ class TWWContext(CommonContext):
                         Utils.async_start(self.update_visited_stages(current_stage_name))
                     self.visited_stage_names = visited_stage_names
 
-    def on_deathlink(self, data: Dict[str, Any]):
+    def on_deathlink(self, data: Dict[str, Any]) -> None:
         super().on_deathlink(data)
         _give_death(self)
 
-    def run_gui(self):
+    def run_gui(self) -> None:
         from kvui import GameManager
 
         class TWWManager(GameManager):
@@ -198,7 +199,7 @@ class TWWContext(CommonContext):
         self.ui = TWWManager(self)
         self.ui_task = asyncio.create_task(self.ui.async_run(), name="UI")
 
-    async def update_visited_stages(self, newly_visited_stage_name: str):
+    async def update_visited_stages(self, newly_visited_stage_name: str) -> None:
         """
         Update the server's data storage of the visited stage names to include the newly visited stage name.
         """
@@ -216,7 +217,7 @@ class TWWContext(CommonContext):
                 ]
             )
 
-    def update_salvage_locations_map(self):
+    def update_salvage_locations_map(self) -> None:
         self.salvage_locations_map = {}
         for offset in range(49):
             island_name = ISLAND_NUMBER_TO_NAME[offset + 1]
@@ -241,7 +242,7 @@ def read_string(console_address: int, strlen: int) -> str:
     return dolphin_memory_engine.read_bytes(console_address, strlen).split(b"\0", 1)[0].decode()
 
 
-def _give_death(ctx: TWWContext):
+def _give_death(ctx: TWWContext) -> None:
     if (
         ctx.slot is not None
         and dolphin_memory_engine.is_hooked()
@@ -275,7 +276,7 @@ def _give_item(ctx: TWWContext, item_name: str) -> bool:
     return False
 
 
-async def give_items(ctx: TWWContext):
+async def give_items(ctx: TWWContext) -> None:
     if check_ingame() and dolphin_memory_engine.read_byte(CURR_STAGE_ID_ADDR) != 0xFF:
         # Read the expected index of the player, which is the index of the latest item they've received.
         expected_idx = read_short(EXPECTED_INDEX_ADDR)
@@ -338,33 +339,33 @@ def check_special_location(location_name: str, data: TWWLocationData) -> bool:
     return checked
 
 
-def check_regular_location(ctx: TWWContext, location_name: str, data: TWWLocationData):
+def check_regular_location(ctx: TWWContext, location_name: str, data: TWWLocationData) -> bool:
     checked = False
 
     if data.type == TWWLocationType.CHART:
         assert location_name in ctx.salvage_locations_map, f'Location "{location_name}" salvage bit not set!'
         charts_bitfield = int.from_bytes(dolphin_memory_engine.read_bytes(CHARTS_BITFLD_ADDR, 8), byteorder="big")
         salvage_bit = ctx.salvage_locations_map[location_name]
-        checked = (charts_bitfield >> salvage_bit) & 1
+        checked = bool((charts_bitfield >> salvage_bit) & 1)
 
     elif data.type == TWWLocationType.BOCTO:
         assert data.address is not None
-        checked = (read_short(data.address) >> data.bit) & 1
+        checked = bool((read_short(data.address) >> data.bit) & 1)
 
     elif data.type == TWWLocationType.CHEST:
         chests_bitfield = dolphin_memory_engine.read_word(CHESTS_BITFLD_ADDR)
-        checked = (chests_bitfield >> data.bit) & 1
+        checked = bool((chests_bitfield >> data.bit) & 1)
 
     elif data.type == TWWLocationType.SWTCH:
         switches_bitfield = int.from_bytes(dolphin_memory_engine.read_bytes(SWITCHES_BITFLD_ADDR, 10), byteorder="big")
-        checked = (switches_bitfield >> data.bit) & 1
+        checked = bool((switches_bitfield >> data.bit) & 1)
 
     elif data.type == TWWLocationType.PCKUP:
         pickups_bitfield = dolphin_memory_engine.read_word(PICKUPS_BITFLD_ADDR)
-        checked = (pickups_bitfield >> data.bit) & 1
+        checked = bool((pickups_bitfield >> data.bit) & 1)
 
     elif data.type == TWWLocationType.EVENT:
-        checked = (dolphin_memory_engine.read_byte(data.address) >> data.bit) & 1
+        checked = bool((dolphin_memory_engine.read_byte(data.address) >> data.bit) & 1)
 
     else:
         raise NotImplementedError(f"Unknown location type: {data.type}")
@@ -372,7 +373,7 @@ def check_regular_location(ctx: TWWContext, location_name: str, data: TWWLocatio
     return checked
 
 
-async def check_locations(ctx: TWWContext):
+async def check_locations(ctx: TWWContext) -> None:
     # We check which locations are currently checked on the current stage.
     curr_stage_id = dolphin_memory_engine.read_byte(CURR_STAGE_ID_ADDR)
 
@@ -407,7 +408,7 @@ async def check_locations(ctx: TWWContext):
         await ctx.send_msgs([{"cmd": "LocationChecks", "locations": locations_checked}])
 
 
-async def check_current_stage_changed(ctx: TWWContext):
+async def check_current_stage_changed(ctx: TWWContext) -> None:
     new_stage_name = read_string(CURR_STAGE_NAME_ADDR, 8)
 
     # Special handling for the Cliff Plateau Isles Inner Cave exit that exits out onto the sea stage rather than a
@@ -440,12 +441,12 @@ async def check_current_stage_changed(ctx: TWWContext):
             await ctx.update_visited_stages(new_stage_name)
 
 
-async def check_alive():
+async def check_alive() -> bool:
     cur_health = read_short(CURR_HEALTH_ADDR)
     return cur_health > 0
 
 
-async def check_death(ctx: TWWContext):
+async def check_death(ctx: TWWContext) -> None:
     if ctx.slot is not None and check_ingame():
         cur_health = read_short(CURR_HEALTH_ADDR)
         if cur_health <= 0:
@@ -456,11 +457,11 @@ async def check_death(ctx: TWWContext):
             ctx.has_send_death = False
 
 
-def check_ingame():
+def check_ingame() -> bool:
     return read_string(CURR_STAGE_NAME_ADDR, 8) not in ["", "sea_T", "Name"]
 
 
-async def dolphin_sync_task(ctx: TWWContext):
+async def dolphin_sync_task(ctx: TWWContext) -> None:
     logger.info("Starting Dolphin connector. Use /dolphin for status information.")
     while not ctx.exit_event.is_set():
         try:
@@ -514,10 +515,10 @@ async def dolphin_sync_task(ctx: TWWContext):
             continue
 
 
-def main(connect=None, password=None):
+def main(connect: Optional[str] = None, password: Optional[str] = None) -> None:
     Utils.init_logging("The Wind Waker Client")
 
-    async def _main(connect, password):
+    async def _main(connect: Optional[str], password: Optional[str]) -> None:
         ctx = TWWContext(connect, password)
         ctx.server_task = asyncio.create_task(server_loop(ctx), name="ServerLoop")
         if gui_enabled:

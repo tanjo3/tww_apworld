@@ -1,12 +1,15 @@
 from collections import defaultdict
 from dataclasses import dataclass
-from typing import ClassVar, Dict, List, Optional, Set
+from typing import TYPE_CHECKING, ClassVar, Dict, Generator, List, Optional, Set, Tuple
 
 from Fill import FillError
 from Options import OptionError
 
 from .. import Macros
 from ..Locations import LOCATION_TABLE, TWWFlag, split_location_name_by_zone
+
+if TYPE_CHECKING:
+    from .. import TWWWorld
 
 
 @dataclass(frozen=True)
@@ -16,15 +19,15 @@ class ZoneEntrance:
     nested_in: Optional["ZoneExit"] = None
 
     @property
-    def is_nested(self):
+    def is_nested(self) -> bool:
         return self.nested_in is not None
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"ZoneEntrance('{self.entrance_name}')"
 
     all: ClassVar[Dict[str, "ZoneEntrance"]] = {}
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         ZoneEntrance.all[self.entrance_name] = self
 
         # Must be an island entrance XOR must be a nested entrance.
@@ -36,23 +39,23 @@ class ZoneExit:
     unique_name: str
     zone_name: Optional[str] = None
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"ZoneExit('{self.unique_name}')"
 
     all: ClassVar[Dict[str, "ZoneExit"]] = {}
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         ZoneExit.all[self.unique_name] = self
 
 
-DUNGEON_ENTRANCES = [
+DUNGEON_ENTRANCES: List[ZoneEntrance] = [
     ZoneEntrance("Dungeon Entrance on Dragon Roost Island", "Dragon Roost Island"),
     ZoneEntrance("Dungeon Entrance in Forest Haven Sector", "Forest Haven"),
     ZoneEntrance("Dungeon Entrance in Tower of the Gods Sector", "Tower of the Gods Sector"),
     ZoneEntrance("Dungeon Entrance on Headstone Island", "Headstone Island"),
     ZoneEntrance("Dungeon Entrance on Gale Isle", "Gale Isle"),
 ]
-DUNGEON_EXITS = [
+DUNGEON_EXITS: List[ZoneExit] = [
     ZoneExit("Dragon Roost Cavern", "Dragon Roost Cavern"),
     ZoneExit("Forbidden Woods", "Forbidden Woods"),
     ZoneExit("Tower of the Gods", "Tower of the Gods"),
@@ -60,14 +63,14 @@ DUNGEON_EXITS = [
     ZoneExit("Wind Temple", "Wind Temple"),
 ]
 
-MINIBOSS_ENTRANCES = [
+MINIBOSS_ENTRANCES: List[ZoneEntrance] = [
     ZoneEntrance("Miniboss Entrance in Forbidden Woods", nested_in=ZoneExit.all["Forbidden Woods"]),
     ZoneEntrance("Miniboss Entrance in Tower of the Gods", nested_in=ZoneExit.all["Tower of the Gods"]),
     ZoneEntrance("Miniboss Entrance in Earth Temple", nested_in=ZoneExit.all["Earth Temple"]),
     ZoneEntrance("Miniboss Entrance in Wind Temple", nested_in=ZoneExit.all["Wind Temple"]),
     ZoneEntrance("Miniboss Entrance in Hyrule Castle", "Tower of the Gods Sector"),
 ]
-MINIBOSS_EXITS = [
+MINIBOSS_EXITS: List[ZoneExit] = [
     ZoneExit("Forbidden Woods Miniboss Arena"),
     ZoneExit("Tower of the Gods Miniboss Arena"),
     ZoneExit("Earth Temple Miniboss Arena"),
@@ -75,7 +78,7 @@ MINIBOSS_EXITS = [
     ZoneExit("Master Sword Chamber"),
 ]
 
-BOSS_ENTRANCES = [
+BOSS_ENTRANCES: List[ZoneEntrance] = [
     ZoneEntrance("Boss Entrance in Dragon Roost Cavern", nested_in=ZoneExit.all["Dragon Roost Cavern"]),
     ZoneEntrance("Boss Entrance in Forbidden Woods", nested_in=ZoneExit.all["Forbidden Woods"]),
     ZoneEntrance("Boss Entrance in Tower of the Gods", nested_in=ZoneExit.all["Tower of the Gods"]),
@@ -83,7 +86,7 @@ BOSS_ENTRANCES = [
     ZoneEntrance("Boss Entrance in Earth Temple", nested_in=ZoneExit.all["Earth Temple"]),
     ZoneEntrance("Boss Entrance in Wind Temple", nested_in=ZoneExit.all["Wind Temple"]),
 ]
-BOSS_EXITS = [
+BOSS_EXITS: List[ZoneExit] = [
     ZoneExit("Gohma Boss Arena"),
     ZoneExit("Kalle Demos Boss Arena"),
     ZoneExit("Gohdan Boss Arena"),
@@ -92,7 +95,7 @@ BOSS_EXITS = [
     ZoneExit("Molgera Boss Arena"),
 ]
 
-SECRET_CAVE_ENTRANCES = [
+SECRET_CAVE_ENTRANCES: List[ZoneEntrance] = [
     ZoneEntrance("Secret Cave Entrance on Outset Island", "Outset Island"),
     ZoneEntrance("Secret Cave Entrance on Dragon Roost Island", "Dragon Roost Island"),
     ZoneEntrance("Secret Cave Entrance on Fire Mountain", "Fire Mountain"),
@@ -114,7 +117,7 @@ SECRET_CAVE_ENTRANCES = [
     ZoneEntrance("Secret Cave Entrance on Horseshoe Island", "Horseshoe Island"),
     ZoneEntrance("Secret Cave Entrance on Star Island", "Star Island"),
 ]
-SECRET_CAVE_EXITS = [
+SECRET_CAVE_EXITS: List[ZoneExit] = [
     ZoneExit("Savage Labyrinth", zone_name="Outset Island"),
     ZoneExit("Dragon Roost Island Secret Cave", zone_name="Dragon Roost Island"),
     ZoneExit("Fire Mountain Secret Cave", zone_name="Fire Mountain"),
@@ -137,18 +140,18 @@ SECRET_CAVE_EXITS = [
     ZoneExit("Star Island Secret Cave", zone_name="Star Island"),
 ]
 
-SECRET_CAVE_INNER_ENTRANCES = [
+SECRET_CAVE_INNER_ENTRANCES: List[ZoneEntrance] = [
     ZoneEntrance("Inner Entrance in Ice Ring Isle Secret Cave", nested_in=ZoneExit.all["Ice Ring Isle Secret Cave"]),
     ZoneEntrance(
         "Inner Entrance in Cliff Plateau Isles Secret Cave", nested_in=ZoneExit.all["Cliff Plateau Isles Secret Cave"]
     ),
 ]
-SECRET_CAVE_INNER_EXITS = [
+SECRET_CAVE_INNER_EXITS: List[ZoneExit] = [
     ZoneExit("Ice Ring Isle Inner Cave"),
     ZoneExit("Cliff Plateau Isles Inner Cave"),
 ]
 
-FAIRY_FOUNTAIN_ENTRANCES = [
+FAIRY_FOUNTAIN_ENTRANCES: List[ZoneEntrance] = [
     ZoneEntrance("Fairy Fountain Entrance on Outset Island", "Outset Island"),
     ZoneEntrance("Fairy Fountain Entrance on Thorned Fairy Island", "Thorned Fairy Island"),
     ZoneEntrance("Fairy Fountain Entrance on Eastern Fairy Island", "Eastern Fairy Island"),
@@ -156,7 +159,7 @@ FAIRY_FOUNTAIN_ENTRANCES = [
     ZoneEntrance("Fairy Fountain Entrance on Southern Fairy Island", "Southern Fairy Island"),
     ZoneEntrance("Fairy Fountain Entrance on Northern Fairy Island", "Northern Fairy Island"),
 ]
-FAIRY_FOUNTAIN_EXITS = [
+FAIRY_FOUNTAIN_EXITS: List[ZoneExit] = [
     ZoneExit("Outset Fairy Fountain"),
     ZoneExit("Thorned Fairy Fountain", zone_name="Thorned Fairy Island"),
     ZoneExit("Eastern Fairy Fountain", zone_name="Eastern Fairy Island"),
@@ -165,7 +168,7 @@ FAIRY_FOUNTAIN_EXITS = [
     ZoneExit("Northern Fairy Fountain", zone_name="Northern Fairy Island"),
 ]
 
-ALL_ENTRANCES = (
+ALL_ENTRANCES: List[ZoneEntrance] = (
     DUNGEON_ENTRANCES
     + MINIBOSS_ENTRANCES
     + BOSS_ENTRANCES
@@ -173,7 +176,7 @@ ALL_ENTRANCES = (
     + SECRET_CAVE_INNER_ENTRANCES
     + FAIRY_FOUNTAIN_ENTRANCES
 )
-ALL_EXITS = (
+ALL_EXITS: List[ZoneExit] = (
     DUNGEON_EXITS
     + MINIBOSS_EXITS
     + BOSS_EXITS
@@ -182,14 +185,14 @@ ALL_EXITS = (
     + FAIRY_FOUNTAIN_EXITS
 )
 
-ENTRANCE_RANDOMIZABLE_ITEM_LOCATION_TYPES = [
+ENTRANCE_RANDOMIZABLE_ITEM_LOCATION_TYPES: List[TWWFlag] = [
     TWWFlag.DUNGEON,
     TWWFlag.PZL_CVE,
     TWWFlag.CBT_CVE,
     TWWFlag.SAVAGE,
     TWWFlag.GRT_FRY,
 ]
-ITEM_LOCATION_NAME_TO_EXIT_OVERRIDES = {
+ITEM_LOCATION_NAME_TO_EXIT_OVERRIDES: Dict[str, ZoneExit] = {
   "Forbidden Woods - Mothula Miniboss Room":           ZoneExit.all["Forbidden Woods Miniboss Arena"],
   "Tower of the Gods - Darknut Miniboss Room":         ZoneExit.all["Tower of the Gods Miniboss Arena"],
   "Earth Temple - Stalfos Miniboss Room":              ZoneExit.all["Earth Temple Miniboss Arena"],
@@ -235,7 +238,7 @@ class EntranceRandomizer:
     Reference: https://github.com/LagoLunatic/wwrando/blob/master/randomizers/entrances.py
     """
 
-    def __init__(self, world):
+    def __init__(self, world: "TWWWorld"):
         self.world = world
         self.multiworld = world.multiworld
         self.player = world.player
@@ -245,7 +248,7 @@ class EntranceRandomizer:
         self.register_mappings_between_item_locations_and_zone_exits()
 
         # Default entrances connections to be used if the entrance randomizer is not on.
-        self.entrance_connections = {
+        self.entrance_connections: Dict[str, str] = {
             "Dungeon Entrance on Dragon Roost Island": "Dragon Roost Cavern",
             "Dungeon Entrance in Forest Haven Sector": "Forbidden Woods",
             "Dungeon Entrance in Tower of the Gods Sector": "Tower of the Gods",
@@ -309,7 +312,7 @@ class EntranceRandomizer:
         self.banned_exits: List[ZoneExit] = []
         self.islands_with_a_banned_dungeon: Set[str] = set()
 
-    def randomize_entrances(self):
+    def randomize_entrances(self) -> None:
         self.init_banned_exits()
 
         for relevant_entrances, relevant_exits in self.get_all_entrance_sets_to_be_randomized():
@@ -317,7 +320,7 @@ class EntranceRandomizer:
 
         self.finalize_all_randomized_sets_of_entrances()
 
-    def init_banned_exits(self):
+    def init_banned_exits(self) -> None:
         options = self.world.options
 
         if options.required_bosses:
@@ -344,9 +347,12 @@ class EntranceRandomizer:
             # it's preset, and won't be updated later since we won't randomize the dungeon entrances.
             for en in DUNGEON_ENTRANCES:
                 if self.entrance_connections[en.entrance_name] in self.world.boss_reqs.banned_dungeons:
+                    assert en.island_name is not None
                     self.islands_with_a_banned_dungeon.add(en.island_name)
 
-    def randomize_one_set_of_entrances(self, relevant_entrances: List[ZoneEntrance], relevant_exits: List[ZoneExit]):
+    def randomize_one_set_of_entrances(
+        self, relevant_entrances: List[ZoneEntrance], relevant_exits: List[ZoneExit]
+    ) -> None:
         # Keep miniboss and boss entrances vanilla in non-required bosses' dungeons.
         for zone_entrance in relevant_entrances.copy():
             zone_exit = self.done_entrances_to_exits[zone_entrance]
@@ -397,7 +403,7 @@ class EntranceRandomizer:
 
     def split_nonprogress_entrances_and_exits(
         self, relevant_entrances: List[ZoneEntrance], relevant_exits: List[ZoneExit]
-    ):
+    ) -> Tuple[List[ZoneEntrance], List[ZoneExit]]:
         """
         Splits the entrance and exit lists into two pairs: ones that should be considered nonprogress on this seed (will
         never lead to any progress items) and ones that should be considered potentially required.
@@ -459,7 +465,7 @@ class EntranceRandomizer:
 
     def randomize_one_set_of_exits(
         self, relevant_entrances: List[ZoneEntrance], relevant_exits: List[ZoneExit], terminal_exits: List[ZoneExit]
-    ):
+    ) -> None:
         options = self.world.options
 
         remaining_entrances = relevant_entrances.copy()
@@ -543,10 +549,10 @@ class EntranceRandomizer:
                     # If we're assigning a nonterminal entrance, any nested entrances will get assigned after this one
                     # and we'll run through this code again (so we can reason based on zone_exit only, instead of having
                     # to recurse through the nested exits to find banned dungeons/bosses.
-                    assert outer_entrance
+                    assert outer_entrance and outer_entrance.island_name is not None
                     self.islands_with_a_banned_dungeon.add(outer_entrance.island_name)
 
-    def finalize_all_randomized_sets_of_entrances(self):
+    def finalize_all_randomized_sets_of_entrances(self) -> None:
         def get_access_rule(region: str) -> str:
             snake_case_region = region.lower().replace("'", "").replace(" ", "_")
             return f"can_access_{snake_case_region}"
@@ -572,7 +578,7 @@ class EntranceRandomizer:
             )
             assert not banned_island_names & required_island_names
 
-    def register_mappings_between_item_locations_and_zone_exits(self):
+    def register_mappings_between_item_locations_and_zone_exits(self) -> None:
         for loc_name in list(LOCATION_TABLE.keys()):
             zone_exit = self.get_zone_exit_for_item_location(loc_name)
             if zone_exit is not None:
@@ -587,15 +593,17 @@ class EntranceRandomizer:
                     if sub_zone_exit is not None:
                         self.zone_exit_to_logically_dependent_item_locations[sub_zone_exit].append(loc_name)
 
-    def get_all_entrance_sets_to_be_randomized(self):
+    def get_all_entrance_sets_to_be_randomized(
+        self,
+    ) -> Generator[Tuple[List[ZoneEntrance], List[ZoneExit]], None, None]:
         options = self.world.options
 
-        dungeons = options.randomize_dungeon_entrances
-        minibosses = options.randomize_miniboss_entrances
-        bosses = options.randomize_boss_entrances
-        secret_caves = options.randomize_secret_cave_entrances
-        inner_caves = options.randomize_secret_cave_inner_entrances
-        fountains = options.randomize_fairy_fountain_entrances
+        dungeons = bool(options.randomize_dungeon_entrances)
+        minibosses = bool(options.randomize_miniboss_entrances)
+        bosses = bool(options.randomize_boss_entrances)
+        secret_caves = bool(options.randomize_secret_cave_entrances)
+        inner_caves = bool(options.randomize_secret_cave_inner_entrances)
+        fountains = bool(options.randomize_fairy_fountain_entrances)
 
         mix_entrances = options.mix_entrances
         if mix_entrances == "separate_pools":
@@ -624,8 +632,15 @@ class EntranceRandomizer:
             raise OptionError(f"Invalid entrance randomization option: {mix_entrances}")
 
     def get_one_entrance_set(
-        self, *, dungeons=False, caves=False, minibosses=False, bosses=False, inner_caves=False, fountains=False
-    ):
+        self,
+        *,
+        dungeons: bool = False,
+        caves: bool = False,
+        minibosses: bool = False,
+        bosses: bool = False,
+        inner_caves: bool = False,
+        fountains: bool = False,
+    ) -> Tuple[List[ZoneEntrance], List[ZoneExit]]:
         relevant_entrances: List[ZoneEntrance] = []
         relevant_exits: List[ZoneExit] = []
         if dungeons:
@@ -648,12 +663,12 @@ class EntranceRandomizer:
             relevant_exits += FAIRY_FOUNTAIN_EXITS
         return relevant_entrances, relevant_exits
 
-    def get_outermost_entrance_for_exit(self, zone_exit: ZoneExit):
+    def get_outermost_entrance_for_exit(self, zone_exit: ZoneExit) -> Optional[ZoneEntrance]:
         """Unrecurses nested dungeons to determine what the outermost (island) entrance is for a given exit."""
         zone_entrance = self.done_exits_to_entrances[zone_exit]
         return self.get_outermost_entrance_for_entrance(zone_entrance)
 
-    def get_outermost_entrance_for_entrance(self, zone_entrance: ZoneEntrance):
+    def get_outermost_entrance_for_entrance(self, zone_entrance: ZoneEntrance) -> Optional[ZoneEntrance]:
         """Unrecurses nested dungeons to determine what the outermost (island) entrance is for a given entrance."""
         seen_entrances = self.get_all_entrances_on_path_to_entrance(zone_entrance)
         if seen_entrances is None:
@@ -662,7 +677,7 @@ class EntranceRandomizer:
         outermost_entrance = seen_entrances[-1]
         return outermost_entrance
 
-    def get_all_entrances_on_path_to_entrance(self, zone_entrance: ZoneEntrance):
+    def get_all_entrances_on_path_to_entrance(self, zone_entrance: ZoneEntrance) -> Optional[List[ZoneEntrance]]:
         """Unrecurses nested dungeons to build a list of all entrances leading to a given entrance."""
         seen_entrances: List[ZoneEntrance] = []
         while zone_entrance.is_nested:
@@ -677,7 +692,7 @@ class EntranceRandomizer:
         seen_entrances.append(zone_entrance)
         return seen_entrances
 
-    def is_item_location_behind_randomizable_entrance(self, location_name):
+    def is_item_location_behind_randomizable_entrance(self, location_name: str) -> bool:
         loc_zone_name, _ = split_location_name_by_zone(location_name)
         if loc_zone_name in ["Ganon's Tower", "Mailbox"]:
             # Ganon's Tower and the handful of Mailbox locations that depend on beating dungeon bosses are considered to
@@ -704,7 +719,7 @@ class EntranceRandomizer:
 
         return False
 
-    def get_zone_exit_for_item_location(self, location_name: str):
+    def get_zone_exit_for_item_location(self, location_name: str) -> Optional[ZoneExit]:
         if not self.is_item_location_behind_randomizable_entrance(location_name):
             return None
 
@@ -728,4 +743,5 @@ class EntranceRandomizer:
         boss_arena_name = f"{boss_name} Boss Arena"
         zone_exit = ZoneExit.all[boss_arena_name]
         outermost_entrance = self.get_outermost_entrance_for_exit(zone_exit)
+        assert outermost_entrance is not None and outermost_entrance.island_name is not None
         return outermost_entrance.island_name

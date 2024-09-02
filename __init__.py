@@ -4,8 +4,9 @@ from typing import Any, ClassVar, Dict, List, Mapping, Set, Tuple, Union
 
 import yaml
 
+from BaseClasses import Item
 from BaseClasses import ItemClassification as IC
-from BaseClasses import Region, Tutorial
+from BaseClasses import MultiWorld, Region, Tutorial
 from Options import Toggle
 from worlds.AutoWorld import WebWorld, World
 from worlds.generic.Rules import add_item_rule
@@ -34,10 +35,10 @@ from .randomizers.ItemPool import generate_itempool
 from .randomizers.RequiredBosses import RequiredBossesRandomizer
 from .Rules import set_rules
 
-VERSION: Tuple[int, int, int] = (2, 5, 2)
+VERSION: Tuple[int, int, int] = (2, 6, 0)
 
 
-def run_client():
+def run_client() -> None:
     print("Running The Wind Waker Client")
     from .TWWClient import main  # lazy import
 
@@ -157,6 +158,7 @@ class TWWWorld(World):
         # If not all the flags for a location are set, then force that location to have a non-progress item.
         nonprogress_locations: Set[str] = set()
         for location in self.multiworld.get_locations(self.player):
+            assert isinstance(location, TWWLocation)
             if location.flags & enabled_flags != location.flags:
                 nonprogress_locations.add(location.name)
 
@@ -205,10 +207,10 @@ class TWWWorld(World):
         multiworld.regions.append(great_sea_region)
 
         # Add all randomizable regions.
-        for region in ALL_ENTRANCES:
-            multiworld.regions.append(Region(region.entrance_name, player, multiworld))
-        for region in ALL_EXITS:
-            multiworld.regions.append(Region(region.unique_name, player, multiworld))
+        for _entrance in ALL_ENTRANCES:
+            multiworld.regions.append(Region(_entrance.entrance_name, player, multiworld))
+        for _exit in ALL_EXITS:
+            multiworld.regions.append(Region(_exit.unique_name, player, multiworld))
 
         # Select required bosses.
         if self.options.required_bosses:
@@ -218,9 +220,9 @@ class TWWWorld(World):
         self.create_dungeons()
 
         # Assign each location to their region.
-        for location, data in LOCATION_TABLE.items():
+        for _location, data in LOCATION_TABLE.items():
             region = self.get_region(data.region)
-            location = TWWLocation(player, location, region, data)
+            location = TWWLocation(player, _location, region, data)
 
             # Additionally, assign dungeon locations to the appropriate dungeon.
             if region.name in self.dungeons:
@@ -332,7 +334,7 @@ class TWWWorld(World):
         )
 
     @classmethod
-    def stage_pre_fill(cls, world):
+    def stage_pre_fill(cls, world: MultiWorld) -> None:
         from .randomizers.Dungeons import fill_dungeons_restrictive
 
         fill_dungeons_restrictive(world)
@@ -390,7 +392,9 @@ class TWWWorld(World):
         all_entrance_names = [en.entrance_name for en in ALL_ENTRANCES]
         entrances = multiworld.get_entrances(player)
         for entrance in entrances:
+            assert entrance.parent_region is not None
             if entrance.parent_region.name in all_entrance_names:
+                assert entrance.connected_region is not None
                 output_data["Entrances"][entrance.parent_region.name] = entrance.connected_region.name
 
         # Output the plando details to file.
@@ -409,7 +413,7 @@ class TWWWorld(World):
         filler_weights = [3, 7, 10, 15, 3]
         return self.multiworld.random.choices(filler_consumables, weights=filler_weights, k=1)[0]
 
-    def get_pre_fill_items(self) -> List[TWWItem]:
+    def get_pre_fill_items(self) -> List[Item]:
         res = []
         if self.dungeon_local_item_names:
             for dungeon in self.dungeons.values():
@@ -490,7 +494,9 @@ class TWWWorld(World):
         entrances = {
             entrance.parent_region.name: entrance.connected_region.name
             for entrance in self.multiworld.get_entrances(self.player)
-            if entrance.parent_region.name in all_entrance_names
+            if entrance.parent_region is not None
+            and entrance.connected_region is not None
+            and entrance.parent_region.name in all_entrance_names
         }
         slot_data["entrances"] = entrances
 

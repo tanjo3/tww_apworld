@@ -1,7 +1,10 @@
 from enum import Enum, Flag, auto
-from typing import Dict, NamedTuple, Optional, Tuple
+from typing import TYPE_CHECKING, Dict, NamedTuple, Optional, Tuple
 
 from BaseClasses import Location, Region
+
+if TYPE_CHECKING:
+    from randomizers.Dungeons import Dungeon
 
 
 class TWWFlag(Flag):
@@ -55,7 +58,7 @@ class TWWLocationData(NamedTuple):
 
 class TWWLocation(Location):
     game: str = "The Wind Waker"
-    dungeon = None
+    dungeon: Optional["Dungeon"] = None
 
     def __init__(self, player: int, name: str, parent: Region, data: TWWLocationData):
         address = None if data.code is None else TWWLocation.get_apid(data.code)
@@ -70,7 +73,7 @@ class TWWLocation(Location):
         self.address = self.address
 
     @staticmethod
-    def get_apid(code: int):
+    def get_apid(code: int) -> int:
         base_id: int = 2326528
         return base_id + code
 
@@ -1162,7 +1165,7 @@ LOCATION_TABLE: Dict[str, TWWLocationData] = {
 }
 
 
-ISLAND_NAME_TO_SALVAGE_BIT = {
+ISLAND_NAME_TO_SALVAGE_BIT: Dict[str, int] = {
     "Forsaken Fortress Sector": 8,
     "Star Island": 18,
     "Northern Fairy Island": 51,

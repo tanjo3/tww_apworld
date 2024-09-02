@@ -1,11 +1,14 @@
-from typing import Dict, Iterable, NamedTuple, Optional, Union
+from typing import TYPE_CHECKING, Dict, Iterable, NamedTuple, Optional, Union
 
 from BaseClasses import Item
 from BaseClasses import ItemClassification as IC
 from worlds.AutoWorld import World
 
+if TYPE_CHECKING:
+    from randomizers.Dungeons import Dungeon
 
-def item_factory(items: Union[str, Iterable[str]], world: World):
+
+def item_factory(items: Union[str, Iterable[str]], world: World) -> Union[Item, Iterable[Item]]:
     ret = []
     singleton = False
     if isinstance(items, str):
@@ -33,7 +36,7 @@ class TWWItemData(NamedTuple):
 class TWWItem(Item):
     game: str = "The Wind Waker"
     type: Optional[str]
-    dungeon = None
+    dungeon: Optional["Dungeon"] = None
 
     def __init__(self, name: str, player: int, data: TWWItemData, classification: Optional[IC] = None):
         super(TWWItem, self).__init__(
@@ -47,7 +50,7 @@ class TWWItem(Item):
         self.item_id = data.item_id
 
     @staticmethod
-    def get_apid(code: int):
+    def get_apid(code: int) -> int:
         base_id: int = 2322432
         return base_id + code
 
@@ -55,6 +58,7 @@ class TWWItem(Item):
     def dungeon_item(self) -> Optional[str]:
         if self.type in ("Small Key", "Big Key", "Map", "Compass"):
             return self.type
+        return None
 
 
 ITEM_TABLE: Dict[str, TWWItemData] = {

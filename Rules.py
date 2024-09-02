@@ -1,13 +1,18 @@
 # flake8: noqa
 
+from typing import TYPE_CHECKING
+
 from worlds.AutoWorld import LogicMixin
 from worlds.generic.Rules import set_rule
 
 from .Macros import *
 
+if TYPE_CHECKING:
+    from . import TWWWorld
+
 
 class TWWLogic(LogicMixin):
-    def _tww_has_chart_for_island(self, player: int, island_number: int):
+    def _tww_has_chart_for_island(self, player: int, island_number: int) -> bool:
         chart_item_name = self.multiworld.worlds[player].charts.island_number_to_chart_name[island_number]
 
         if "Triforce Chart" in chart_item_name:
@@ -15,62 +20,62 @@ class TWWLogic(LogicMixin):
         else:
             return self.has(chart_item_name, player)
 
-    def _tww_can_defeat_all_required_bosses(self, player: int):
+    def _tww_can_defeat_all_required_bosses(self, player: int) -> bool:
         required_boss_item_locations = self.multiworld.worlds[player].boss_reqs.required_boss_item_locations
         return all(self.can_reach_location(loc, player) for loc in required_boss_item_locations)
 
-    def _tww_rematch_bosses_skipped(self, player: int):
+    def _tww_rematch_bosses_skipped(self, player: int) -> bool:
         return self.multiworld.worlds[player].options.skip_rematch_bosses
 
-    def _tww_in_swordless_mode(self, player: int):
+    def _tww_in_swordless_mode(self, player: int) -> bool:
         return self.multiworld.worlds[player].options.sword_mode in ("swords_optional", "swordless")
 
-    def _tww_outside_swordless_mode(self, player: int):
+    def _tww_outside_swordless_mode(self, player: int) -> bool:
         return self.multiworld.worlds[player].options.sword_mode not in ("swords_optional", "swordless")
 
-    def _tww_in_required_bosses_mode(self, player: int):
+    def _tww_in_required_bosses_mode(self, player: int) -> bool:
         return self.multiworld.worlds[player].options.required_bosses
 
-    def _tww_outside_required_bosses_mode(self, player: int):
+    def _tww_outside_required_bosses_mode(self, player: int) -> bool:
         return not self.multiworld.worlds[player].options.required_bosses
 
-    def _tww_obscure_1(self, player: int):
+    def _tww_obscure_1(self, player: int) -> bool:
         return (
             self.multiworld.worlds[player].options.logic_obscurity == "normal"
             or self.multiworld.worlds[player].options.logic_obscurity == "hard"
             or self.multiworld.worlds[player].options.logic_obscurity == "very_hard"
         )
 
-    def _tww_obscure_2(self, player: int):
+    def _tww_obscure_2(self, player: int) -> bool:
         return (
             self.multiworld.worlds[player].options.logic_obscurity == "hard"
             or self.multiworld.worlds[player].options.logic_obscurity == "very_hard"
         )
 
-    def _tww_obscure_3(self, player: int):
+    def _tww_obscure_3(self, player: int) -> bool:
         return self.multiworld.worlds[player].options.logic_obscurity == "very_hard"
 
-    def _tww_precise_1(self, player: int):
+    def _tww_precise_1(self, player: int) -> bool:
         return (
             self.multiworld.worlds[player].options.logic_precision == "normal"
             or self.multiworld.worlds[player].options.logic_precision == "hard"
             or self.multiworld.worlds[player].options.logic_precision == "very_hard"
         )
 
-    def _tww_precise_2(self, player: int):
+    def _tww_precise_2(self, player: int) -> bool:
         return (
             self.multiworld.worlds[player].options.logic_precision == "hard"
             or self.multiworld.worlds[player].options.logic_precision == "very_hard"
         )
 
-    def _tww_precise_3(self, player: int):
+    def _tww_precise_3(self, player: int) -> bool:
         return self.multiworld.worlds[player].options.logic_precision == "very_hard"
 
-    def _tww_tuner_logic_enabled(self, player: int):
+    def _tww_tuner_logic_enabled(self, player: int) -> bool:
         return self.multiworld.worlds[player].options.enable_tuner_logic
 
 
-def set_rules(world):  # noqa: F405
+def set_rules(world: "TWWWorld") -> None:  # noqa: F405
     player = world.player
 
     # Outset Island

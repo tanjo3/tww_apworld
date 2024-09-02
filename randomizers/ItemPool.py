@@ -1,10 +1,14 @@
-from typing import Dict, List
+from typing import TYPE_CHECKING, Dict, List, Tuple
 
 from BaseClasses import ItemClassification
 from Fill import FillError
 
 from ..Items import ITEM_TABLE, item_factory
+from ..Options import DungeonItem
 from .Dungeons import get_dungeon_item_pool_player
+
+if TYPE_CHECKING:
+    from .. import TWWWorld
 
 VANILLA_DUNGEON_ITEM_LOCATIONS: Dict[str, List[str]] = {
     "DRC Small Key": [
@@ -52,7 +56,7 @@ VANILLA_DUNGEON_ITEM_LOCATIONS: Dict[str, List[str]] = {
 }
 
 
-def generate_itempool(world):
+def generate_itempool(world: "TWWWorld") -> None:
     multiworld = world.multiworld
 
     # Get the core pool of items.
@@ -75,7 +79,7 @@ def generate_itempool(world):
     handle_dungeon_items(world)
 
 
-def get_pool_core(world):
+def get_pool_core(world: "TWWWorld") -> Tuple[List[str], List[str]]:
     pool: List[str] = []
     precollected_items: List[str] = []
     n_pending_junk: int = 0
@@ -102,7 +106,7 @@ def get_pool_core(world):
     return pool, precollected_items
 
 
-def handle_dungeon_items(world):
+def handle_dungeon_items(world: "TWWWorld") -> None:
     player = world.player
     multiworld = world.multiworld
     options = world.options
@@ -120,6 +124,7 @@ def handle_dungeon_items(world):
         if item.dungeon.name in world.boss_reqs.banned_dungeons:
             item.classification = ItemClassification.filler
 
+        option: DungeonItem
         if item.type == "Big Key":
             option = options.randomize_bigkeys
         elif item.type == "Small Key":

@@ -1,12 +1,16 @@
-from typing import List
+from typing import TYPE_CHECKING, List
 
 from Options import OptionError
 
 from ..Locations import DUNGEON_NAMES, LOCATION_TABLE, TWWFlag, split_location_name_by_zone
+from ..Options import TWWOptions
+
+if TYPE_CHECKING:
+    from .. import TWWWorld
 
 
 class RequiredBossesRandomizer:
-    def __init__(self, world):
+    def __init__(self, world: "TWWWorld"):
         self.world = world
         self.multiworld = world.multiworld
 
@@ -17,14 +21,14 @@ class RequiredBossesRandomizer:
         self.banned_dungeons: List[str] = []
         self.banned_bosses: List[str] = []
 
-    def validate_boss_options(self, options):
+    def validate_boss_options(self, options: TWWOptions) -> None:
         if not options.progression_dungeons:
             raise OptionError("Cannot make bosses required when progression dungeons are disabled.")
 
         if len(options.included_dungeons.value & options.excluded_dungeons.value) != 0:
             raise OptionError("Conflict found in the lists of required and banned dungeons for required bosses mode.")
 
-    def randomize_required_bosses(self):
+    def randomize_required_bosses(self) -> None:
         options = self.world.options
 
         # Validate constraints on required bosses options.
@@ -70,9 +74,9 @@ class RequiredBossesRandomizer:
             self.world.nonprogress_locations.add(location_name)
 
         # Record the item location names for required bosses.
-        self.required_boss_item_locations: List[str] = []
-        self.required_bosses: List[str] = []
-        self.banned_bosses: List[str] = []
+        self.required_boss_item_locations = []
+        self.required_bosses = []
+        self.banned_bosses = []
         possible_boss_item_locations = [loc for loc, data in LOCATION_TABLE.items() if TWWFlag.BOSS in data.flags]
         for location_name in possible_boss_item_locations:
             dungeon_name, specific_location_name = split_location_name_by_zone(location_name)
