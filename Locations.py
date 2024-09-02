@@ -155,7 +155,7 @@ LOCATION_TABLE: Dict[str, TWWLocationData] = {
         20, TWWFlag.SHRT_SQ, "The Great Sea", 0xB, TWWLocationType.CHEST, 2
     ),
     "Windfall Island - Lenzo's House - Become Lenzo's Assistant": TWWLocationData(
-        21, TWWFlag.LONG_SQ, "The Great Sea", 0xB, TWWLocationType.EVENT, 0, 0x803C52B5
+        21, TWWFlag.LONG_SQ, "The Great Sea", 0xB, TWWLocationType.SPECL, 0, 0x803C52F0
     ),
     "Windfall Island - Lenzo's House - Bring Forest Firefly": TWWLocationData(
         22, TWWFlag.LONG_SQ, "The Great Sea", 0xB, TWWLocationType.EVENT, 5, 0x803C5295

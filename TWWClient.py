@@ -296,10 +296,14 @@ async def give_items(ctx: TWWContext) -> None:
 def check_special_location(location_name: str, data: TWWLocationData) -> bool:
     checked = False
 
+    # For "Windfall Island - Lenzo's House - Become Lenzo's Assistant", 0x6 is delivered the final picture for Lenzo.
+    if location_name == "Windfall Island - Lenzo's House - Become Lenzo's Assistant":
+        checked = dolphin_memory_engine.read_byte(data.address) & 0x6 == 0x6
+
     # The flag for "Windfall Island - Maggie - Delivery Reward" is still unknown.
     # However, as a temporary workaround, we can just check if the player had Moblin's letter at some point,
     # but it's no longer in their Delivery Bag.
-    if location_name == "Windfall Island - Maggie - Delivery Reward":
+    elif location_name == "Windfall Island - Maggie - Delivery Reward":
         was_moblins_owned = (dolphin_memory_engine.read_word(LETTER_OWND_ADDR) >> 15) & 1
         dbag_contents = [dolphin_memory_engine.read_byte(LETTER_BASE_ADDR + offset) for offset in range(8)]
         checked = was_moblins_owned and 0x9B not in dbag_contents
