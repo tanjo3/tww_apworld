@@ -5,7 +5,7 @@ from BaseClasses import ItemClassification as IC
 from worlds.AutoWorld import World
 
 if TYPE_CHECKING:
-    from randomizers.Dungeons import Dungeon
+    from .randomizers.Dungeons import Dungeon
 
 
 def item_factory(items: Union[str, Iterable[str]], world: World) -> Union[Item, Iterable[Item]]:

@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING, Dict, NamedTuple, Optional, Tuple
 from BaseClasses import Location, Region
 
 if TYPE_CHECKING:
-    from randomizers.Dungeons import Dungeon
+    from .randomizers.Dungeons import Dungeon
 
 
 class TWWFlag(Flag):
