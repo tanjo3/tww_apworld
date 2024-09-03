@@ -768,7 +768,7 @@ tww_option_groups: List[OptionGroup] = [
             SwiftSail,
             InstantTextBoxes,
             RevealFullSeaChart,
-            # SkipRematchBosses,
+            SkipRematchBosses,
             AddShortcutWarpsBetweenDungeons,
             RemoveMusic,
         ],
