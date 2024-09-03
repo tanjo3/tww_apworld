@@ -402,6 +402,17 @@ class TWWWorld(World):
         with open(file_path, "w") as f:
             f.write(yaml.dump(output_data, sort_keys=False))
 
+    def extend_hint_information(self, hint_data: Dict[int, Dict[int, str]]) -> None:
+        # Regardless of ER settings, always hint the outermost entrance for every "interior" location
+        hint_data[self.player] = {}
+        for location in self.multiworld.get_locations(self.player):
+            if location.address is not None and location.item is not None:
+                zone_exit = self.entrances.get_zone_exit_for_item_location(location.name)
+                if zone_exit is not None:
+                    outermost_entrance = self.entrances.get_outermost_entrance_for_exit(zone_exit)
+                    assert outermost_entrance is not None and outermost_entrance.island_name is not None
+                    hint_data[self.player][location.address] = outermost_entrance.island_name
+
     def create_item(self, name: str) -> TWWItem:
         if name in ITEM_TABLE:
             return TWWItem(name, self.player, ITEM_TABLE[name], self._determine_item_classification(name))
