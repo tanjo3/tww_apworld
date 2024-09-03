@@ -143,10 +143,10 @@ LOCATION_TABLE: Dict[str, TWWLocationData] = {
         16, TWWFlag.SPOILS, "The Great Sea", 0xB, TWWLocationType.EVENT, 0, 0x803C52EC
     ),
     "Windfall Island - Mrs. Marie - Give 21 Joy Pendants": TWWLocationData(
-        17, TWWFlag.SPOILS, "The Great Sea", 0xB, TWWLocationType.EVENT, 4, 0x803C52EC
+        17, TWWFlag.SPOILS, "The Great Sea", 0xB, TWWLocationType.EVENT, 3, 0x803C5248
     ),
     "Windfall Island - Mrs. Marie - Give 40 Joy Pendants": TWWLocationData(
-        18, TWWFlag.SPOILS, "The Great Sea", 0xB, TWWLocationType.EVENT, 5, 0x803C52EC
+        18, TWWFlag.SPOILS, "The Great Sea", 0xB, TWWLocationType.EVENT, 2, 0x803C5248
     ),
     "Windfall Island - Lenzo's House - Left Chest": TWWLocationData(
         19, TWWFlag.SHRT_SQ, "The Great Sea", 0xB, TWWLocationType.CHEST, 1
