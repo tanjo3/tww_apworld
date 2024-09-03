@@ -107,7 +107,7 @@ class TWWContext(CommonContext):
     def __init__(self, server_address: Optional[str], password: Optional[str]) -> None:
         super().__init__(server_address, password)
         self.items_received_2: List[Tuple[NetworkItem, int]] = []
-        self.dolphin_sync_task: Optional[asyncio.Task] = None
+        self.dolphin_sync_task: Optional[asyncio.Task[None]] = None
         self.dolphin_status: str = CONNECTION_INITIAL_STATUS
         self.awaiting_rom: bool = False
         self.last_rcvd_index: int = -1
