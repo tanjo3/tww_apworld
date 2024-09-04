@@ -427,12 +427,11 @@ async def check_current_stage_changed(ctx: TWWContext) -> None:
     current_stage_name = ctx.current_stage_name
     if new_stage_name != current_stage_name:
         ctx.current_stage_name = new_stage_name
-        # Send a Bounced message, containing the new stage name, to all trackers connected to the current slot.
+        # Send a Bounced message, containing the new stage name, to all clients connected to the current slot.
         data_to_send = {"tww_stage_name": new_stage_name}
         message = {
             "cmd": "Bounce",
             "slots": [ctx.slot],
-            "tags": ["Tracker"],
             "data": data_to_send,
         }
         await ctx.send_msgs([message])
