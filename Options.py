@@ -331,8 +331,8 @@ class RequiredBosses(Toggle):
 class NumRequiredBosses(Range):
     """Select the number of randomly-chosen bosses that are required in Required Bosses Mode.
 
-    The door to Puppet Ganon will not unlock until you've defeated all of these bosses. Nothing in dungeons for other
-    bosses will ever be required."""
+    The door to Puppet Ganon will not unlock until you've defeated all of these bosses. Dungeons that contain bosses
+    that are not required will contain filler items only and will never contain progression items."""
 
     display_name = "Number of Required Bosses"
     range_start = 1
