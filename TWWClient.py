@@ -47,11 +47,6 @@ EXPECTED_INDEX_ADDR = 0x803C528C
 TINGLE_STATUE_1_ADDR = 0x803C523E  # 0x40 is the bit for Dragon Tingle statue.
 TINGLE_STATUE_2_ADDR = 0x803C5249  # 0x0F are the bits for the remaining Tingle statues.
 
-# These addresses contain the current high score for the Bird-Man Contest.
-# `FCP_SCORE_LO_ADDR` is are the lower eight bits of the score, `FCP_SCORE_HI_ADDR` are the higher eight bits.
-FCP_SCORE_LO_ADDR = 0x803C52D3
-FCP_SCORE_HI_ADDR = 0x803C52D4
-
 # This address contains the current stage ID.
 CURR_STAGE_ID_ADDR = 0x803C53A4
 
@@ -334,13 +329,6 @@ def check_special_location(location_name: str, data: TWWLocationData) -> bool:
         dragon_tingle_statue_rewarded = dolphin_memory_engine.read_byte(TINGLE_STATUE_1_ADDR) & 0x40 == 0x40
         other_tingle_statues_rewarded = dolphin_memory_engine.read_byte(TINGLE_STATUE_2_ADDR) & 0x0F == 0x0F
         checked = dragon_tingle_statue_rewarded and other_tingle_statues_rewarded
-
-    # For the Bird-Man Contest, we check if the high score is greater than 250 yards.
-    elif location_name == "Flight Control Platform - Bird-Man Contest - First Prize":
-        high_score = dolphin_memory_engine.read_byte(FCP_SCORE_LO_ADDR) + (
-            dolphin_memory_engine.read_byte(FCP_SCORE_HI_ADDR) << 8
-        )
-        checked = high_score > 250
 
     else:
         raise NotImplementedError(f"Unknown special location: {location_name}")

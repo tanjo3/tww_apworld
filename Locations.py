@@ -917,7 +917,7 @@ LOCATION_TABLE: Dict[str, TWWLocationData] = {
 
     # Flight Control Platform
     "Flight Control Platform - Bird-Man Contest - First Prize": TWWLocationData(
-        247, TWWFlag.MINIGME, "The Great Sea", 0x0, TWWLocationType.SPECL, 0
+        247, TWWFlag.MINIGME, "The Great Sea", 0x0, TWWLocationType.EVENT, 6, 0x803C5257
     ),
     "Flight Control Platform - Submarine": TWWLocationData(
         248, TWWFlag.SUBMRIN, "The Great Sea", 0xA, TWWLocationType.CHEST, 3
