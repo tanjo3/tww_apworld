@@ -92,21 +92,15 @@ def can_buy_hyoi_pears(state: CollectionState, player: int) -> bool:
 
 
 def has_heros_sword(state: CollectionState, player: int) -> bool:
-    if state._tww_in_swordless_mode(player):
-        return False
-    return state.has("Progressive Sword", player, 1)
+    return not state._tww_in_swordless_mode(player) and state.has("Progressive Sword", player, 1)
 
 
 def has_any_master_sword(state: CollectionState, player: int) -> bool:
-    if state._tww_in_swordless_mode(player):
-        return False
-    return state.has("Progressive Sword", player, 2)
+    return not state._tww_in_swordless_mode(player) and state.has("Progressive Sword", player, 2)
 
 
 def has_full_power_master_sword(state: CollectionState, player: int) -> bool:
-    if state._tww_in_swordless_mode(player):
-        return False
-    return state.has("Progressive Sword", player, 4)
+    return not state._tww_in_swordless_mode(player) and state.has("Progressive Sword", player, 4)
 
 
 def has_heros_shield(state: CollectionState, player: int) -> bool:
