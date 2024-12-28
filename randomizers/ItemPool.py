@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Dict, List, Tuple
+from typing import TYPE_CHECKING
 
 from BaseClasses import ItemClassification as IC
 from Fill import FillError
@@ -10,7 +10,7 @@ from .Dungeons import get_dungeon_item_pool_player
 if TYPE_CHECKING:
     from .. import TWWWorld
 
-VANILLA_DUNGEON_ITEM_LOCATIONS: Dict[str, List[str]] = {
+VANILLA_DUNGEON_ITEM_LOCATIONS: dict[str, list[str]] = {
     "DRC Small Key": [
         "Dragon Roost Cavern - First Room",
         "Dragon Roost Cavern - Boarded Up Chest",
@@ -79,14 +79,14 @@ def generate_itempool(world: "TWWWorld") -> None:
     handle_dungeon_items(world)
 
 
-def get_pool_core(world: "TWWWorld") -> Tuple[List[str], List[str]]:
-    pool: List[str] = []
-    precollected_items: List[str] = []
+def get_pool_core(world: "TWWWorld") -> tuple[list[str], list[str]]:
+    pool: list[str] = []
+    precollected_items: list[str] = []
 
     # Split items into three different pools: progression, useful, and filler.
-    progression_pool: List[str] = []
-    useful_pool: List[str] = []
-    filler_pool: List[str] = []
+    progression_pool: list[str] = []
+    useful_pool: list[str] = []
+    filler_pool: list[str] = []
     for item, data in ITEM_TABLE.items():
         if data.type == "Item":
             adjusted_classification = world.determine_item_classification(item)

@@ -1,6 +1,7 @@
 import os
+from collections.abc import Mapping
 from dataclasses import fields
-from typing import Any, ClassVar, Dict, List, Mapping, Set, Tuple, Union
+from typing import Any, ClassVar, Union
 
 import yaml
 
@@ -35,7 +36,7 @@ from .randomizers.ItemPool import generate_itempool
 from .randomizers.RequiredBosses import RequiredBossesRandomizer
 from .Rules import set_rules
 
-VERSION: Tuple[int, int, int] = (2, 6, 0)
+VERSION: tuple[int, int, int] = (2, 6, 0)
 
 
 def run_client() -> None:
@@ -81,16 +82,16 @@ class TWWWorld(World):
     game: ClassVar[str] = "The Wind Waker"
     topology_present: bool = True
 
-    item_name_to_id: ClassVar[Dict[str, int]] = {
+    item_name_to_id: ClassVar[dict[str, int]] = {
         name: TWWItem.get_apid(data.code) for name, data in ITEM_TABLE.items() if data.code is not None
     }
-    location_name_to_id: ClassVar[Dict[str, int]] = {
+    location_name_to_id: ClassVar[dict[str, int]] = {
         name: TWWLocation.get_apid(data.code) for name, data in LOCATION_TABLE.items() if data.code is not None
     }
 
-    item_name_groups: ClassVar[Dict[str, Set[str]]] = item_name_groups
+    item_name_groups: ClassVar[dict[str, set[str]]] = item_name_groups
 
-    required_client_version: Tuple[int, int, int] = (0, 5, 1)
+    required_client_version: tuple[int, int, int] = (0, 5, 1)
 
     web: ClassVar[TWWWeb] = TWWWeb()
 
@@ -101,21 +102,21 @@ class TWWWorld(World):
     def __init__(self, *args, **kwargs):
         super(TWWWorld, self).__init__(*args, **kwargs)
 
-        self.progress_locations: Set[str] = set()
-        self.nonprogress_locations: Set[str] = set()
+        self.progress_locations: set[str] = set()
+        self.nonprogress_locations: set[str] = set()
 
-        self.dungeon_local_item_names: Set[str] = set()
-        self.dungeon_specific_item_names: Set[str] = set()
-        self.dungeons: Dict[str, Dungeon] = {}
+        self.dungeon_local_item_names: set[str] = set()
+        self.dungeon_specific_item_names: set[str] = set()
+        self.dungeons: dict[str, Dungeon] = {}
 
-        self.useful_pool: List[str] = []
-        self.filler_pool: List[str] = []
+        self.useful_pool: list[str] = []
+        self.filler_pool: list[str] = []
 
         self.charts = ChartRandomizer(self)
         self.entrances = EntranceRandomizer(self)
         self.boss_reqs = RequiredBossesRandomizer(self)
 
-    def _determine_progress_and_nonprogress_locations(self) -> Tuple[Set[str], Set[str]]:
+    def _determine_progress_and_nonprogress_locations(self) -> tuple[set[str], set[str]]:
         def add_flag(option: Toggle, flag: TWWFlag) -> TWWFlag:
             return flag if option else TWWFlag.ALWAYS
 
@@ -143,8 +144,8 @@ class TWWWorld(World):
         enabled_flags |= add_flag(options.progression_island_puzzles, TWWFlag.ISLND_P)
         enabled_flags |= add_flag(options.progression_misc, TWWFlag.MISCELL)
 
-        progress_locations: Set[str] = set()
-        nonprogress_locations: Set[str] = set()
+        progress_locations: set[str] = set()
+        nonprogress_locations: set[str] = set()
         for location, data in LOCATION_TABLE.items():
             if data.flags & enabled_flags == data.flags:
                 progress_locations.add(location)
@@ -288,7 +289,7 @@ class TWWWorld(World):
 
             for i in range(len(rock_spire_shop_ship_locations)):
                 curr_loc = rock_spire_shop_ship_locations[i]
-                other_locs = rock_spire_shop_ship_locations[:i] + rock_spire_shop_ship_locations[i + 1 :]
+                other_locs = rock_spire_shop_ship_locations[:i] + rock_spire_shop_ship_locations[i + 1:]
 
                 add_item_rule(
                     curr_loc,
@@ -321,7 +322,7 @@ class TWWWorld(World):
         chart_name_to_island_number = {
             chart_name: island_number for island_number, chart_name in self.charts.island_number_to_chart_name.items()
         }
-        charts_mapping: List[int] = []
+        charts_mapping: list[int] = []
         for i in range(1, 49 + 1):
             original_chart_name = ISLAND_NUMBER_TO_CHART_NAME[i]
             new_island_number = chart_name_to_island_number[original_chart_name]
@@ -373,7 +374,7 @@ class TWWWorld(World):
         with open(file_path, "w") as f:
             f.write(yaml.dump(output_data, sort_keys=False))
 
-    def extend_hint_information(self, hint_data: Dict[int, Dict[int, str]]) -> None:
+    def extend_hint_information(self, hint_data: dict[int, dict[int, str]]) -> None:
         # Regardless of ER settings, always hint at the outermost entrance for every "interior" location.
         hint_data[self.player] = {}
         for location in self.multiworld.get_locations(self.player):
@@ -436,7 +437,7 @@ class TWWWorld(World):
         filler_weights = [3, 7, 10, 15, 3]
         return self.multiworld.random.choices(filler_consumables, weights=filler_weights, k=1)[0]
 
-    def get_pre_fill_items(self) -> List[Item]:
+    def get_pre_fill_items(self) -> list[Item]:
         res = []
         if self.dungeon_local_item_names:
             for dungeon in self.dungeons.values():

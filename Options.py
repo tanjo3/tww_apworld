@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from typing import List
 
 from Options import (
     Choice,
@@ -89,7 +88,8 @@ class SpoilsTrading(Toggle):
 
 
 class Minigames(Toggle):
-    """This controls whether most minigames are randomized (auctions, mail sorting, barrel shooting, bird-man contest)."""
+    """This controls whether most minigames are randomized (auctions, mail sorting, barrel shooting, bird-man contest).
+    """
 
     display_name = "Minigames"
 
@@ -638,7 +638,7 @@ class TWWOptions(PerGameCommonOptions):
     death_link: DeathLink
 
 
-tww_option_groups: List[OptionGroup] = [
+tww_option_groups: list[OptionGroup] = [
     OptionGroup(
         "Progression Locations",
         [

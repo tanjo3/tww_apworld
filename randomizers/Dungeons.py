@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, List, Optional, Set, Tuple
+from typing import TYPE_CHECKING, Any, Optional
 
 from BaseClasses import CollectionState, Item, Location, MultiWorld
 from Fill import fill_restrictive
@@ -14,8 +14,8 @@ class Dungeon:
         self,
         name: str,
         big_key: Optional[Item],
-        small_keys: List[Item],
-        dungeon_items: List[Item],
+        small_keys: list[Item],
+        dungeon_items: list[Item],
         player: int,
     ):
         self.name = name
@@ -25,11 +25,11 @@ class Dungeon:
         self.player = player
 
     @property
-    def keys(self) -> List[Item]:
+    def keys(self) -> list[Item]:
         return self.small_keys + ([self.big_key] if self.big_key else [])
 
     @property
-    def all_items(self) -> List[Item]:
+    def all_items(self) -> list[Item]:
         return self.dungeon_items + self.keys
 
     def __eq__(self, other: Any) -> bool:
@@ -48,7 +48,7 @@ def create_dungeons(world: "TWWWorld") -> None:
     player = world.player
     options = world.options
 
-    def make_dungeon(name: str, big_key: Optional[Item], small_keys: List[Item], dungeon_items: List[Item]) -> Dungeon:
+    def make_dungeon(name: str, big_key: Optional[Item], small_keys: list[Item], dungeon_items: list[Item]) -> Dungeon:
         dungeon = Dungeon(name, big_key, small_keys, dungeon_items, player)
         for item in dungeon.all_items:
             item.dungeon = dungeon
@@ -104,17 +104,17 @@ def create_dungeons(world: "TWWWorld") -> None:
             )
 
 
-def get_dungeon_item_pool(multiworld: MultiWorld) -> List[Item]:
+def get_dungeon_item_pool(multiworld: MultiWorld) -> list[Item]:
     return [
         item for world in multiworld.get_game_worlds("The Wind Waker") for item in get_dungeon_item_pool_player(world)
     ]
 
 
-def get_dungeon_item_pool_player(world: "TWWWorld") -> List[Item]:
+def get_dungeon_item_pool_player(world: "TWWWorld") -> list[Item]:
     return [item for dungeon in world.dungeons.values() for item in dungeon.all_items]
 
 
-def get_unfilled_dungeon_locations(multiworld: MultiWorld) -> List[Location]:
+def get_unfilled_dungeon_locations(multiworld: MultiWorld) -> list[Location]:
     return [
         location
         for world in multiworld.get_game_worlds("The Wind Waker")
@@ -123,7 +123,7 @@ def get_unfilled_dungeon_locations(multiworld: MultiWorld) -> List[Location]:
     ]
 
 
-def modify_dungeon_location_rules(locations: List[Location], dungeon_specific: Set[Tuple[int, str]]) -> None:
+def modify_dungeon_location_rules(locations: list[Location], dungeon_specific: set[tuple[int, str]]) -> None:
     for location in locations:
         orig_rule = location.item_rule
         if dungeon_specific:
@@ -141,8 +141,8 @@ def modify_dungeon_location_rules(locations: List[Location], dungeon_specific: S
 
 
 def fill_dungeons_restrictive(multiworld: MultiWorld) -> None:
-    localized: Set[Tuple[int, str]] = set()
-    dungeon_specific: Set[Tuple[int, str]] = set()
+    localized: set[tuple[int, str]] = set()
+    dungeon_specific: set[tuple[int, str]] = set()
     for subworld in multiworld.get_game_worlds("The Wind Waker"):
         player = subworld.player
         if player not in multiworld.groups:

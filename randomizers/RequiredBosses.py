@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, List, Set
+from typing import TYPE_CHECKING
 
 from Options import OptionError
 
@@ -14,12 +14,12 @@ class RequiredBossesRandomizer:
         self.world = world
         self.multiworld = world.multiworld
 
-        self.required_boss_item_locations: List[str] = []
-        self.required_dungeons: List[str] = []
-        self.required_bosses: List[str] = []
-        self.banned_locations: Set[str] = set()
-        self.banned_dungeons: List[str] = []
-        self.banned_bosses: List[str] = []
+        self.required_boss_item_locations: list[str] = []
+        self.required_dungeons: list[str] = []
+        self.required_bosses: list[str] = []
+        self.banned_locations: set[str] = set()
+        self.banned_dungeons: list[str] = []
+        self.banned_bosses: list[str] = []
 
     def validate_boss_options(self, options: TWWOptions) -> None:
         if not options.progression_dungeons:

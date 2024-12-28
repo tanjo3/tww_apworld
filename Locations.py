@@ -1,5 +1,5 @@
 from enum import Enum, Flag, auto
-from typing import TYPE_CHECKING, Dict, NamedTuple, Optional, Tuple
+from typing import TYPE_CHECKING, NamedTuple, Optional
 
 from BaseClasses import Location, Region
 
@@ -87,7 +87,7 @@ DUNGEON_NAMES = [
     "Wind Temple",
 ]
 
-LOCATION_TABLE: Dict[str, TWWLocationData] = {
+LOCATION_TABLE: dict[str, TWWLocationData] = {
     # Outset Island
     "Outset Island - Underneath Link's House": TWWLocationData(
         0, TWWFlag.MISCELL, "The Great Sea", 0xB, TWWLocationType.CHEST, 5
@@ -1165,7 +1165,7 @@ LOCATION_TABLE: Dict[str, TWWLocationData] = {
 }
 
 
-ISLAND_NAME_TO_SALVAGE_BIT: Dict[str, int] = {
+ISLAND_NAME_TO_SALVAGE_BIT: dict[str, int] = {
     "Forsaken Fortress Sector": 8,
     "Star Island": 18,
     "Northern Fairy Island": 51,
@@ -1218,7 +1218,7 @@ ISLAND_NAME_TO_SALVAGE_BIT: Dict[str, int] = {
 }
 
 
-def split_location_name_by_zone(location_name: str) -> Tuple[str, str]:
+def split_location_name_by_zone(location_name: str) -> tuple[str, str]:
     if " - " in location_name:
         zone_name, specific_location_name = location_name.split(" - ", 1)
     else:

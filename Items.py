@@ -1,4 +1,5 @@
-from typing import TYPE_CHECKING, Dict, Iterable, NamedTuple, Optional, Union
+from collections.abc import Iterable
+from typing import TYPE_CHECKING, NamedTuple, Optional, Union
 
 from BaseClasses import Item
 from BaseClasses import ItemClassification as IC
@@ -61,7 +62,7 @@ class TWWItem(Item):
         return None
 
 
-ITEM_TABLE: Dict[str, TWWItemData] = {
+ITEM_TABLE: dict[str, TWWItemData] = {
     "Telescope":               TWWItemData("Item",      IC.useful,                       0,  1, 0x20),
   # "Boat's Sail":             TWWItemData("Item",      IC.progression,                  1,  1, 0x78),  # noqa: E131
     "Wind Waker":              TWWItemData("Item",      IC.progression,                  2,  1, 0x22),
@@ -284,7 +285,7 @@ ISLAND_NUMBER_TO_CHART_NAME = {
 }
 
 
-LOOKUP_ID_TO_NAME: Dict[int, str] = {
+LOOKUP_ID_TO_NAME: dict[int, str] = {
     TWWItem.get_apid(data.code): item for item, data in ITEM_TABLE.items() if data.code is not None
 }
 

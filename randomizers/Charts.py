@@ -1,5 +1,5 @@
 import copy
-from typing import TYPE_CHECKING, Dict
+from typing import TYPE_CHECKING
 
 from ..Items import ISLAND_NUMBER_TO_CHART_NAME
 from ..Locations import TWWFlag, TWWLocation
@@ -7,7 +7,7 @@ from ..Locations import TWWFlag, TWWLocation
 if TYPE_CHECKING:
     from .. import TWWWorld
 
-ISLAND_NUMBER_TO_NAME: Dict[int, str] = {
+ISLAND_NUMBER_TO_NAME: dict[int, str] = {
     1: "Forsaken Fortress Sector",
     2: "Star Island",
     3: "Northern Fairy Island",

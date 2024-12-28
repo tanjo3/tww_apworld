@@ -1,8 +1,7 @@
 import asyncio
 import time
 import traceback
-import typing
-from typing import Any, Dict, List, Optional, Set, Tuple
+from typing import TYPE_CHECKING, Any, Optional
 
 import dolphin_memory_engine
 
@@ -14,7 +13,7 @@ from .Items import ITEM_TABLE, LOOKUP_ID_TO_NAME
 from .Locations import ISLAND_NAME_TO_SALVAGE_BIT, LOCATION_TABLE, TWWLocation, TWWLocationData, TWWLocationType
 from .randomizers.Charts import ISLAND_NUMBER_TO_NAME
 
-if typing.TYPE_CHECKING:
+if TYPE_CHECKING:
     import kvui
 
 CONNECTION_REFUSED_GAME_STATUS = (
@@ -105,7 +104,7 @@ class TWWContext(CommonContext):
 
     def __init__(self, server_address: Optional[str], password: Optional[str]) -> None:
         super().__init__(server_address, password)
-        self.items_received_2: List[Tuple[NetworkItem, int]] = []
+        self.items_received_2: list[tuple[NetworkItem, int]] = []
         self.dolphin_sync_task: Optional[asyncio.Task[None]] = None
         self.dolphin_status: str = CONNECTION_INITIAL_STATUS
         self.awaiting_rom: bool = False
@@ -116,7 +115,7 @@ class TWWContext(CommonContext):
         self.received_magic: bool = False
 
         # A dictionary that maps salvage locations to their sunken treasure bit.
-        self.salvage_locations_map: Dict[str, int] = {}
+        self.salvage_locations_map: dict[str, int] = {}
 
         # Name of the current stage as read from the game's memory. Sent to trackers whenever its value changes to
         # facilitate automatically switching to the map of the current stage.
@@ -127,7 +126,7 @@ class TWWContext(CommonContext):
         # cause the server's data storage to update, the TWW AP Client keeps track of the visited stages in a set.
         # Trackers can request the dictionary from data storage to see which stages the player has visited.
         # It starts as `None` until it has been read from the server.
-        self.visited_stage_names: Optional[Set[str]] = None
+        self.visited_stage_names: Optional[set[str]] = None
 
         # Length of the item get array in memory.
         self.len_give_item_array: int = 0x10
@@ -150,7 +149,7 @@ class TWWContext(CommonContext):
             return
         await self.send_connect()
 
-    def on_package(self, cmd: str, args: Dict[str, Any]) -> None:
+    def on_package(self, cmd: str, args: dict[str, Any]) -> None:
         if cmd == "Connected":
             self.items_received_2 = []
             self.last_rcvd_index = -1
@@ -184,11 +183,11 @@ class TWWContext(CommonContext):
                         Utils.async_start(self.update_visited_stages(current_stage_name))
                     self.visited_stage_names = visited_stage_names
 
-    def on_deathlink(self, data: Dict[str, Any]) -> None:
+    def on_deathlink(self, data: dict[str, Any]) -> None:
         super().on_deathlink(data)
         _give_death(self)
 
-    def make_gui(self) -> typing.Type["kvui.GameManager"]:
+    def make_gui(self) -> type["kvui.GameManager"]:
         ui = super().make_gui()
         ui.base_title = "Archipelago The Wind Waker Client"
         return ui

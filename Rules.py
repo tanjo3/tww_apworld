@@ -1,6 +1,7 @@
 # flake8: noqa
 
-from typing import TYPE_CHECKING, Callable
+from collections.abc import Callable
+from typing import TYPE_CHECKING
 
 import BaseClasses
 from worlds.AutoWorld import LogicMixin
