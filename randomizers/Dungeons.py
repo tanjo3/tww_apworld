@@ -147,7 +147,7 @@ def fill_dungeons_restrictive(multiworld: MultiWorld) -> None:
 
             multiworld.random.shuffle(locations)
 
-            # Dungeon-locked items have to be placed first, to not run out of spaces for dungeon-locked items.
+            # Dungeon-locked items have to be placed first so as not to run out of space for dungeon-locked items.
             # Subsort in the order Small Key, Big Key, Other before placing dungeon items.
             sort_order = {"Small Key": 3, "Big Key": 2}
             in_dungeon_items.sort(
@@ -156,8 +156,8 @@ def fill_dungeons_restrictive(multiworld: MultiWorld) -> None:
                 reverse=True,
             )
 
-            # Construct a partial `all_state` which contains only the items from `get_pre_fill_items`, which aren't
-            # in a dungeon.
+            # Construct a partial `all_state` that contains only the items from `get_pre_fill_items` that aren't in a
+            # dungeon.
             in_dungeon_player_ids = {item.player for item in in_dungeon_items}
             all_state_base = CollectionState(multiworld)
             for item in multiworld.itempool:
@@ -175,7 +175,7 @@ def fill_dungeons_restrictive(multiworld: MultiWorld) -> None:
                 multiworld.worlds[item.player].collect(all_state_base, item)
             all_state_base.sweep_for_events()
 
-            # Remove completion condition so that minimal-accessibility worlds place keys properly.
+            # Remove the completion condition so that minimal-accessibility words place keys correctly.
             for player in (item.player for item in in_dungeon_items):
                 if all_state_base.has("Victory", player):
                     all_state_base.remove(multiworld.worlds[player].create_item("Victory"))

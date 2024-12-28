@@ -344,7 +344,7 @@ class EntranceRandomizer:
 
         if not options.randomize_dungeon_entrances:
             # If dungeon entrances are not randomized, `islands_with_a_banned_dungeon` can be initialized early since
-            # it's preset, and won't be updated later since we won't randomize the dungeon entrances.
+            # it's preset and won't be updated later since we won't randomize the dungeon entrances.
             for en in DUNGEON_ENTRANCES:
                 if self.entrance_connections[en.entrance_name] in self.world.boss_reqs.banned_dungeons:
                     assert en.island_name is not None
@@ -368,7 +368,7 @@ class EntranceRandomizer:
 
         self.multiworld.random.shuffle(relevant_entrances)
 
-        # We calculate which exits are terminal (the end of a nested chain) per-set instead of for all entrances.
+        # We calculate which exits are terminal (the end of a nested chain) per set instead of for all entrances.
         # This is so that, for example, Ice Ring Isle counts as terminal when its inner cave is not being randomized.
         non_terminal_exits = []
         for en in relevant_entrances:
@@ -405,11 +405,11 @@ class EntranceRandomizer:
         self, relevant_entrances: List[ZoneEntrance], relevant_exits: List[ZoneExit]
     ) -> Tuple[List[ZoneEntrance], List[ZoneExit]]:
         """
-        Splits the entrance and exit lists into two pairs: ones that should be considered nonprogress on this seed (will
-        never lead to any progress items) and ones that should be considered potentially required.
+        Splits the entrance and exit lists into two pairs: ones that should be considered nonprogress on this seed
+        (will never lead to any progress items) and ones that should be regarded as potentially required.
 
         This is so that we can effectively randomize these two pairs separately without any convoluted logic to ensure
-        they don't connect to each other.
+        they don't connect.
         """
         nonprogress_exits = [ex for ex in relevant_exits if not self.check_if_one_exit_is_progress(ex)]
         nonprogress_entrances = [
@@ -418,19 +418,19 @@ class EntranceRandomizer:
             if en.nested_in is not None
             and (
                 (en.nested_in in nonprogress_exits)
-                # The area this entrance is nested in is not randomized, but we still need to figure out if it's
+                # The area this entrance is nested in is not randomized, but we still need to determine whether it's
                 # progression.
                 or (en.nested_in not in relevant_exits and not self.check_if_one_exit_is_progress(en.nested_in))
             )
         ]
 
-        # At this point, `nonprogress_entrances` includes only the inner entrances nested inside of the main exits, not
-        # any of the island entrances on the sea. So we need to select `N` random island entrances to allow all of the
-        # nonprogress exits to be accessible, where `N` is the difference between the number of entrances and exits we
-        # currently have.
+        # At this point, `nonprogress_entrances` includes only the inner entrances nested inside the main exits, not any
+        # island entrances on the sea. So, we need to select `N` random island entrances to allow all of the nonprogress
+        # exits to be accessible, where `N` is the difference between the number of entrances and exits we currently
+        # have.
         possible_island_entrances = [en for en in relevant_entrances if en.island_name is not None]
 
-        # We need special logic to handle Forsaken Fortress as it is the only island entrance inside of a dungeon.
+        # We need special logic to handle Forsaken Fortress, as it is the only island entrance inside a dungeon.
         ff_boss_entrance = ZoneEntrance.all["Boss Entrance in Forsaken Fortress"]
         if ff_boss_entrance in possible_island_entrances:
             if self.world.options.progression_dungeons:
@@ -442,10 +442,10 @@ class EntranceRandomizer:
                 ff_progress = False
 
             if ff_progress:
-                # If it's progress then don't allow it to be randomly chosen to lead to nonprogress exits.
+                # If it's progress, don't allow it to be randomly chosen to lead to nonprogress exits.
                 possible_island_entrances.remove(ff_boss_entrance)
             else:
-                # If it's not progress then manually mark it as such, and still don't allow it to be chosen randomly.
+                # If it's not progress, manually mark it as such, and don't allow it to be chosen randomly.
                 nonprogress_entrances.append(ff_boss_entrance)
                 possible_island_entrances.remove(ff_boss_entrance)
 
@@ -455,7 +455,7 @@ class EntranceRandomizer:
 
         for _ in range(num_island_entrances_needed):
             # Note: `relevant_entrances` is already shuffled, so we can just take the first result from
-            # `possible_island_entrances` and it's the same as picking one randomly.
+            # `possible_island_entrances`—it's the same as picking one randomly.
             nonprogress_island_entrance = possible_island_entrances.pop(0)
             nonprogress_entrances.append(nonprogress_island_entrance)
 
@@ -476,11 +476,11 @@ class EntranceRandomizer:
             doing_banned = True
 
         if options.required_bosses and not doing_banned:
-            # Prioritize entrances that share an island with an entrance randomized to lead into a required bosses mode
-            # banned dungeon. (e.g. DRI, Pawprint, Outset, TotG sector.)
-            # This is because we need to prevent these islands from having a required boss or anything that could
-            # potentially lead to a required boss, and if we don't do this first we can get backed into a corner where
-            # there is no other option left.
+            # Prioritize entrances that share an island with an entrance randomized to lead into a
+            # required-bosses-mode-banned dungeon. (e.g., DRI, Pawprint, Outset, TotG sector.)
+            # This is because we need to prevent these islands from having a required boss or anything that could lead
+            # to a required boss. If we don't do this first, we can get backed into a corner where there is no other
+            # option left.
             entrances_not_on_unique_islands = []
             for zone_entrance in relevant_entrances:
                 if zone_entrance.is_nested:
@@ -505,21 +505,20 @@ class EntranceRandomizer:
             possible_remaining_exits = remaining_exits.copy()
 
             if len(possible_remaining_entrances) == 0 and len(remaining_entrances) > 0:
-                # If this is the last entrance we have left to attach exits to, then we can't place a terminal exit
-                # here, as terminal exits do not create another entrance, so one would leave us with no possible way to
-                # continue placing the remaining exits on future loops.
+                # If this is the last entrance we have left to attach exits to, we can't place a terminal exit here.
+                # Terminal exits do not create another entrance, so one would leave us with no possible way to continue
+                # placing the remaining exits on future loops.
                 possible_remaining_exits = [ex for ex in possible_remaining_exits if ex not in terminal_exits]
 
             if options.required_bosses and zone_entrance.island_name is not None and not doing_banned:
-                # Prevent required bosses (and non-terminal exits which could potentially lead to required bosses) from
-                # appearing on islands where we already placed a banned boss or dungeon.
-                # This can happen with DRI and Pawprint, as these islands each have two entrances. This would be bad
-                # because required bosses mode's dungeon markers only tell you what island the required dungeons are on,
-                # not which of the two entrances to enter.
-                # So e.g. if a banned dungeon gets placed on DRI's main entrance, we will then have to fill DRI's pit
-                # entrance with either a miniboss or one of the caves that does not have a nested entrance inside of it.
-                # We allow multiple banned dungeons on a single islands, and also allow multiple required dungeons on a
-                # single island.
+                # Prevent required bosses (and non-terminal exits, which could lead to required bosses) from appearing
+                # on islands where we already placed a banned boss or dungeon.
+                # This can happen with DRI and Pawprint, as these islands have two entrances. This would be bad because
+                # the required bosses mode's dungeon markers only tell you what island the required dungeons are on, not
+                # which of the two entrances to enter.
+                # So, if a banned dungeon is placed on DRI's main entrance, we will have to fill DRI's pit entrance with
+                # either a miniboss or one of the caves that does not have a nested entrance inside. We allow multiple
+                # banned and required dungeons on a single island.
                 if zone_entrance.island_name in self.islands_with_a_banned_dungeon:
                     possible_remaining_exits = [
                         ex
@@ -545,10 +544,10 @@ class EntranceRandomizer:
                     outer_entrance = self.get_outermost_entrance_for_entrance(zone_entrance)
 
                     # Because we filter above so that we always assign entrances from the sea inwards, we can assume
-                    # when we assign an entrance that it has a path back to the sea.
-                    # If we're assigning a nonterminal entrance, any nested entrances will get assigned after this one
-                    # and we'll run through this code again (so we can reason based on zone_exit only, instead of having
-                    # to recurse through the nested exits to find banned dungeons/bosses.
+                    # that when we assign an entrance, it has a path back to the sea.
+                    # If we're assigning a non-terminal entrance, any nested entrances will get assigned after this one,
+                    # and we'll run through this code again (so we can reason based on `zone_exit` only instead of
+                    # having to recurse through the nested exits to find banned dungeons/bosses).
                     assert outer_entrance and outer_entrance.island_name is not None
                     self.islands_with_a_banned_dungeon.add(outer_entrance.island_name)
 
@@ -569,7 +568,7 @@ class EntranceRandomizer:
             )
 
         if self.world.options.required_bosses:
-            # Make sure we didn't accidentally place a banned boss and a required boss on the same island.
+            # Ensure we didn't accidentally place a banned boss and a required boss on the same island.
             banned_island_names = set(
                 self.get_entrance_zone_for_boss(boss_name) for boss_name in self.world.boss_reqs.banned_bosses
             )
@@ -586,8 +585,8 @@ class EntranceRandomizer:
                 self.zone_exit_to_logically_dependent_item_locations[zone_exit].append(loc_name)
 
             if loc_name == "The Great Sea - Withered Trees":
-                # This location isn't inside of a zone exit itself, but it does logically require the player to be able
-                # to reach a different item location that is inside of a zone exit.
+                # This location isn't inside a zone exit, but it does logically require the player to be able to reach
+                # a different item location inside one.
                 for sub_loc_name in ["Cliff Plateau Isles - Highest Isle"]:
                     sub_zone_exit = self.get_zone_exit_for_item_location(sub_loc_name)
                     if sub_zone_exit is not None:
@@ -664,12 +663,12 @@ class EntranceRandomizer:
         return relevant_entrances, relevant_exits
 
     def get_outermost_entrance_for_exit(self, zone_exit: ZoneExit) -> Optional[ZoneEntrance]:
-        """Unrecurses nested dungeons to determine what the outermost (island) entrance is for a given exit."""
+        """Unrecurses nested dungeons to determine the outermost (island) entrance for a given exit."""
         zone_entrance = self.done_exits_to_entrances[zone_exit]
         return self.get_outermost_entrance_for_entrance(zone_entrance)
 
     def get_outermost_entrance_for_entrance(self, zone_entrance: ZoneEntrance) -> Optional[ZoneEntrance]:
-        """Unrecurses nested dungeons to determine what the outermost (island) entrance is for a given entrance."""
+        """Unrecurses nested dungeons to determine the outermost (island) entrance for a given entrance."""
         seen_entrances = self.get_all_entrances_on_path_to_entrance(zone_entrance)
         if seen_entrances is None:
             # Undecided.
@@ -695,8 +694,8 @@ class EntranceRandomizer:
     def is_item_location_behind_randomizable_entrance(self, location_name: str) -> bool:
         loc_zone_name, _ = split_location_name_by_zone(location_name)
         if loc_zone_name in ["Ganon's Tower", "Mailbox"]:
-            # Ganon's Tower and the handful of Mailbox locations that depend on beating dungeon bosses are considered to
-            # be "Dungeon" location types by the logic, but entrance randomizer does not need to take them into account.
+            # Ganon's Tower and the handful of Mailbox locations that depend on beating dungeon bosses are considered
+            # "Dungeon" location types by the logic, but the entrance randomizer does not need to consider them.
             # Although the mail locations are technically locked behind dungeons, we can still ignore them here because
             # if all of the locations in the dungeon itself are nonprogress, then any mail depending on that dungeon
             # should also be enforced as nonprogress by other parts of the code.
@@ -713,7 +712,7 @@ class EntranceRandomizer:
             # The Big Octo Great Fairy is the only Great Fairy location that is not also a Fairy Fountain.
             return False
 
-        # In the general case we check if the location has a type corresponding to exits that can be randomized.
+        # In the general case, we check if the location has a type corresponding to exits that can be randomized.
         if any(t in types for t in ENTRANCE_RANDOMIZABLE_ITEM_LOCATION_TYPES):
             return True
 

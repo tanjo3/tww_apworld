@@ -40,7 +40,7 @@ VERSION: Tuple[int, int, int] = (2, 6, 0)
 
 def run_client() -> None:
     print("Running The Wind Waker Client")
-    from .TWWClient import main  # lazy import
+    from .TWWClient import main
 
     launch_subprocess(main, name="TheWindWakerClient")
 
@@ -202,7 +202,7 @@ class TWWWorld(World):
         menu_region = Region("Menu", player, multiworld)
         multiworld.regions.append(menu_region)
 
-        # "The Great Sea" region contains all locations not in a randomizable region.
+        # "The Great Sea" region contains all locations that are not in a randomizable region.
         great_sea_region = Region("The Great Sea", player, multiworld)
         multiworld.regions.append(great_sea_region)
 
@@ -344,8 +344,8 @@ class TWWWorld(World):
         player = self.player
 
         # Determine the current arrangement for charts.
-        # Create a list where the original island number is the index and the value is the new island number.
-        # Without randomized charts, this array would be just a ordered list of the numbers 1 to 49.
+        # Create a list where the original island number is the index, and the value is the new island number.
+        # Without randomized charts, this array would be just an ordered list of the numbers 1 to 49.
         # With randomized charts, the new island number is where the chart for the original island now leads.
         chart_name_to_island_number = {
             chart_name: island_number for island_number, chart_name in self.charts.island_number_to_chart_name.items()
@@ -403,7 +403,7 @@ class TWWWorld(World):
             f.write(yaml.dump(output_data, sort_keys=False))
 
     def extend_hint_information(self, hint_data: Dict[int, Dict[int, str]]) -> None:
-        # Regardless of ER settings, always hint the outermost entrance for every "interior" location
+        # Regardless of ER settings, always hint at the outermost entrance for every "interior" location.
         hint_data[self.player] = {}
         for location in self.multiworld.get_locations(self.player):
             if location.address is not None and location.item is not None:
@@ -500,7 +500,7 @@ class TWWWorld(World):
             "death_link": self.options.death_link.value,
         }
 
-        # Add entrances to slot_data. This is the same data that is written to the .aptww file.
+        # Add entrances to `slot_data`. This is the same data that is written to the .aptww file.
         all_entrance_names = [en.entrance_name for en in ALL_ENTRANCES]
         entrances = {
             entrance.parent_region.name: entrance.connected_region.name

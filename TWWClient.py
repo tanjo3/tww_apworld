@@ -40,17 +40,17 @@ SWITCHES_BITFLD_ADDR = 0x803C5384
 PICKUPS_BITFLD_ADDR = 0x803C5394
 SEA_ALT_BITFLD_ADDR = 0x803C4FAC
 
-# The expected index for the next item that should be received. Uses event bits 0x60 and 0x61.
+# The expected index for the following item that should be received. Uses event bits 0x60 and 0x61.
 EXPECTED_INDEX_ADDR = 0x803C528C
 
-# These bytes contain the bits whether the player has received the reward for finding a particular Tingle statue.
-TINGLE_STATUE_1_ADDR = 0x803C523E  # 0x40 is the bit for Dragon Tingle statue.
+# These bytes contain whether the player has been rewarded for finding a particular Tingle statue.
+TINGLE_STATUE_1_ADDR = 0x803C523E  # 0x40 is the bit for the Dragon Tingle statue.
 TINGLE_STATUE_2_ADDR = 0x803C5249  # 0x0F are the bits for the remaining Tingle statues.
 
 # This address contains the current stage ID.
 CURR_STAGE_ID_ADDR = 0x803C53A4
 
-# This address is used to check the stage name to verify the player is in-game before sending items.
+# This address is used to check the stage name to verify that the player is in-game before sending items.
 CURR_STAGE_NAME_ADDR = 0x803C9D3C
 
 # This is an array of length 0x10 where each element is a byte and contains item IDs for items to give the player.
@@ -62,12 +62,12 @@ GIVE_ITEM_ARRAY_ADDR = 0x803FE87C
 SLOT_NAME_ADDR = 0x803FE8A0
 
 # This address is the start of an array that we use to inform us of which charts lead where.
-# The array is of length 49 where each element is two bytes. The index represents the original destination of the chart
-# and the value represents the new destination.
-# The chart name is inferrable from the original destination of the chart.
+# The array is of length 49, and each element is two bytes. The index represents the chart's original destination, and
+# the value represents the new destination.
+# The chart name is inferrable from the chart's original destination.
 CHARTS_MAPPING_ADDR = 0x803FE8E0
 
-# This address contains the most recent spawn ID the player spawned from.
+# This address contains the most recent spawn ID from which the player spawned.
 MOST_RECENT_SPAWN_ID_ADDR = 0x803C9D44
 
 # This address contains the most recent room number the player spawned in.
@@ -77,7 +77,7 @@ MOST_RECENT_ROOM_NUMBER_ADDR = 0x803C9D46
 # 42. Starting at 1 and going left to right, top to bottom, Cliff Plateau Isles is the 42nd square in the sea stage.
 CLIFF_PLATEAU_ISLES_ROOM_NUMBER = 0x2A
 CLIFF_PLATEAU_ISLES_HIGHEST_ISLE_SPAWN_ID = 1  # As a note, the lower isle's spawn ID is 2.
-# Dummy stage name used to identify the highest isle in Cliff Plateau Isles.
+# The dummy stage name used to identify the highest isle in Cliff Plateau Isles.
 CLIFF_PLATEAU_ISLES_HIGHEST_ISLE_DUMMY_STAGE_NAME = "CliPlaH"
 
 # Data storage key
@@ -108,7 +108,7 @@ class TWWContext(CommonContext):
         self.last_rcvd_index: int = -1
         self.has_send_death: bool = False
 
-        # Keep track of whether the player has received their first progressive magic meter yet.
+        # Keep track of whether the player has yet received their first progressive magic meter.
         self.received_magic: bool = False
 
         # A dictionary that maps salvage locations to their sunken treasure bit.
@@ -119,10 +119,10 @@ class TWWContext(CommonContext):
         self.current_stage_name: str = ""
 
         # Set of visited stages. A dictionary (used as a set) of all visited stages is set in the server's data storage
-        # and updated when the player visits a new stage for the first time. To track which stages are new, and need to
+        # and updated when the player visits a new stage for the first time. To track which stages are new and need to
         # cause the server's data storage to update, the TWW AP Client keeps track of the visited stages in a set.
         # Trackers can request the dictionary from data storage to see which stages the player has visited.
-        # Starts off as `None` until it has been read from the server.
+        # It starts as `None` until it has been read from the server.
         self.visited_stage_names: Optional[Set[str]] = None
 
         # Length of the item get array in memory.
@@ -142,7 +142,7 @@ class TWWContext(CommonContext):
             if self.awaiting_rom:
                 return
             self.awaiting_rom = True
-            logger.info("Awaiting connection to Dolphin to get player information")
+            logger.info("Awaiting connection to Dolphin to get player information.")
             return
         await self.send_connect()
 
@@ -170,7 +170,7 @@ class TWWContext(CommonContext):
                 visited_stages_key = AP_VISITED_STAGE_NAMES_KEY_FORMAT % self.slot
                 if visited_stages_key in requested_keys_dict:
                     visited_stages = requested_keys_dict[visited_stages_key]
-                    # If it has not been set before, the value in the response will be None
+                    # If it has not been set before, the value in the response will be `None`.
                     visited_stage_names = set() if visited_stages is None else set(visited_stages.keys())
                     # If the current stage name is not in the set, send a message to update the dictionary on the
                     # server.
@@ -254,11 +254,11 @@ def _give_item(ctx: TWWContext, item_name: str) -> bool:
 
     item_id = ITEM_TABLE[item_name].item_id
 
-    # Loop through the give item array, placing the item in an empty slot.
+    # Loop through the item array, placing the item in an empty slot.
     for idx in range(ctx.len_give_item_array):
         slot = dolphin_memory_engine.read_byte(GIVE_ITEM_ARRAY_ADDR + idx)
         if slot == 0xFF:
-            # Special case: use a different item ID for second progressive magic meter.
+            # Special case: Use a different item ID for the second progressive magic meter.
             if item_name == "Progressive Magic Meter":
                 if ctx.received_magic:
                     item_id = 0xB2
@@ -267,7 +267,7 @@ def _give_item(ctx: TWWContext, item_name: str) -> bool:
             dolphin_memory_engine.write_byte(GIVE_ITEM_ARRAY_ADDR + idx, item_id)
             return True
 
-    # Unable to place the item in the array, so return `False`.
+    # If unable to place the item in the array, return `False`.
     return False
 
 
@@ -278,7 +278,7 @@ async def give_items(ctx: TWWContext) -> None:
 
         # Loop through items to give.
         for item, idx in ctx.items_received_2:
-            # If the index of the item is greater than the expected index of the player, give the player the item.
+            # If the item's index is greater than the player's expected index, give the player the item.
             if expected_idx <= idx:
                 # Attempt to give the item and increment the expected index.
                 while not _give_item(ctx, LOOKUP_ID_TO_NAME[item.item]):
@@ -292,17 +292,17 @@ def check_special_location(location_name: str, data: TWWLocationData) -> bool:
     checked = False
 
     # For "Windfall Island - Lenzo's House - Become Lenzo's Assistant"
-    # 0x6 is delivered the final picture for Lenzo, 0x7 is day has passed since becoming his assistant
-    # Either is fine for the check to be sent, so check both conditions.
+    # 0x6 is delivered the final picture for Lenzo, 0x7 is a day has passed since becoming his assistant
+    # Either is fine for sending the check, so check both conditions.
     if location_name == "Windfall Island - Lenzo's House - Become Lenzo's Assistant":
         checked = (
             dolphin_memory_engine.read_byte(data.address) & 0x6 == 0x6
             or dolphin_memory_engine.read_byte(data.address) & 0x7 == 0x7
         )
 
-    # The flag for "Windfall Island - Maggie - Delivery Reward" is still unknown.
-    # However, as a temporary workaround, we can just check if the player had Moblin's letter at some point,
-    # but it's no longer in their Delivery Bag.
+    # The "Windfall Island - Maggie - Delivery Reward" flag remains unknown.
+    # However, as a temporary workaround, we can check if the player had Moblin's letter at some point, but it's no
+    # longer in their Delivery Bag.
     elif location_name == "Windfall Island - Maggie - Delivery Reward":
         was_moblins_owned = (dolphin_memory_engine.read_word(LETTER_OWND_ADDR) >> 15) & 1
         dbag_contents = [dolphin_memory_engine.read_byte(LETTER_BASE_ADDR + offset) for offset in range(8)]
@@ -323,8 +323,8 @@ def check_special_location(location_name: str, data: TWWLocationData) -> bool:
     elif location_name == "Mailbox - Letter from Grandma":
         checked = dolphin_memory_engine.read_byte(data.address) & 0x3 == 0x3
 
-    # For the Ankle's reward, we check if the bits for turning all five statues are set.
-    # For some reason, the bit for the Dragon Tingle Statue is located in a separate location than the rest.
+    # We check if the bits for turning all five statues are set for the Ankle's reward.
+    # For some reason, the bit for the Dragon Tingle Statue is separate from the rest.
     elif location_name == "Tingle Island - Ankle - Reward for All Tingle Statues":
         dragon_tingle_statue_rewarded = dolphin_memory_engine.read_byte(TINGLE_STATUE_1_ADDR) & 0x40 == 0x40
         other_tingle_statues_rewarded = dolphin_memory_engine.read_byte(TINGLE_STATUE_2_ADDR) & 0x0F == 0x0F
@@ -408,8 +408,8 @@ async def check_locations(ctx: TWWContext) -> None:
 async def check_current_stage_changed(ctx: TWWContext) -> None:
     new_stage_name = read_string(CURR_STAGE_NAME_ADDR, 8)
 
-    # Special handling for the Cliff Plateau Isles Inner Cave exit that exits out onto the sea stage rather than a
-    # unique stage.
+    # Special handling is required for the Cliff Plateau Isles Inner Cave exit, which exits out onto the sea stage
+    # rather than a unique stage.
     if (
         new_stage_name == "sea"
         and dolphin_memory_engine.read_byte(MOST_RECENT_ROOM_NUMBER_ADDR) == CLIFF_PLATEAU_ISLES_ROOM_NUMBER
@@ -420,7 +420,7 @@ async def check_current_stage_changed(ctx: TWWContext) -> None:
     current_stage_name = ctx.current_stage_name
     if new_stage_name != current_stage_name:
         ctx.current_stage_name = new_stage_name
-        # Send a Bounced message, containing the new stage name, to all clients connected to the current slot.
+        # Send a Bounced message containing the new stage name to all trackers connected to the current slot.
         data_to_send = {"tww_stage_name": new_stage_name}
         message = {
             "cmd": "Bounce",
@@ -429,8 +429,8 @@ async def check_current_stage_changed(ctx: TWWContext) -> None:
         }
         await ctx.send_msgs([message])
 
-        # If the stage has never been visited before, update the server's data storage to include that the stage has
-        # been visited.
+        # If the stage has never been visited before, update the server's data storage to indicate that it has been
+        # visited.
         visited_stage_names = ctx.visited_stage_names
         if visited_stage_names is not None and new_stage_name not in visited_stage_names:
             visited_stage_names.add(new_stage_name)
@@ -463,7 +463,7 @@ async def dolphin_sync_task(ctx: TWWContext) -> None:
         try:
             if dolphin_memory_engine.is_hooked() and ctx.dolphin_status == CONNECTION_CONNECTED_STATUS:
                 if not check_ingame():
-                    # Reset give item array while not in game.
+                    # Reset the give item array while not in the game.
                     dolphin_memory_engine.write_bytes(GIVE_ITEM_ARRAY_ADDR, bytes([0xFF] * ctx.len_give_item_array))
                     await asyncio.sleep(0.1)
                     continue

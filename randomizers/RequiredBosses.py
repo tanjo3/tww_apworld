@@ -23,10 +23,12 @@ class RequiredBossesRandomizer:
 
     def validate_boss_options(self, options: TWWOptions) -> None:
         if not options.progression_dungeons:
-            raise OptionError("Cannot make bosses required when progression dungeons are disabled.")
+            raise OptionError("You cannot make bosses required when progression dungeons are disabled.")
 
         if len(options.included_dungeons.value & options.excluded_dungeons.value) != 0:
-            raise OptionError("Conflict found in the lists of required and banned dungeons for required bosses mode.")
+            raise OptionError(
+                "A conflict was found in the lists of required and banned dungeons for required bosses mode."
+            )
 
     def randomize_required_bosses(self) -> None:
         options = self.world.options
@@ -42,21 +44,28 @@ class RequiredBossesRandomizer:
             if dungeon_name in dungeon_names:
                 required_dungeons.add(dungeon_name)
 
-        # Ensure that we aren't prioritizing more dungeon locations than requested number of required bosses.
+        # Ensure we aren't prioritizing more dungeon locations than the requested number of required bosses.
         num_required_bosses = options.num_required_bosses
         if len(required_dungeons) > num_required_bosses:
-            raise OptionError("Could not select required bosses to satisfy options set by user.")
+            raise OptionError(
+                "Could not select required bosses to satisfy options set by the user. "
+                "There are more dungeons with priority locations than the desired number of required bosses."
+            )
 
-        # Ensure that after removing excluded dungeons that we still have enough dungeons to satisfy user options.
+        # Ensure that after removing excluded dungeons, we still have enough to satisfy user options.
         num_remaining = num_required_bosses - len(required_dungeons)
         remaining_dungeon_options = dungeon_names - required_dungeons - options.excluded_dungeons.value
         if len(remaining_dungeon_options) < num_remaining:
-            raise OptionError("Could not select required bosses to satisfy options set by user.")
+            raise OptionError(
+                "Could not select required bosses to satisfy options set by the user. "
+                "After removing the excluded dungeons, there are not enough to meet the desired number of required"
+                "bosses."
+            )
 
         # Finish selecting required bosses.
         required_dungeons.update(self.multiworld.random.sample(list(remaining_dungeon_options), num_remaining))
 
-        # Exclude locations which are not in the dungeon of a required boss.
+        # Exclude locations that are not in the dungeon of a required boss.
         banned_dungeons = dungeon_names - required_dungeons
         for location_name, location_data in LOCATION_TABLE.items():
             dungeon_name, _ = split_location_name_by_zone(location_name)

@@ -120,7 +120,7 @@ def handle_dungeon_items(world: "TWWWorld") -> None:
     for x in range(len(dungeon_items) - 1, -1, -1):
         item = dungeon_items[x]
 
-        # Consider dungeon items in non-required dungeons as filler
+        # Consider dungeon items in non-required dungeons as filler.
         if item.dungeon.name in world.boss_reqs.banned_dungeons:
             item.classification = ItemClassification.filler
 

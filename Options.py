@@ -341,14 +341,14 @@ class NumRequiredBosses(Range):
 
 
 class IncludedDungeons(OptionSet):
-    """A list of dungeons which should always be included when required bosses mode is on."""
+    """A list of dungeons that should always be included when required bosses mode is on."""
 
     display_name = "Included Dungeons"
     valid_keys = frozenset(DUNGEON_NAMES)
 
 
 class ExcludedDungeons(OptionSet):
-    """A list of dungeons which should always be excluded when required bosses mode is on."""
+    """A list of dungeons that should always be excluded when required bosses mode is on."""
 
     display_name = "Excluded Dungeons"
     valid_keys = frozenset(DUNGEON_NAMES)
@@ -407,9 +407,9 @@ class LogicPrecision(Choice):
 
 
 class EnableTunerLogic(Toggle):
-    """If enabled, the randomizer can logically expect the Tingle Tuner for Tingle chests.
+    """If enabled, the randomizer can logically expect the Tingle Tuner for Tingle Chests.
 
-    The randomizer behavior of logically expecting Bombs/bomb flowers to spawn in Tingle chests remains unchanged.
+    The randomizer behavior of logically expecting Bombs/bomb flowers to spawn in Tingle Chests remains unchanged.
     """
 
     display_name = "Enable Tuner Logic"
@@ -463,7 +463,7 @@ class RandomizeFairyFountainEntrances(Toggle):
 class MixEntrances(Choice):
     """Controls how the different types (pools) of randomized entrances should be shuffled.
 
-    - **Separate Pools:** Each pool of randomized entrances with shuffle into itself (e.g., dungeons into dungeons).
+    - **Separate Pools:** Each pool of randomized entrances will shuffle into itself (e.g., dungeons into dungeons).
     - **Mix Pools:** All pools of randomized entrances will be combined into one pool to be shuffled.
     """
 
