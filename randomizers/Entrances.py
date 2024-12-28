@@ -327,7 +327,7 @@ class EntranceRandomizer:
         if options.required_bosses:
             for zone_exit in BOSS_EXITS:
                 assert zone_exit.unique_name.endswith(" Boss Arena")
-                boss_name = zone_exit.unique_name[: -len(" Boss Arena")]
+                boss_name = zone_exit.unique_name.removesuffix(" Boss Arena")
                 if boss_name in self.world.boss_reqs.banned_bosses:
                     self.banned_exits.append(zone_exit)
             for zone_exit in DUNGEON_EXITS:
@@ -339,7 +339,7 @@ class EntranceRandomizer:
                     # Hyrule cannot be chosen as a banned dungeon.
                     continue
                 assert zone_exit.unique_name.endswith(" Miniboss Arena")
-                dungeon_name = zone_exit.unique_name[: -len(" Miniboss Arena")]
+                dungeon_name = zone_exit.unique_name.removesuffix(" Miniboss Arena")
                 if dungeon_name in self.world.boss_reqs.banned_dungeons:
                     self.banned_exits.append(zone_exit)
 

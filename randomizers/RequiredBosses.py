@@ -90,7 +90,7 @@ class RequiredBossesRandomizer:
         for location_name in possible_boss_item_locations:
             dungeon_name, specific_location_name = split_location_name_by_zone(location_name)
             assert specific_location_name.endswith(" Heart Container")
-            boss_name = specific_location_name[: -len(" Heart Container")]
+            boss_name = specific_location_name.removesuffix(" Heart Container")
 
             if dungeon_name in required_dungeons:
                 self.required_boss_item_locations.append(location_name)
