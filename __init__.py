@@ -90,7 +90,7 @@ class TWWWorld(World):
 
     item_name_groups: ClassVar[Dict[str, Set[str]]] = item_name_groups
 
-    required_client_version: Tuple[int, int, int] = (0, 5, 0)
+    required_client_version: Tuple[int, int, int] = (0, 5, 1)
 
     web: ClassVar[TWWWeb] = TWWWeb()
 

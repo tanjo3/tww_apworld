@@ -9,7 +9,7 @@ Unfortunately, Mac OS is not officially supported at this time.
 ## Requirements
 
 You'll need the following components to be able to play/generate with The Wind Waker:
-* Install [Archipelago](https://github.com/ArchipelagoMW/Archipelago/releases) v0.5.0 or higher.\
+* Install [Archipelago](https://github.com/ArchipelagoMW/Archipelago/releases) v0.5.1 or higher.\
     **Make sure to install the Generator if you intend to generate multiworlds.**
 * The latest version of the [TWW APWorld](https://github.com/tanjo3/tww_apworld/releases/latest).
 
@@ -105,7 +105,7 @@ name automatically when you start a new save file.
 
 ## Troubleshooting
 
-* Ensure that you are running version v0.5.0 or higher of Archipelago.
+* Ensure that you are running version v0.5.1 or higher of Archipelago.
 * If you do not see the client in the launcher, ensure that the `tww.apworld` file is in the correct folder (the
 `custom_worlds` folder of your Archipelago installation).
 * If the client is not working, double-check that you have the most recent release of the `tww.apworld`. Additionally,
