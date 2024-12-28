@@ -1,7 +1,7 @@
 import os
 from collections.abc import Mapping
 from dataclasses import fields
-from typing import Any, ClassVar, Union
+from typing import Any, ClassVar
 
 import yaml
 
@@ -385,7 +385,7 @@ class TWWWorld(World):
                     assert outermost_entrance is not None and outermost_entrance.island_name is not None
                     hint_data[self.player][location.address] = outermost_entrance.island_name
 
-    def determine_item_classification(self, name: str) -> Union[IC, None]:
+    def determine_item_classification(self, name: str) -> IC | None:
         # TODO: Calculate nonprogress items dynamically
         adjusted_classification = None
         if not self.options.progression_big_octos_gunboats and name == "Progressive Quiver":

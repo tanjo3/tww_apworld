@@ -1,5 +1,5 @@
 from collections.abc import Iterable
-from typing import TYPE_CHECKING, NamedTuple, Optional, Union
+from typing import TYPE_CHECKING, NamedTuple, Optional
 
 from BaseClasses import Item
 from BaseClasses import ItemClassification as IC
@@ -9,7 +9,7 @@ if TYPE_CHECKING:
     from .randomizers.Dungeons import Dungeon
 
 
-def item_factory(items: Union[str, Iterable[str]], world: World) -> Union[Item, Iterable[Item]]:
+def item_factory(items: str | Iterable[str], world: World) -> Item | Iterable[Item]:
     ret = []
     singleton = False
     if isinstance(items, str):
