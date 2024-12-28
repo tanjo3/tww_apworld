@@ -95,6 +95,8 @@ class TWWWorld(World):
 
     web: ClassVar[TWWWeb] = TWWWeb()
 
+    origin_region_name: str = "The Great Sea"
+
     create_items = generate_itempool
 
     set_rules = set_rules
@@ -182,10 +184,6 @@ class TWWWorld(World):
         multiworld = self.multiworld
         player = self.player
 
-        # "Menu" is the required starting point.
-        menu_region = Region("Menu", player, multiworld)
-        multiworld.regions.append(menu_region)
-
         # "The Great Sea" region contains all locations that are not in a randomizable region.
         great_sea_region = Region("The Great Sea", player, multiworld)
         multiworld.regions.append(great_sea_region)
@@ -195,9 +193,6 @@ class TWWWorld(World):
             multiworld.regions.append(Region(_entrance.entrance_name, player, multiworld))
         for _exit in ALL_EXITS:
             multiworld.regions.append(Region(_exit.unique_name, player, multiworld))
-
-        # Connect the "Menu" region to the "The Great Sea" region.
-        menu_region.connect(great_sea_region)
 
         # Connect the dungeon, secret caves, and fairy fountain regions to the "The Great Sea" region.
         for entrance in DUNGEON_ENTRANCES + SECRET_CAVE_ENTRANCES + FAIRY_FOUNTAIN_ENTRANCES:
