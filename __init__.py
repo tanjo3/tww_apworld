@@ -101,31 +101,21 @@ class TWWWorld(World):
     def __init__(self, *args, **kwargs):
         super(TWWWorld, self).__init__(*args, **kwargs)
 
+        self.progress_locations: Set[str] = set()
+        self.nonprogress_locations: Set[str] = set()
+
         self.dungeon_local_item_names: Set[str] = set()
         self.dungeon_specific_item_names: Set[str] = set()
         self.dungeons: Dict[str, Dungeon] = {}
 
-        self.nonprogress_locations: Set[str] = set()
+        self.useful_pool: List[str] = []
+        self.filler_pool: List[str] = []
 
         self.charts = ChartRandomizer(self)
         self.entrances = EntranceRandomizer(self)
         self.boss_reqs = RequiredBossesRandomizer(self)
 
-    def _determine_item_classification(self, name: str) -> Union[IC, None]:
-        # TODO: calculate nonprogress items dynamically
-        adjusted_classification = None
-        if self.options.sword_mode == "swords_optional" and name == "Progressive Sword":
-            adjusted_classification = IC.useful
-        if not self.options.progression_dungeons and name.endswith(" Key"):
-            adjusted_classification = IC.filler
-        if not self.options.progression_triforce_charts and name.startswith("Triforce Chart"):
-            adjusted_classification = IC.filler
-        if not self.options.progression_treasure_charts and name.startswith("Treasure Chart"):
-            adjusted_classification = IC.filler
-
-        return adjusted_classification
-
-    def _determine_nonprogress_locations(self) -> Set[str]:
+    def _determine_progress_and_nonprogress_locations(self) -> Tuple[Set[str], Set[str]]:
         def add_flag(option: Toggle, flag: TWWFlag) -> TWWFlag:
             return flag if option else TWWFlag.ALWAYS
 
@@ -149,32 +139,26 @@ class TWWWorld(World):
         enabled_flags |= add_flag(options.progression_submarines, TWWFlag.SUBMRIN)
         enabled_flags |= add_flag(options.progression_eye_reef_chests, TWWFlag.EYE_RFS)
         enabled_flags |= add_flag(options.progression_big_octos_gunboats, TWWFlag.BG_OCTO)
-        enabled_flags |= add_flag(options.progression_triforce_charts, TWWFlag.TRI_CHT)
-        enabled_flags |= add_flag(options.progression_treasure_charts, TWWFlag.TRE_CHT)
         enabled_flags |= add_flag(options.progression_expensive_purchases, TWWFlag.XPENSVE)
         enabled_flags |= add_flag(options.progression_island_puzzles, TWWFlag.ISLND_P)
         enabled_flags |= add_flag(options.progression_misc, TWWFlag.MISCELL)
 
-        # If not all the flags for a location are set, then force that location to have a non-progress item.
+        progress_locations: Set[str] = set()
         nonprogress_locations: Set[str] = set()
-        for location in self.multiworld.get_locations(self.player):
-            assert isinstance(location, TWWLocation)
-            if location.flags & enabled_flags != location.flags:
-                nonprogress_locations.add(location.name)
+        for location, data in LOCATION_TABLE.items():
+            if data.flags & enabled_flags == data.flags:
+                progress_locations.add(location)
+            else:
+                nonprogress_locations.add(location)
+        assert progress_locations.isdisjoint(nonprogress_locations)
 
-        return nonprogress_locations
+        return progress_locations, nonprogress_locations
 
     def generate_early(self) -> None:
         options = self.options
 
-        # Force vanilla dungeon items when dungeons are not progression.
-        if not options.progression_dungeons:
-            if options.randomize_smallkeys.value > 0:
-                options.randomize_smallkeys.value = 1
-            if options.randomize_bigkeys.value > 0:
-                options.randomize_bigkeys.value = 1
-            if options.randomize_mapcompass.value > 0:
-                options.randomize_mapcompass.value = 1
+        # Determine which locations are progression and which are not from options.
+        self.progress_locations, self.nonprogress_locations = self._determine_progress_and_nonprogress_locations()
 
         for dungeon_item in ["randomize_smallkeys", "randomize_bigkeys", "randomize_mapcompass"]:
             option = getattr(options, dungeon_item)
@@ -189,14 +173,13 @@ class TWWWorld(World):
 
     create_dungeons = create_dungeons
 
-    def create_regions(self) -> None:
+    def setup_base_regions(self) -> None:
         def get_access_rule(region: str) -> str:
             snake_case_region = region.lower().replace("'", "").replace(" ", "_")
             return f"can_access_{snake_case_region}"
 
         multiworld = self.multiworld
         player = self.player
-        options = self.options
 
         # "Menu" is the required starting point.
         menu_region = Region("Menu", player, multiworld)
@@ -211,35 +194,6 @@ class TWWWorld(World):
             multiworld.regions.append(Region(_entrance.entrance_name, player, multiworld))
         for _exit in ALL_EXITS:
             multiworld.regions.append(Region(_exit.unique_name, player, multiworld))
-
-        # Select required bosses.
-        if self.options.required_bosses:
-            self.boss_reqs.randomize_required_bosses()
-
-        # Create the dungeon classes.
-        self.create_dungeons()
-
-        # Assign each location to their region.
-        for _location, data in LOCATION_TABLE.items():
-            region = self.get_region(data.region)
-            location = TWWLocation(player, _location, region, data)
-
-            # Additionally, assign dungeon locations to the appropriate dungeon.
-            if region.name in self.dungeons:
-                location.dungeon = self.dungeons[region.name]
-            elif region.name in MINIBOSS_EXIT_TO_DUNGEON and not options.randomize_miniboss_entrances:
-                location.dungeon = self.dungeons[MINIBOSS_EXIT_TO_DUNGEON[region.name]]
-            elif region.name in BOSS_EXIT_TO_DUNGEON and not options.randomize_boss_entrances:
-                location.dungeon = self.dungeons[BOSS_EXIT_TO_DUNGEON[region.name]]
-            elif location.name in [
-                "Forsaken Fortress - Phantom Ganon",
-                "Forsaken Fortress - Chest Outside Upper Jail Cell",
-                "Forsaken Fortress - Chest Inside Lower Jail Cell",
-                "Forsaken Fortress - Chest Guarded By Bokoblin",
-                "Forsaken Fortress - Chest on Bed",
-            ]:
-                location.dungeon = self.dungeons["Forsaken Fortress"]
-            region.locations.append(location)
 
         # Connect the "Menu" region to the "The Great Sea" region.
         menu_region.connect(great_sea_region)
@@ -267,71 +221,88 @@ class TWWWorld(World):
                 ),
             )
 
-        self.post_create_regions()
+    def create_regions(self) -> None:
+        self.setup_base_regions()
 
-    def post_create_regions(self) -> None:
-        # Randomize which chart points to each sector, if the option is enabled.
-        if self.options.randomize_charts:
+        player = self.player
+        options = self.options
+
+        # Randomize which chart points to each sector if the option is enabled.
+        if options.randomize_charts:
             self.charts.randomize_charts()
 
-        # Determine nonprogress location from options.
-        self.nonprogress_locations |= self._determine_nonprogress_locations()
+        # Select required bosses.
+        if options.required_bosses:
+            self.boss_reqs.randomize_required_bosses()
+            self.progress_locations -= self.boss_reqs.banned_locations
+            self.nonprogress_locations |= self.boss_reqs.banned_locations
 
-        # With all non-progress locations set, exclude them from containing progression.
-        for location_name in self.nonprogress_locations:
-            self.options.exclude_locations.value.add(location_name)
+        # Create the dungeon classes.
+        self.create_dungeons()
 
-        # Connect the regions together in the multiworld. Randomize entrances to exits, if the option is set.
+        # Assign each location to their region.
+        for location_name in self.progress_locations:
+            data = LOCATION_TABLE[location_name]
+
+            region = self.get_region(data.region)
+            location = TWWLocation(player, location_name, region, data)
+
+            # Exclude randomized locations which are nonprogress.
+            if location_name in self.nonprogress_locations:
+                add_item_rule(location, lambda item: item.classification & IC.filler)
+
+            # Additionally, assign dungeon locations to the appropriate dungeon.
+            if region.name in self.dungeons:
+                location.dungeon = self.dungeons[region.name]
+            elif region.name in MINIBOSS_EXIT_TO_DUNGEON and not options.randomize_miniboss_entrances:
+                location.dungeon = self.dungeons[MINIBOSS_EXIT_TO_DUNGEON[region.name]]
+            elif region.name in BOSS_EXIT_TO_DUNGEON and not options.randomize_boss_entrances:
+                location.dungeon = self.dungeons[BOSS_EXIT_TO_DUNGEON[region.name]]
+            elif location.name in [
+                "Forsaken Fortress - Phantom Ganon",
+                "Forsaken Fortress - Chest Outside Upper Jail Cell",
+                "Forsaken Fortress - Chest Inside Lower Jail Cell",
+                "Forsaken Fortress - Chest Guarded By Bokoblin",
+                "Forsaken Fortress - Chest on Bed",
+            ]:
+                location.dungeon = self.dungeons["Forsaken Fortress"]
+            region.locations.append(location)
+
+        # Correct the flags of the sunken treasure locations if the charts are randomized.
+        if options.randomize_charts:
+            self.charts.update_chart_location_flags()
+
+        # Connect the regions in the multiworld. Randomize entrances to exits if the option is set.
         self.entrances.randomize_entrances()
 
     def pre_fill(self) -> None:
         # Ban the Bait Bag slot from having bait.
-        beedle_20 = self.get_location("The Great Sea - Beedle's Shop Ship - 20 Rupee Item")
-        add_item_rule(beedle_20, lambda item: item.name not in ["All-Purpose Bait", "Hyoi Pear"])
+        if "The Great Sea - Beedle's Shop Ship - 20 Rupee Item" in self.progress_locations:
+            beedle_20 = self.get_location("The Great Sea - Beedle's Shop Ship - 20 Rupee Item")
+            add_item_rule(beedle_20, lambda item: item.name not in ["All-Purpose Bait", "Hyoi Pear"])
 
-        # Also ban the same item from appearing more than once in the Rock Spire Isle shop ship.
-        beedle_500 = self.get_location("Rock Spire Isle - Beedle's Special Shop Ship - 500 Rupee Item")
-        beedle_950 = self.get_location("Rock Spire Isle - Beedle's Special Shop Ship - 950 Rupee Item")
-        beedle_900 = self.get_location("Rock Spire Isle - Beedle's Special Shop Ship - 900 Rupee Item")
-        add_item_rule(
-            beedle_500,
-            lambda item, locations=[beedle_950, beedle_900]: (
-                (
-                    item.game == "The Wind Waker"
-                    and all(location.item is None or item.name != location.item.name for location in locations)
+        # Also, the same item should not appear more than once on the Rock Spire Isle shop ship.
+        locations = [f"Rock Spire Isle - Beedle's Special Shop Ship - {v} Rupee Item" for v in [500, 950, 900]]
+        if all(loc in self.progress_locations for loc in locations):
+            rock_spire_shop_ship_locations = [self.get_location(location_name) for location_name in locations]
+
+            for i in range(len(rock_spire_shop_ship_locations)):
+                curr_loc = rock_spire_shop_ship_locations[i]
+                other_locs = rock_spire_shop_ship_locations[:i] + rock_spire_shop_ship_locations[i + 1 :]
+
+                add_item_rule(
+                    curr_loc,
+                    lambda item, locations=other_locs: (
+                        item.game == "The Wind Waker"
+                        and all(location.item is None or item.name != location.item.name for location in locations)
+                    )
+                    or (
+                        item.game != "The Wind Waker"
+                        and all(
+                            location.item is None or location.item.game == "The Wind Waker" for location in locations
+                        )
+                    ),
                 )
-                or (
-                    item.game != "The Wind Waker"
-                    and all(location.item is None or location.item.game == "The Wind Waker" for location in locations)
-                )
-            ),
-        )
-        add_item_rule(
-            beedle_950,
-            lambda item, locations=[beedle_500, beedle_900]: (
-                (
-                    item.game == "The Wind Waker"
-                    and all(location.item is None or item.name != location.item.name for location in locations)
-                )
-                or (
-                    item.game != "The Wind Waker"
-                    and all(location.item is None or location.item.game == "The Wind Waker" for location in locations)
-                )
-            ),
-        )
-        add_item_rule(
-            beedle_900,
-            lambda item, locations=[beedle_500, beedle_950]: (
-                (
-                    item.game == "The Wind Waker"
-                    and all(location.item is None or item.name != location.item.name for location in locations)
-                )
-                or (
-                    item.game != "The Wind Waker"
-                    and all(location.item is None or location.item.game == "The Wind Waker" for location in locations)
-                )
-            ),
-        )
 
     @classmethod
     def stage_pre_fill(cls, world: MultiWorld) -> None:
@@ -382,7 +353,7 @@ class TWWWorld(World):
                         "player": location.item.player,
                         "name": location.item.name,
                         "game": location.item.game,
-                        "classification": location.item.classification.name,
+                        "classification": location.item.classification,
                     }
                 else:
                     item_info = {"name": "Nothing", "game": "The Wind Waker", "classification": "filler"}
@@ -413,13 +384,54 @@ class TWWWorld(World):
                     assert outermost_entrance is not None and outermost_entrance.island_name is not None
                     hint_data[self.player][location.address] = outermost_entrance.island_name
 
+    def determine_item_classification(self, name: str) -> Union[IC, None]:
+        # TODO: Calculate nonprogress items dynamically
+        adjusted_classification = None
+        if not self.options.progression_big_octos_gunboats and name == "Progressive Quiver":
+            adjusted_classification = IC.useful
+        if self.options.sword_mode == "swords_optional" and name == "Progressive Sword":
+            adjusted_classification = IC.useful
+        if not self.options.enable_tuner_logic and name == "Tingle Tuner":
+            adjusted_classification = IC.useful
+
+        if not self.options.progression_dungeons and name.endswith(" Key"):
+            adjusted_classification = IC.filler
+        if not self.options.progression_dungeons and name in ("Command Melody", "Earth God's Lyric", "Wind God's Aria"):
+            adjusted_classification = IC.filler
+        if not self.options.progression_short_sidequests and name in ("Maggie's Letter", "Moblin's Letter"):
+            adjusted_classification = IC.filler
+        if (
+            not self.options.progression_short_sidequests
+            and self.options.progression_long_sidequests
+            and name == "Progressive Picto Box"
+        ):
+            adjusted_classification = IC.filler
+        if not self.options.progression_spoils_trading and name == "Spoils Bag":
+            adjusted_classification = IC.filler
+        if not self.options.progression_triforce_charts and name.startswith("Triforce Chart"):
+            adjusted_classification = IC.filler
+        if not self.options.progression_treasure_charts and name.startswith("Treasure Chart"):
+            adjusted_classification = IC.filler
+        if not self.options.progression_misc and name.endswith("Tingle Statue"):
+            adjusted_classification = IC.filler
+
+        return adjusted_classification
+
     def create_item(self, name: str) -> TWWItem:
         if name in ITEM_TABLE:
-            return TWWItem(name, self.player, ITEM_TABLE[name], self._determine_item_classification(name))
+            return TWWItem(name, self.player, ITEM_TABLE[name], self.determine_item_classification(name))
         raise KeyError(f"Invalid item name: {name}")
 
     def get_filler_item_name(self) -> str:
-        # Use the same weights for filler items that are used in the base randomizer.
+        # If there are still useful items to place, place those first.
+        if len(self.useful_pool) > 0:
+            return self.useful_pool.pop()
+
+        # If there are still vanilla filler items to place, place those first.
+        if len(self.filler_pool) > 0:
+            return self.filler_pool.pop()
+
+        # Use the same weights for filler items used in the base randomizer.
         filler_consumables = ["Yellow Rupee", "Red Rupee", "Purple Rupee", "Orange Rupee", "Joy Pendant"]
         filler_weights = [3, 7, 10, 15, 3]
         return self.multiworld.random.choices(filler_consumables, weights=filler_weights, k=1)[0]

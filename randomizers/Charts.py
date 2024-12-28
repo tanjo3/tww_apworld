@@ -69,7 +69,7 @@ class ChartRandomizer:
         self.island_number_to_chart_name = copy.deepcopy(ISLAND_NUMBER_TO_CHART_NAME)
 
     def randomize_charts(self) -> None:
-        # This code comes straight from the base randomizer's chart randomizer.
+        options = self.world.options
 
         original_item_names = list(self.island_number_to_chart_name.values())
 
@@ -79,14 +79,35 @@ class ChartRandomizer:
         self.multiworld.random.shuffle(shuffled_island_numbers)
 
         for original_item_name in original_item_names:
+            # Assign each chart to its new island.
             shuffled_island_number = shuffled_island_numbers.pop()
             self.island_number_to_chart_name[shuffled_island_number] = original_item_name
 
+            # Additionally, determine if that location is a progress location or not.
+            island_name = ISLAND_NUMBER_TO_NAME[shuffled_island_number]
+            island_location = f"{island_name} - Sunken Treasure"
+            if options.progression_triforce_charts or options.progression_treasure_charts:
+                if original_item_name.startswith("Triforce Chart "):
+                    if options.progression_triforce_charts:
+                        self.world.progress_locations.add(island_location)
+                        self.world.nonprogress_locations.remove(island_location)
+                else:
+                    if options.progression_treasure_charts:
+                        self.world.progress_locations.add(island_location)
+                        self.world.nonprogress_locations.remove(island_location)
+            else:
+                self.world.nonprogress_locations.add(island_location)
+
+    def update_chart_location_flags(self) -> None:
+        for shuffled_island_number, item_name in self.island_number_to_chart_name.items():
             # Properly adjust the flags for sunken treasure locations.
             island_name = ISLAND_NUMBER_TO_NAME[shuffled_island_number]
-            island_location = self.world.get_location(f"{island_name} - Sunken Treasure")
-            assert isinstance(island_location, TWWLocation)
-            if original_item_name.startswith("Triforce Chart "):
-                island_location.flags = TWWFlag.TRI_CHT
-            else:
-                island_location.flags = TWWFlag.TRE_CHT
+            island_location_str = f"{island_name} - Sunken Treasure"
+
+            if island_location_str in self.world.progress_locations:
+                island_location = self.world.get_location(island_location_str)
+                assert isinstance(island_location, TWWLocation)
+                if item_name.startswith("Triforce Chart "):
+                    island_location.flags = TWWFlag.TRI_CHT
+                else:
+                    island_location.flags = TWWFlag.TRE_CHT

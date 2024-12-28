@@ -46,6 +46,7 @@ class Dungeon:
 
 def create_dungeons(world: "TWWWorld") -> None:
     player = world.player
+    options = world.options
 
     def make_dungeon(name: str, big_key: Optional[Item], small_keys: List[Item], dungeon_items: List[Item]) -> Dungeon:
         dungeon = Dungeon(name, big_key, small_keys, dungeon_items, player)
@@ -53,45 +54,54 @@ def create_dungeons(world: "TWWWorld") -> None:
             item.dungeon = dungeon
         return dungeon
 
-    DRC = make_dungeon(
-        "Dragon Roost Cavern",
-        item_factory("DRC Big Key", world),
-        item_factory(["DRC Small Key"] * 4, world),
-        item_factory(["DRC Dungeon Map", "DRC Compass"], world),
-    )
-    FW = make_dungeon(
-        "Forbidden Woods",
-        item_factory("FW Big Key", world),
-        item_factory(["FW Small Key"] * 1, world),
-        item_factory(["FW Dungeon Map", "FW Compass"], world),
-    )
-    TOTG = make_dungeon(
-        "Tower of the Gods",
-        item_factory("TotG Big Key", world),
-        item_factory(["TotG Small Key"] * 2, world),
-        item_factory(["TotG Dungeon Map", "TotG Compass"], world),
-    )
-    FF = make_dungeon(
-        "Forsaken Fortress",
-        None,
-        [],
-        item_factory(["FF Dungeon Map", "FF Compass"], world),
-    )
-    ET = make_dungeon(
-        "Earth Temple",
-        item_factory("ET Big Key", world),
-        item_factory(["ET Small Key"] * 3, world),
-        item_factory(["ET Dungeon Map", "ET Compass"], world),
-    )
-    WT = make_dungeon(
-        "Wind Temple",
-        item_factory("WT Big Key", world),
-        item_factory(["WT Small Key"] * 2, world),
-        item_factory(["WT Dungeon Map", "WT Compass"], world),
-    )
+    if options.progression_dungeons:
+        if not options.required_bosses or "Dragon Roost Cavern" in world.boss_reqs.required_dungeons:
+            world.dungeons["Dragon Roost Cavern"] = make_dungeon(
+                "Dragon Roost Cavern",
+                item_factory("DRC Big Key", world),
+                item_factory(["DRC Small Key"] * 4, world),
+                item_factory(["DRC Dungeon Map", "DRC Compass"], world),
+            )
 
-    for dungeon in [DRC, FW, TOTG, FF, ET, WT]:
-        world.dungeons[dungeon.name] = dungeon
+        if not options.required_bosses or "Forbidden Woods" in world.boss_reqs.required_dungeons:
+            world.dungeons["Forbidden Woods"] = make_dungeon(
+                "Forbidden Woods",
+                item_factory("FW Big Key", world),
+                item_factory(["FW Small Key"] * 1, world),
+                item_factory(["FW Dungeon Map", "FW Compass"], world),
+            )
+
+        if not options.required_bosses or "Tower of the Gods" in world.boss_reqs.required_dungeons:
+            world.dungeons["Tower of the Gods"] = make_dungeon(
+                "Tower of the Gods",
+                item_factory("TotG Big Key", world),
+                item_factory(["TotG Small Key"] * 2, world),
+                item_factory(["TotG Dungeon Map", "TotG Compass"], world),
+            )
+
+        if not options.required_bosses or "Forsaken Fortress" in world.boss_reqs.required_dungeons:
+            world.dungeons["Forsaken Fortress"] = make_dungeon(
+                "Forsaken Fortress",
+                None,
+                [],
+                item_factory(["FF Dungeon Map", "FF Compass"], world),
+            )
+
+        if not options.required_bosses or "Earth Temple" in world.boss_reqs.required_dungeons:
+            world.dungeons["Earth Temple"] = make_dungeon(
+                "Earth Temple",
+                item_factory("ET Big Key", world),
+                item_factory(["ET Small Key"] * 3, world),
+                item_factory(["ET Dungeon Map", "ET Compass"], world),
+            )
+
+        if not options.required_bosses or "Wind Temple" in world.boss_reqs.required_dungeons:
+            world.dungeons["Wind Temple"] = make_dungeon(
+                "Wind Temple",
+                item_factory("WT Big Key", world),
+                item_factory(["WT Small Key"] * 2, world),
+                item_factory(["WT Dungeon Map", "WT Compass"], world),
+            )
 
 
 def get_dungeon_item_pool(multiworld: MultiWorld) -> List[Item]:

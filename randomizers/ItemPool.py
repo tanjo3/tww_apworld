@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING, Dict, List, Tuple
 
 from BaseClasses import ItemClassification
+from BaseClasses import ItemClassification as IC
 from Fill import FillError
 
 from ..Items import ITEM_TABLE, item_factory
@@ -82,26 +83,58 @@ def generate_itempool(world: "TWWWorld") -> None:
 def get_pool_core(world: "TWWWorld") -> Tuple[List[str], List[str]]:
     pool: List[str] = []
     precollected_items: List[str] = []
-    n_pending_junk: int = 0
 
-    # Add regular items to the item pool.
+    # Split items into three different pools: progression, useful, and filler.
+    progression_pool: List[str] = []
+    useful_pool: List[str] = []
+    filler_pool: List[str] = []
     for item, data in ITEM_TABLE.items():
         if data.type == "Item":
-            pool.extend([item] * data.quantity)
+            adjusted_classification = world.determine_item_classification(item)
+            classification = data.classification if adjusted_classification is None else adjusted_classification
+
+            if classification & IC.progression:
+                progression_pool.extend([item] * data.quantity)
+            elif classification & IC.useful:
+                useful_pool.extend([item] * data.quantity)
+            else:
+                filler_pool.extend([item] * data.quantity)
+
+    # The number of items in the item pool should be the same as the number of locations in the world.
+    num_items_left_to_place = len(world.multiworld.get_locations(world.player)) - 1
+
+    # Account for the dungeon items that have already been created.
+    for dungeon in world.dungeons.values():
+        num_items_left_to_place -= len(dungeon.all_items)
+
+    # All progression items are added to the item pool.
+    if len(progression_pool) > num_items_left_to_place:
+        raise FillError(
+            "There are insufficient locations to place progression items! "
+            f"Trying to place {len(progression_pool)} items in only {num_items_left_to_place} locations."
+        )
+    pool.extend(progression_pool)
+    num_items_left_to_place -= len(progression_pool)
+
+    # Assign the remaining items to item pools in the world.
+    world.multiworld.random.shuffle(useful_pool)
+    world.multiworld.random.shuffle(filler_pool)
+    world.useful_pool = useful_pool
+    world.filler_pool = filler_pool
 
     # If the player starts with a sword, add one to the precollected items list and remove one from the item pool.
     if world.options.sword_mode == "start_with_sword":
         precollected_items.append("Progressive Sword")
-        n_pending_junk += 1
+        num_items_left_to_place += 1
         pool.remove("Progressive Sword")
     # Or, if it's swordless mode, remove all swords from the item pool.
     elif world.options.sword_mode == "swordless":
         while "Progressive Sword" in pool:
-            n_pending_junk += 1
+            num_items_left_to_place += 1
             pool.remove("Progressive Sword")
 
-    # Place filler items to replace the items we've removed from the pool core.
-    pool.extend([world.get_filler_item_name() for _ in range(n_pending_junk)])
+    # Place useful items, then filler items to fill out the remaining locations.
+    pool.extend([world.get_filler_item_name() for _ in range(num_items_left_to_place)])
 
     return pool, precollected_items
 

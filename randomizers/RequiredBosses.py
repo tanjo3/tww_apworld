@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, List
+from typing import TYPE_CHECKING, List, Set
 
 from Options import OptionError
 
@@ -17,7 +17,7 @@ class RequiredBossesRandomizer:
         self.required_boss_item_locations: List[str] = []
         self.required_dungeons: List[str] = []
         self.required_bosses: List[str] = []
-        self.banned_locations: List[str] = []
+        self.banned_locations: Set[str] = set()
         self.banned_dungeons: List[str] = []
         self.banned_bosses: List[str] = []
 
@@ -70,15 +70,15 @@ class RequiredBossesRandomizer:
         for location_name, location_data in LOCATION_TABLE.items():
             dungeon_name, _ = split_location_name_by_zone(location_name)
             if dungeon_name in banned_dungeons and TWWFlag.DUNGEON in location_data.flags:
-                self.banned_locations.append(location_name)
+                self.banned_locations.add(location_name)
             elif location_name == "Mailbox - Letter from Orca" and "Forbidden Woods" in banned_dungeons:
-                self.banned_locations.append(location_name)
+                self.banned_locations.add(location_name)
             elif location_name == "Mailbox - Letter from Baito" and "Earth Temple" in banned_dungeons:
-                self.banned_locations.append(location_name)
+                self.banned_locations.add(location_name)
             elif location_name == "Mailbox - Letter from Aryll" and "Forsaken Fortress" in banned_dungeons:
-                self.banned_locations.append(location_name)
+                self.banned_locations.add(location_name)
             elif location_name == "Mailbox - Letter from Tingle" and "Forsaken Fortress" in banned_dungeons:
-                self.banned_locations.append(location_name)
+                self.banned_locations.add(location_name)
         for location_name in self.banned_locations:
             self.world.nonprogress_locations.add(location_name)
 

@@ -62,7 +62,7 @@ class TWWItem(Item):
 
 
 ITEM_TABLE: Dict[str, TWWItemData] = {
-    "Telescope":               TWWItemData("Item",      IC.filler,                       0,  1, 0x20),
+    "Telescope":               TWWItemData("Item",      IC.useful,                       0,  1, 0x20),
   # "Boat's Sail":             TWWItemData("Item",      IC.progression,                  1,  1, 0x78),  # noqa: E131
     "Wind Waker":              TWWItemData("Item",      IC.progression,                  2,  1, 0x22),
     "Grappling Hook":          TWWItemData("Item",      IC.progression,                  3,  1, 0x25),
@@ -79,8 +79,8 @@ ITEM_TABLE: Dict[str, TWWItemData] = {
     "Skull Hammer":            TWWItemData("Item",      IC.progression,                 14,  1, 0x33),
     "Power Bracelets":         TWWItemData("Item",      IC.progression,                 15,  1, 0x28),
 
-    "Hero's Charm":            TWWItemData("Item",      IC.filler,                      16,  1, 0x43),
-    "Hurricane Spin":          TWWItemData("Item",      IC.filler,                      17,  1, 0xAA),
+    "Hero's Charm":            TWWItemData("Item",      IC.useful,                      16,  1, 0x43),
+    "Hurricane Spin":          TWWItemData("Item",      IC.useful,                      17,  1, 0xAA),
     "Dragon Tingle Statue":    TWWItemData("Item",      IC.progression,                 18,  1, 0xA3),
     "Forbidden Tingle Statue": TWWItemData("Item",      IC.progression,                 19,  1, 0xA4),
     "Goddess Tingle Statue":   TWWItemData("Item",      IC.progression,                 20,  1, 0xA5),
@@ -117,7 +117,7 @@ ITEM_TABLE: Dict[str, TWWItemData] = {
     "Maggie's Letter":         TWWItemData("Item",      IC.progression,                 47,  1, 0x9A),
     "Moblin's Letter":         TWWItemData("Item",      IC.progression,                 48,  1, 0x9B),
     "Cabana Deed":             TWWItemData("Item",      IC.progression,                 49,  1, 0x9C),
-    "Fill-Up Coupon":          TWWItemData("Item",      IC.filler,                      50,  1, 0x9E),
+    "Fill-Up Coupon":          TWWItemData("Item",      IC.useful,                      50,  1, 0x9E),
 
     "Nayru's Pearl":           TWWItemData("Item",      IC.progression,                 51,  1, 0x69),
     "Din's Pearl":             TWWItemData("Item",      IC.progression,                 52,  1, 0x6A),
@@ -198,12 +198,12 @@ ITEM_TABLE: Dict[str, TWWItemData] = {
     "Yellow Rupee":            TWWItemData("Item",      IC.filler,                     123,  3, 0x03),
     "Red Rupee":               TWWItemData("Item",      IC.filler,                     124,  8, 0x04),
     "Purple Rupee":            TWWItemData("Item",      IC.filler,                     125, 10, 0x05),
-    "Orange Rupee":            TWWItemData("Item",      IC.filler,                     126, 15, 0x06),
-    "Silver Rupee":            TWWItemData("Item",      IC.filler,                     127, 20, 0x0F),
-    "Rainbow Rupee":           TWWItemData("Item",      IC.filler,                     128,  1, 0xB8),
+    "Orange Rupee":            TWWItemData("Item",      IC.useful,                     126, 15, 0x06),
+    "Silver Rupee":            TWWItemData("Item",      IC.useful,                     127, 20, 0x0F),
+    "Rainbow Rupee":           TWWItemData("Item",      IC.useful,                     128,  1, 0xB8),
 
     "Piece of Heart":          TWWItemData("Item",      IC.filler,                     129, 44, 0x07),
-    "Heart Container":         TWWItemData("Item",      IC.filler,                     130,  6, 0x08),
+    "Heart Container":         TWWItemData("Item",      IC.useful,                     130,  6, 0x08),
 
     "DRC Big Key":             TWWItemData("Big Key",   IC.progression,                131,  1, 0x14),
     "DRC Small Key":           TWWItemData("Small Key", IC.progression,                132,  4, 0x13),
