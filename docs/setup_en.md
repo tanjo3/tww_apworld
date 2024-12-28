@@ -33,16 +33,16 @@ All users should follow these steps:
 little dialog window telling you it has been installed successfully.
     * Alternatively, copy the `tww.apworld` to your Archipelago installation's `custom_worlds` folder (Windows default
     to: `%programdata%/Archipelago`).
-3. Place the content of the `lib` folder of the downloaded TWW APWorld zip file into your Archipelago installation's
-`lib` folder.
+3. Copy the contents of the `lib` folder in the downloaded TWW APWorld zip file to your Archipelago installation's `lib`
+folder.
 
 If you're playing The Wind Waker, you must also unzip the TWW AP Randomizer Build downloaded from the release page.
 
 ## Setting Up a YAML
 
 All players playing The Wind Waker must provide the room host with a YAML file containing the settings for their world.
-A sample YAML file for The Wind Waker is supplied in the TWW APWorld download. Refer to the comments in that file for
-details about what each setting does.
+The TWW APWorld download includes a sample YAML file for The Wind Waker. The comments in that file explain each
+setting's function.
 
 Once you're happy with your settings, provide the room host with your YAML file and proceed to the next step.
 
@@ -57,7 +57,7 @@ folder does not exist, then it must be created manually. The files here should n
 is placed in the `output` folder (usually named something like `AP_XXXXX.zip`).
     * Please note that if any player in the game you want to generate plays a game that needs a ROM file to generate,
     you will need the corresponding ROM files. A ROM file is not required for The Wind Waker at this stage.
-4. Unzip the `AP_XXXXX.zip` file. It should include a `.aptww` file for each player in the room playing The Wind Waker.
+4. Unzip the `AP_XXXXX.zip` file. It should include a `aptww` file for each player in the room playing The Wind Waker.
 Each file will be named `AP_XXXXX_P#_<name>.aptww`, where `#` corresponds to that player's slot number and `<name>` is
 their slot (player) name. Distribute each file to the appropriate player.
 5. In the next section, use the archive file `AP_XXXXX.zip` to host a room or provide it to the room host.
@@ -80,45 +80,44 @@ path to your The Wind Waker ISO and the output folder for the randomized ISO. Th
 open the program.
 2. Modify any cosmetic convenience tweaks and player customization options as desired.
 [This repository](https://github.com/Sage-of-Mirrors/Custom-Wind-Waker-Player-Models) contains a collection of custom
-player models for The Wind Waker. Follow the installation instructions there to set up custom player models.
+player models for The Wind Waker. To set up custom player models, follow the installation instructions there.
 3. For the APTWW file, browse and locate the path to the `.aptww` you received from the multiworld generator.
 4. Click `Randomize` at the bottom. This randomizes the ISO and puts it in the output folder you specified. The file
 will be named `TWW AP_XXXXX_P# (<name>).iso`, where `#` is the slot number and `<name>` is the slot (player) name.
 Verify that the values are correct for the multiworld.
-    * If nothing happens when you click `Randomize`, ensure that you are using the correct build version for the
-    `aptww` you have provided.
+    * If nothing happens when you click `Randomize`, ensure you are using the correct build version for the `aptww` file
+    you provided.
     * v2.5.x APWorlds should use the 2.3.0 build, v2.4.0 APWorlds should use the 2.2.0 build, v2.3.x APWorlds should use
     the 2.1.0 build, and older APWorlds should use 2.0.0.
 5. Open Dolphin and use it to open the randomized ISO.
 6. Start `ArchipelagoLauncher.exe` (without `.exe` on Linux) and choose `The Wind Waker Client`, which will open the
 text client. If Dolphin is not already open, or you have yet to start a new file, you will be prompted to do so.
-    * Be sure to launch `The Wind Waker Client`, not `WW Client`. The latter is the name of the client's previous
-    (pre-v2.0.0) version and is no longer supported. In this case, you should delete the `ww.apworld` from your
-    `lib/worlds` folder.
+    * Launch `The Wind Waker Client`, not `WW Client`. The latter is the name of the client's previous (pre-v2.0.0)
+    version and is no longer supported. You should delete the `ww.apworld` from your `lib/worlds` folder.
 7. Connect to the room by entering the server name and port number at the top and pressing `Connect`. For rooms hosted
 on the website, this will be `archipelago.gg:<port>`, where `<port>` is the port number. If a game is hosted from the
 `ArchipelagoServer.exe` (without `.exe` on Linux), this will default to `38281` but may be changed in the `host.yaml`.
 8. If you've opened a ROM corresponding to the multiworld to which you are connected, it should authenticate your slot
 name automatically when you start a new save file.
-    * If you are encountering issues with authenticating, ensure that the randomized ROM is open in Dolphin and that it
-    corresponds to the multiworld to which you are connecting.
+    * If you encounter issues with authenticating, ensure that the randomized ROM is open in Dolphin and corresponds to
+    the multiworld to which you are connecting.
 
 ## Troubleshooting
 
 * Ensure that you are running version v0.5.1 or higher of Archipelago.
-* If you do not see the client in the launcher, ensure that the `tww.apworld` file is in the correct folder (the
-`custom_worlds` folder of your Archipelago installation).
-* If the client is not working, double-check that you have the most recent release of the `tww.apworld`. Additionally,
-ensure that there are no `ww.apworld`/`tww.apworld` files or `ww`/`tww` folders in your `lib/worlds` folder. If those
+* If you do not see the client in the launcher, ensure the `tww.apworld` file is in the correct folder (the
+`custom_worlds` folder of your Archipelago installation). Additionally, ensure you have copied the contents of the `lib`
+folder in the downloaded TWW APWorld zip file to your Archipelago installation's `lib` folder.
+* If the client is not working, double-check that you have the most recent release of the `tww.apworld` file.
+Additionally, ensure no `ww.apworld`/`tww.apworld` files or `ww`/`tww` folders are in your `lib/worlds` folder. If those
 exist, delete them. Finally, ensure that the content of the `lib` folder from the release download has been placed in
 your Archipelago installation's `lib` folder.
 * If you press Randomize in the build and nothing happens, ensure that you are using the correct version of the build
 for the `aptww` file you are using.
     * v2.5.x APWorlds should use the 2.3.0 build, v2.4.0 APWorlds should use the 2.2.0 build, v2.3.x APWorlds should use
     the 2.1.0 build, and older APWorlds should use 2.0.0.
-    * Remember that you should use the same APWorld version with which the `aptww` was generated; ask the multiworld
-    generator if you're unsure which version was used.
-if you're unsure which version was used.
+    * Remember that you should use the same APWorld version with which the `aptww` file was generated; ask the
+    multiworld generator if you're unsure which version was used.
 * Ensure that you do not have any Dolphin cheats or codes enabled. Some cheats or codes can unexpectedly interfere with
 emulation and make troubleshooting errors difficult.
 * If you get an error message, ensure that `Enable Emulated Memory Size Override` in Dolphin (under `Options` >
