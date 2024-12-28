@@ -1,6 +1,5 @@
 from typing import TYPE_CHECKING, Dict, List, Tuple
 
-from BaseClasses import ItemClassification
 from BaseClasses import ItemClassification as IC
 from Fill import FillError
 
@@ -155,7 +154,7 @@ def handle_dungeon_items(world: "TWWWorld") -> None:
 
         # Consider dungeon items in non-required dungeons as filler.
         if item.dungeon.name in world.boss_reqs.banned_dungeons:
-            item.classification = ItemClassification.filler
+            item.classification = IC.filler
 
         option: DungeonItem
         if item.type == "Big Key":
