@@ -1,6 +1,7 @@
 import asyncio
 import time
 import traceback
+import typing
 from typing import Any, Dict, List, Optional, Set, Tuple
 
 import dolphin_memory_engine
@@ -12,6 +13,9 @@ from NetUtils import ClientStatus, NetworkItem
 from .Items import ITEM_TABLE, LOOKUP_ID_TO_NAME
 from .Locations import ISLAND_NAME_TO_SALVAGE_BIT, LOCATION_TABLE, TWWLocation, TWWLocationData, TWWLocationType
 from .randomizers.Charts import ISLAND_NUMBER_TO_NAME
+
+if typing.TYPE_CHECKING:
+    import kvui
 
 CONNECTION_REFUSED_GAME_STATUS = (
     "Dolphin failed to connect. Please load a randomized ROM for The Wind Waker. Trying again in 5 seconds..."
@@ -184,15 +188,10 @@ class TWWContext(CommonContext):
         super().on_deathlink(data)
         _give_death(self)
 
-    def run_gui(self) -> None:
-        from kvui import GameManager
-
-        class TWWManager(GameManager):
-            logging_pairs = [("Client", "Archipelago")]
-            base_title = "Archipelago The Wind Waker Client"
-
-        self.ui = TWWManager(self)
-        self.ui_task = asyncio.create_task(self.ui.async_run(), name="UI")
+    def make_gui(self) -> typing.Type["kvui.GameManager"]:
+        ui = super().make_gui()
+        ui.base_title = "Archipelago The Wind Waker Client"
+        return ui
 
     async def update_visited_stages(self, newly_visited_stage_name: str) -> None:
         """
