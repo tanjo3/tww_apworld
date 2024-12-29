@@ -349,7 +349,7 @@ class TWWWorld(World):
                         "player": location.item.player,
                         "name": location.item.name,
                         "game": location.item.game,
-                        "classification": location.item.classification,
+                        "classification": location.item.classification.name,
                     }
                 else:
                     item_info = {"name": "Nothing", "game": "The Wind Waker", "classification": "filler"}
