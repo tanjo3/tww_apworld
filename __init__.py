@@ -138,6 +138,7 @@ class TWWWorld(World):
         enabled_flags |= add_flag(options.progression_minigames, TWWFlag.MINIGME)
         enabled_flags |= add_flag(options.progression_battlesquid, TWWFlag.SPLOOSH)
         enabled_flags |= add_flag(options.progression_free_gifts, TWWFlag.FREE_GF)
+        enabled_flags |= add_flag(options.progression_mail, TWWFlag.MAILBOX)
         enabled_flags |= add_flag(options.progression_platforms_rafts, TWWFlag.PLTFRMS)
         enabled_flags |= add_flag(options.progression_submarines, TWWFlag.SUBMRIN)
         enabled_flags |= add_flag(options.progression_eye_reef_chests, TWWFlag.EYE_RFS)
