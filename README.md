@@ -67,7 +67,7 @@ git clone https://github.com/tanjo3/tww_apworld.git
 
 ### Installing Python
 
-You will need to install Python 3.11. We recommend using `pyenv` to manage different Python versions:
+You will need to install Python 3.12. We recommend using `pyenv` to manage different Python versions:
 
 - For Windows, install `pyenv-win` by following
   [these steps](https://github.com/pyenv-win/pyenv-win?tab=readme-ov-file#quick-start).
@@ -76,11 +76,11 @@ You will need to install Python 3.11. We recommend using `pyenv` to manage diffe
   [here](https://github.com/pyenv/pyenv?tab=readme-ov-file#set-up-your-shell-environment-for-pyenv) to set up your shell
   environment.
 
-After installing `pyenv`, install and switch to Python 3.11 by running:
+After installing `pyenv`, install and switch to Python 3.12 by running:
 
 ```sh
-pyenv install 3.11
-pyenv global 3.11
+pyenv install 3.12
+pyenv global 3.12
 ```
 
 ## Credits
