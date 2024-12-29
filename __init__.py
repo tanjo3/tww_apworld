@@ -17,7 +17,7 @@ from . import Macros
 from .Items import ISLAND_NUMBER_TO_CHART_NAME, ITEM_TABLE, TWWItem, item_name_groups
 from .Locations import LOCATION_TABLE, TWWFlag, TWWLocation
 from .Options import TWWOptions, tww_option_groups
-from .randomizers.Charts import ChartRandomizer
+from .randomizers.Charts import ISLAND_NUMBER_TO_NAME, ChartRandomizer
 from .randomizers.Dungeons import Dungeon, create_dungeons
 from .randomizers.Entrances import (
     ALL_ENTRANCES,
@@ -371,15 +371,25 @@ class TWWWorld(World):
             f.write(yaml.dump(output_data, sort_keys=False))
 
     def extend_hint_information(self, hint_data: dict[int, dict[int, str]]) -> None:
-        # Regardless of ER settings, always hint at the outermost entrance for every "interior" location.
+        # Create a mapping of island names to numbers for sunken treasure hints.
+        island_name_to_number = {v: k for k, v in ISLAND_NUMBER_TO_NAME.items()}
+
         hint_data[self.player] = {}
         for location in self.multiworld.get_locations(self.player):
             if location.address is not None and location.item is not None:
+                # Regardless of ER settings, always hint at the outermost entrance for every "interior" location.
                 zone_exit = self.entrances.get_zone_exit_for_item_location(location.name)
                 if zone_exit is not None:
                     outermost_entrance = self.entrances.get_outermost_entrance_for_exit(zone_exit)
                     assert outermost_entrance is not None and outermost_entrance.island_name is not None
                     hint_data[self.player][location.address] = outermost_entrance.island_name
+
+                # Hint at which chart leads to the sunken treasure for these locations.
+                if location.name.endswith(" - Sunken Treasure"):
+                    island_name = location.name.removesuffix(" - Sunken Treasure")
+                    island_number = island_name_to_number[island_name]
+                    chart_name = self.charts.island_number_to_chart_name[island_number]
+                    hint_data[self.player][location.address] = chart_name
 
     def determine_item_classification(self, name: str) -> IC | None:
         # TODO: Calculate nonprogress items dynamically
