@@ -38,10 +38,12 @@ LETTER_OWND_ADDR = 0x803C4C98
 
 # These addresses are used to check flags for locations.
 CHARTS_BITFLD_ADDR = 0x803C4CFC
-CHESTS_BITFLD_ADDR = 0x803C5380
-SWITCHES_BITFLD_ADDR = 0x803C5384
-PICKUPS_BITFLD_ADDR = 0x803C5394
-SEA_ALT_BITFLD_ADDR = 0x803C4FAC
+BASE_CHESTS_BITFLD_ADDR = 0x803C4F88
+BASE_SWITCHES_BITFLD_ADDR = 0x803C4F8C
+BASE_PICKUPS_BITFLD_ADDR = 0x803C4F9C
+CURR_STAGE_CHESTS_BITFLD_ADDR = 0x803C5380
+CURR_STAGE_SWITCHES_BITFLD_ADDR = 0x803C5384
+CURR_STAGE_PICKUPS_BITFLD_ADDR = 0x803C5394
 
 # The expected index for the following item that should be received. Uses event bits 0x60 and 0x61.
 EXPECTED_INDEX_ADDR = 0x803C528C
@@ -111,12 +113,14 @@ class TWWContext(CommonContext):
         self.last_rcvd_index: int = -1
         self.has_send_death: bool = False
 
-        # The bitfields for the current stage.
+        # Bitfields used for checking locations.
         self.charts_bitfield: int
-        self.chests_bitfield: int
-        self.switches_bitfield: int
-        self.pickups_bitfield: int
-        self.sea_alt_bitfield: int
+        self.chests_bitfields: dict[int, int]
+        self.switches_bitfields: dict[int, int]
+        self.pickups_bitfields: dict[int, int]
+        self.curr_stage_chests_bitfield: int
+        self.curr_stage_switches_bitfield: int
+        self.curr_stage_pickups_bitfield: int
 
         # Keep track of whether the player has yet received their first progressive magic meter.
         self.received_magic: bool = False
@@ -341,62 +345,77 @@ def check_special_location(location_name: str, data: TWWLocationData) -> bool:
     return checked
 
 
-def check_regular_location(ctx: TWWContext, location_name: str, data: TWWLocationData) -> bool:
+def check_regular_location(ctx: TWWContext, curr_stage_id: int, data: TWWLocationData) -> bool:
     checked = False
 
-    if data.type == TWWLocationType.CHART:
-        assert location_name in ctx.salvage_locations_map, f'Location "{location_name}" salvage bit not set!'
-        salvage_bit = ctx.salvage_locations_map[location_name]
-        checked = bool((ctx.charts_bitfield >> salvage_bit) & 1)
-
-    elif data.type == TWWLocationType.BOCTO:
-        assert data.address is not None
-        checked = bool((read_short(data.address) >> data.bit) & 1)
-
-    elif data.type == TWWLocationType.CHEST:
-        checked = bool((ctx.chests_bitfield >> data.bit) & 1)
-
+    # Check the saved bitfields for the stage.
+    if data.type == TWWLocationType.CHEST:
+        checked = bool((ctx.chests_bitfields[data.stage_id] >> data.bit) & 1)
     elif data.type == TWWLocationType.SWTCH:
-        checked = bool((ctx.switches_bitfield >> data.bit) & 1)
-
+        checked = bool((ctx.switches_bitfields[data.stage_id] >> data.bit) & 1)
     elif data.type == TWWLocationType.PCKUP:
-        checked = bool((ctx.pickups_bitfield >> data.bit) & 1)
-
-    elif data.type == TWWLocationType.EVENT:
-        checked = bool((dolphin_memory_engine.read_byte(data.address) >> data.bit) & 1)
-
+        checked = bool((ctx.pickups_bitfields[data.stage_id] >> data.bit) & 1)
     else:
         raise NotImplementedError(f"Unknown location type: {data.type}")
+
+    # If the location is in the current stage, check the bitfields for the current stage as well.
+    if not checked and curr_stage_id == data.stage_id:
+        if data.type == TWWLocationType.CHEST:
+            checked = bool((ctx.curr_stage_chests_bitfield >> data.bit) & 1)
+        elif data.type == TWWLocationType.SWTCH:
+            checked = bool((ctx.curr_stage_switches_bitfield >> data.bit) & 1)
+        elif data.type == TWWLocationType.PCKUP:
+            checked = bool((ctx.curr_stage_pickups_bitfield >> data.bit) & 1)
+        else:
+            raise NotImplementedError(f"Unknown location type: {data.type}")
 
     return checked
 
 
 async def check_locations(ctx: TWWContext) -> None:
+    # Read the bitfield for sunken treasure locations.
+    ctx.charts_bitfield = int.from_bytes(dolphin_memory_engine.read_bytes(CHARTS_BITFLD_ADDR, 8), byteorder="big")
+
+    # Read the bitfields once before the loop to speed things up a bit.
+    ctx.chests_bitfields = {}
+    ctx.switches_bitfields = {}
+    ctx.pickups_bitfields = {}
+    for stage_id in range(0xE):
+        chest_bitfield_addr = BASE_CHESTS_BITFLD_ADDR + (0x24 * stage_id)
+        switches_bitfield_addr = BASE_SWITCHES_BITFLD_ADDR + (0x24 * stage_id)
+        pickups_bitfield_addr = BASE_PICKUPS_BITFLD_ADDR + (0x24 * stage_id)
+
+        ctx.chests_bitfields[stage_id] = int(dolphin_memory_engine.read_word(chest_bitfield_addr))
+        ctx.switches_bitfields[stage_id] = int.from_bytes(
+            dolphin_memory_engine.read_bytes(switches_bitfield_addr, 10), byteorder="big"
+        )
+        ctx.pickups_bitfields[stage_id] = int(dolphin_memory_engine.read_word(pickups_bitfield_addr))
+
+    ctx.curr_stage_chests_bitfield = int(dolphin_memory_engine.read_word(CURR_STAGE_CHESTS_BITFLD_ADDR))
+    ctx.curr_stage_switches_bitfield = int.from_bytes(
+        dolphin_memory_engine.read_bytes(CURR_STAGE_SWITCHES_BITFLD_ADDR, 10), byteorder="big"
+    )
+    ctx.curr_stage_pickups_bitfield = int(dolphin_memory_engine.read_word(CURR_STAGE_PICKUPS_BITFLD_ADDR))
+
     # We check which locations are currently checked on the current stage.
     curr_stage_id = dolphin_memory_engine.read_byte(CURR_STAGE_ID_ADDR)
 
-    # Read the bitfields once before the loop to speed things up a bit.
-    ctx.charts_bitfield = int.from_bytes(dolphin_memory_engine.read_bytes(CHARTS_BITFLD_ADDR, 8), byteorder="big")
-    ctx.chests_bitfield = int(dolphin_memory_engine.read_word(CHESTS_BITFLD_ADDR))
-    ctx.switches_bitfield = int.from_bytes(dolphin_memory_engine.read_bytes(SWITCHES_BITFLD_ADDR, 10), byteorder="big")
-    ctx.pickups_bitfield = int(dolphin_memory_engine.read_word(PICKUPS_BITFLD_ADDR))
-    ctx.sea_alt_bitfield = int(dolphin_memory_engine.read_word(SEA_ALT_BITFLD_ADDR))
-
+    # Loop through all locations to see if each has been checked.
     for location, data in LOCATION_TABLE.items():
         checked = False
-
-        # Special-case checks
-        if data.type == TWWLocationType.SPECL:
+        if data.type == TWWLocationType.CHART:
+            assert location in ctx.salvage_locations_map, f'Location "{location}" salvage bit not set!'
+            salvage_bit = ctx.salvage_locations_map[location]
+            checked = bool((ctx.charts_bitfield >> salvage_bit) & 1)
+        elif data.type == TWWLocationType.BOCTO:
+            assert data.address is not None
+            checked = bool((read_short(data.address) >> data.bit) & 1)
+        elif data.type == TWWLocationType.EVENT:
+            checked = bool((dolphin_memory_engine.read_byte(data.address) >> data.bit) & 1)
+        elif data.type == TWWLocationType.SPECL:
             checked = check_special_location(location, data)
-
-        # Regular checks
-        elif data.stage_id == curr_stage_id:
-            checked = check_regular_location(ctx, location, data)
-
-        # Sea (Alt) chests
-        elif curr_stage_id == 0x0 and data.stage_id == 0x1:
-            assert data.type == TWWLocationType.CHEST
-            checked = (ctx.sea_alt_bitfield >> data.bit) & 1
+        else:
+            checked = check_regular_location(ctx, curr_stage_id, data)
 
         if checked:
             if data.code is None:
