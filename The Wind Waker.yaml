@@ -32,7 +32,7 @@ description: Default The Wind Waker Template
 
 game: The Wind Waker
 requires:
-  version: 0.5.0 # Version of Archipelago required for this yaml to work as expected.
+  version: 0.5.1 # Version of Archipelago required for this yaml to work as expected.
 
 The Wind Waker:
   # Game Options
@@ -54,46 +54,34 @@ The Wind Waker:
   accessibility:
     # Set rules for reachability of your items/locations.
     # 
-    # - **Locations:** ensure everything can be reached and acquired.
-    # - **Items:** ensure all logically relevant items can be acquired.
-    # - **Minimal:** ensure what is needed to reach your goal can be acquired.
-    locations: 0
-    items: 50
+    # **Full:** ensure everything can be reached and acquired.
+    # 
+    # **Minimal:** ensure what is needed to reach your goal can be acquired.
+    full: 50
     minimal: 0
 
-  skip_rematch_bosses:
-    # Removes the door in Ganon's Tower that only unlocks when you defeat the rematch versions of Gohma, Kalle Demos,
-    # Jalhalla, and Molgera.
-    'false': 0
-    'true': 50
-
   death_link:
-    # When you die, everyone dies. Of course the reverse is true too.
+    # When you die, everyone who enabled death link dies. Of course, the reverse is true too.
     'false': 50
     'true': 0
 
   # Progression Locations
   progression_dungeons:
-    # This controls whether dungeons can contain progress items.
-    # 
-    # If off, dungeons will still be randomized, but will only contain optional items you don't need to beat the game.
+    # This controls whether dungeon locations are randomized.
     'false': 0
     'true': 50
 
   progression_tingle_chests:
-    # Tingle Chests that are hidden in dungeons and must be bombed to make them appear. (2 in DRC, 1 each in FW, TotG,
-    # ET, and WT).
-    # 
-    # If off, they will still be randomized, but will only contain optional items you don't need to beat the game.
+    # Tingle Chests are hidden in dungeons and must be bombed to make them appear. (2 in DRC, 1 each in FW, TotG, ET, and
+    # WT). This controls whether they are randomized.
     'false': 50
     'true': 0
 
   progression_dungeon_secrets:
-    # DRC, FW, TotG, ET, and WT each have 2-3 secret items within them (11 in total). This controls whether they can be
-    # progress items.
+    # DRC, FW, TotG, ET, and WT each contain 2-3 secret items (11 in total). This controls whether these are randomized.
     # 
-    # The items are fairly well-hidden (they aren't in chests), so don't select this option unless you're
-    # prepared to search each dungeon high and low!
+    # The items are relatively well-hidden (they aren't in chests), so don't select this option unless you're prepared to
+    # search each dungeon high and low!
     # 
     # For a list of the dungeon secrets, refer to this Google doc:
     # https://docs.google.com/document/d/1LrjGr6W9970XEA-pzl8OhwnqMqTbQaxCX--M-kdsLos/edit
@@ -101,147 +89,105 @@ The Wind Waker:
     'true': 0
 
   progression_puzzle_secret_caves:
-    # This controls whether puzzle-focused secret caves can contain progress items.
-    # 
-    # If off, they will still be randomized, but will only contain optional items you don't need to beat the game.
+    # This controls whether the rewards from puzzle-focused secret caves are randomized locations.
     'false': 0
     'true': 50
 
   progression_combat_secret_caves:
-    # This controls whether combat-focused secret caves (besides Savage Labyrinth) can contain progress items.
-    # 
-    # If off, they will still be randomized, but will only contain optional items you don't need to beat the game.
+    # This controls whether the rewards from combat-focused secret caves (besides Savage Labyrinth) are randomized
+    # locations.
     'false': 50
     'true': 0
 
   progression_savage_labyrinth:
-    # This controls whether the Savage Labyrinth can contain progress items.
-    # 
-    # If off, it will still be randomized, but will only contain optional items you don't need to beat the game.
+    # This controls whether the two locations in Savage Labyrinth are randomized.
     'false': 50
     'true': 0
 
   progression_great_fairies:
-    # This controls whether the items given by Great Fairies can be progress items.
-    # 
-    # If off, they will still be randomized, but will only contain optional items you don't need to beat the game.
+    # This controls whether the items given by Great Fairies are randomized.
     'false': 0
     'true': 50
 
   progression_short_sidequests:
-    # This controls whether sidequests that can be completed quickly can reward progress items.
-    # 
-    # If off, they will still be randomized, but will only reward optional items you don't need to beat the game.
+    # This controls whether sidequests that can be completed quickly are randomized.
     'false': 50
     'true': 0
 
   progression_long_sidequests:
-    # This controls whether long sidequests (e.g. Lenzo's assistant, withered trees, goron trading) can reward progress
-    # items.
-    # 
-    # If off, they will still be randomized, but will only reward optional items you don't need to beat the game.
+    # This controls whether long sidequests (e.g., Lenzo's assistant, withered trees, goron trading) are randomized.
     'false': 50
     'true': 0
 
   progression_spoils_trading:
-    # This controls whether the items you get by trading in spoils to NPCs can be progress items.
-    # 
-    # If off, they will still be randomized</u>, but will only reward optional items you don't need to beat the game.
+    # This controls whether the items you get by trading in spoils to NPCs are randomized.
     'false': 50
     'true': 0
 
   progression_minigames:
-    # This controls whether most minigames can reward progress items (auctions, mail sorting, barrel shooting, bird-man
-    # contest).
-    # 
-    # If off, minigames will still be randomized, but will only reward optional items you don't need to beat the game.
+    # This controls whether most minigames are randomized (auctions, mail sorting, barrel shooting, bird-man contest).
     'false': 50
     'true': 0
 
   progression_battlesquid:
-    # This controls whether the Windfall battleship minigame can reward progress items.
-    # 
-    # If off, it will still be randomized, but will only reward optional items you don't need to beat the game.
+    # This controls whether the Windfall battleship minigame is randomized.
     'false': 50
     'true': 0
 
   progression_free_gifts:
-    # This controls whether gifts freely given by NPCs can be progress items (Tott, Salvage Corp, imprisoned Tingle).
-    # 
-    # If off, they will still be randomized, but will only be optional items you don't need to beat the game.
+    # This controls whether gifts freely given by NPCs are randomized (Tott, Salvage Corp, imprisoned Tingle).
     'false': 0
     'true': 50
 
   progression_mail:
-    # This controls whether mail can contain progress items.
-    # 
-    # If off, mail will still be randomized, but will only contain optional items you don't need to beat the game.
+    # This controls whether items received from the mail are randomized.
     'false': 50
     'true': 0
 
   progression_platforms_rafts:
-    # This controls whether lookout platforms and rafts can contain progress items.
-    # 
-    # If off, they will still be randomized, but will only contain optional items you don't need to beat the game.
+    # This controls whether lookout platforms and rafts are randomized.
     'false': 50
     'true': 0
 
   progression_submarines:
-    # This controls whether submarines can contain progress items.
-    # 
-    # If off, submarines will still be randomized, but will only contain optional items you don't need to beat the
-    # game.
+    # This controls whether submarines are randomized.
     'false': 50
     'true': 0
 
   progression_eye_reef_chests:
-    # This controls whether the chests that appear after clearing out the eye reefs can contain progress items.
-    # 
-    # If off, they will still be randomized, but will only contain optional items you don't need to beat the game.
+    # This controls whether the chests that appear after clearing out the eye reefs are randomized.
     'false': 50
     'true': 0
 
   progression_big_octos_gunboats:
-    # This controls whether the items dropped by Big Octos and Gunboats can contain progress items.
-    # 
-    # If off, they will still be randomized, but will only contain optional items you don't need to beat the game.
+    # This controls whether the items dropped by Big Octos and Gunboats are randomized.
     'false': 50
     'true': 0
 
   progression_triforce_charts:
-    # This controls whether the sunken treasure chests marked on Triforce Charts can contain progress items.
-    # 
-    # If off, they will still be randomized, but will only contain optional items you don't need to beat the game.
+    # This controls whether the sunken treasure chests marked on Triforce Charts are randomized.
     'false': 50
     'true': 0
 
   progression_treasure_charts:
-    # This controls whether the sunken treasure chests marked on Treasure Charts can contain progress items.
-    # 
-    # If off, they will still be randomized, but will only contain optional items you don't need to beat the game.
+    # This controls whether the sunken treasure chests marked on Treasure Charts are randomized.
     'false': 50
     'true': 0
 
   progression_expensive_purchases:
-    # This controls whether items that cost a lot of rupees can be progress items (Rock Spire shop, auctions, Tingle's
-    # letter, trading quest).
-    # 
-    # If off, they will still be randomized, but will only be optional items you don't need to beat the game.
+    # This controls whether items that cost many Rupees are randomized (Rock Spire shop, auctions, Tingle's letter,
+    # trading quest).
     'false': 0
     'true': 50
 
   progression_island_puzzles:
-    # This controls whether various island puzzles can contain progress items (e.g. chests hidden in unusual places).
-    # 
-    # If off, they will still be randomized, but will only contain optional items you don't need to beat the game.
+    # This controls whether various island puzzles are randomized (e.g., chests hidden in unusual places).
     'false': 50
     'true': 0
 
   progression_misc:
-    # Miscellaneous locations that don't fit into any of the above categories (outdoors chests, wind shrine, Cyclos,
-    # etc).
-    # 
-    # If off, they will still be randomized, but will only contain optional items you don't need to beat the game.
+    # Miscellaneous locations that don't fit into any of the above categories (outdoors chests, wind shrine, Cyclos, etc).
+    # This controls whether these are randomized.
     'false': 50
     'true': 0
 
@@ -295,8 +241,8 @@ The Wind Waker:
     keylunacy: 0
 
   sword_mode:
-    # Controls whether you start with the Hero's Sword, the Hero's Sword is randomized, or if there are no swords in
-    # the entire game.
+    # Controls whether you start with the Hero's Sword, the Hero's Sword is randomized, or if there are no swords in the
+    # entire game.
     # 
     # - **Start with Hero's Sword:** You will start the game with the basic Hero's Sword already in your inventory.
     # - **No Starting Sword:** You will start the game with no sword, and have to find it somewhere in the world like
@@ -313,8 +259,8 @@ The Wind Waker:
     swordless: 0
 
   chest_type_matches_contents:
-    # Changes the chest type to reflect its contents. A metal chest has a progress item, a wooden chest has a
-    # non-progress item or a consumable, and a green chest has a potentially required dungeon key.
+    # Changes the chest type to reflect its contents. A metal chest has a progress item, a wooden chest has a non-progress
+    # item or a consumable, and a green chest has a potentially required dungeon key.
     'false': 50
     'true': 0
 
@@ -359,7 +305,7 @@ The Wind Waker:
   mix_entrances:
     # Controls how the different types (pools) of randomized entrances should be shuffled.
     # 
-    # - **Separate Pools:** Each pool of randomized entrances with shuffle into itself (e.g., dungeons into dungeons).
+    # - **Separate Pools:** Each pool of randomized entrances will shuffle into itself (e.g., dungeons into dungeons).
     # - **Mix Pools:** All pools of randomized entrances will be combined into one pool to be shuffled.
     separate_pools: 50
     mix_pools: 0
@@ -382,8 +328,7 @@ The Wind Waker:
     'true': 50
 
   instant_text_boxes:
-    # Text appears instantly. Also, the B button is changed to instantly skip through text as long as you hold it
-    # down.
+    # Text appears instantly. Also, the B button is changed to instantly skip through text as long as you hold it down.
     'false': 0
     'true': 50
 
@@ -393,13 +338,19 @@ The Wind Waker:
     'true': 50
 
   add_shortcut_warps_between_dungeons:
-    # Adds new warp pots that act as shortcuts connecting dungeons to each other directly. (DRC, FW, TotG, and
-    # separately FF, ET, WT.)
+    # Adds new warp pots that act as shortcuts connecting dungeons to each other directly. (DRC, FW, TotG, and separately
+    # FF, ET, WT.)
     # 
     # Each pot must be unlocked before it can be used, so you cannot use them to access dungeons
     # you wouldn't already have access to.
     'false': 50
     'true': 0
+
+  skip_rematch_bosses:
+    # Removes the door in Ganon's Tower that only unlocks when you defeat the rematch versions of Gohma, Kalle Demos,
+    # Jalhalla, and Molgera.
+    'false': 0
+    'true': 50
 
   remove_music:
     # Mutes all ingame music.
@@ -408,8 +359,8 @@ The Wind Waker:
 
   # Required Bosses
   required_bosses:
-    # In this mode, you will not be allowed to beat the game until certain randomly-chosen bosses are defeated. Nothing
-    # in dungeons for other bosses will ever be required.
+    # In this mode, you will not be allowed to beat the game until certain randomly-chosen bosses are defeated. Nothing in
+    # dungeons for other bosses will ever be required.
     # 
     # You can see which islands have the required bosses on them by opening the sea chart and checking which islands have
     # blue quest markers.
@@ -431,11 +382,11 @@ The Wind Waker:
     random-high: 0
 
   included_dungeons:
-    # A list of dungeons which should always be included when required bosses mode is on.
+    # A list of dungeons that should always be included when required bosses mode is on.
     []
 
   excluded_dungeons:
-    # A list of dungeons which should always be excluded when required bosses mode is on.
+    # A list of dungeons that should always be excluded when required bosses mode is on.
     []
 
   # Difficulty Options
@@ -455,8 +406,7 @@ The Wind Waker:
     very_hard: 0
 
   logic_precision:
-    # Precise tricks are ways of obtaining items that involve difficult inputs such as accurate aiming or perfect
-    # timing.
+    # Precise tricks are ways of obtaining items that involve difficult inputs such as accurate aiming or perfect timing.
     # 
     # This option controls the maximum difficulty of precise tricks the randomizer will require you to do to beat the
     # game.
@@ -466,9 +416,9 @@ The Wind Waker:
     very_hard: 0
 
   enable_tuner_logic:
-    # If enabled, the randomizer can logically expect the Tingle Tuner for Tingle chests.
+    # If enabled, the randomizer can logically expect the Tingle Tuner for Tingle Chests.
     # 
-    # The randomizer behavior of logically expecting Bombs/bomb flowers to spawn in Tingle chests remains unchanged.
+    # The randomizer behavior of logically expecting Bombs/bomb flowers to spawn in Tingle Chests remains unchanged.
     'false': 50
     'true': 0
 
@@ -518,4 +468,4 @@ The Wind Waker:
     # Start with these items and don't place them in the world.
     # 
     # The game decides what the replacement items will be.
-    { "Wind Waker": 1, "Ballad of Gales": 1, "Song of Passing": 1 }
+    {}
