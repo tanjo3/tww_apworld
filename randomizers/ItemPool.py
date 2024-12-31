@@ -57,6 +57,11 @@ VANILLA_DUNGEON_ITEM_LOCATIONS: dict[str, list[str]] = {
 
 
 def generate_itempool(world: "TWWWorld") -> None:
+    """
+    Generate the item pool for the world.
+
+    :param world: The Wind Waker game world.
+    """
     multiworld = world.multiworld
 
     # Get the core pool of items.
@@ -80,6 +85,12 @@ def generate_itempool(world: "TWWWorld") -> None:
 
 
 def get_pool_core(world: "TWWWorld") -> tuple[list[str], list[str]]:
+    """
+    Get the core pool of items and precollected items for the world.
+
+    :param world: The Wind Waker game world.
+    :return: A tuple of the item pool and precollected items.
+    """
     pool: list[str] = []
     precollected_items: list[str] = []
 
@@ -139,6 +150,11 @@ def get_pool_core(world: "TWWWorld") -> tuple[list[str], list[str]]:
 
 
 def handle_dungeon_items(world: "TWWWorld") -> None:
+    """
+    Handle the placement of dungeon items in the world.
+
+    :param world: The Wind Waker game world.
+    """
     player = world.player
     multiworld = world.multiworld
     options = world.options

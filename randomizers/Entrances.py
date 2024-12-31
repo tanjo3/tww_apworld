@@ -15,15 +15,29 @@ if TYPE_CHECKING:
 
 @dataclass(frozen=True)
 class ZoneEntrance:
+    """
+    A data class that encapsulates information about a zone entrance.
+    """
+
     entrance_name: str
     island_name: Optional[str] = None
     nested_in: Optional["ZoneExit"] = None
 
     @property
     def is_nested(self) -> bool:
+        """
+        Determine if this entrance is nested within another entrance.
+
+        :return: `True` if the entrance is nested, `False` otherwise.
+        """
         return self.nested_in is not None
 
     def __repr__(self) -> str:
+        """
+        Provide a string representation of the zone exit.
+
+        :return: A string representing the zone exit.
+        """
         return f"ZoneEntrance('{self.entrance_name}')"
 
     all: ClassVar[dict[str, "ZoneEntrance"]] = {}
@@ -37,10 +51,19 @@ class ZoneEntrance:
 
 @dataclass(frozen=True)
 class ZoneExit:
+    """
+    A data class that encapsulates information about a zone exit.
+    """
+
     unique_name: str
     zone_name: Optional[str] = None
 
     def __repr__(self) -> str:
+        """
+        Provide a string representation of the zone exit.
+
+        :return: A string representing the zone exit.
+        """
         return f"ZoneExit('{self.unique_name}')"
 
     all: ClassVar[dict[str, "ZoneExit"]] = {}
@@ -234,9 +257,12 @@ BOSS_EXIT_TO_DUNGEON: dict[str, str] = {
 
 class EntranceRandomizer:
     """
-    Handles the logic for TWW entrance randomizer.
+    This class handles the logic for The Wind Waker entrance randomizer.
+
     We reference the logic from the base randomizer with some modifications to suit it for Archipelago.
     Reference: https://github.com/LagoLunatic/wwrando/blob/master/randomizers/entrances.py
+
+    :param world: The Wind Waker game world.
     """
 
     def __init__(self, world: "TWWWorld"):
@@ -314,6 +340,9 @@ class EntranceRandomizer:
         self.islands_with_a_banned_dungeon: set[str] = set()
 
     def randomize_entrances(self) -> None:
+        """
+        Randomize entrances for The Wind Waker.
+        """
         self.init_banned_exits()
 
         for relevant_entrances, relevant_exits in self.get_all_entrance_sets_to_be_randomized():
@@ -322,6 +351,12 @@ class EntranceRandomizer:
         self.finalize_all_randomized_sets_of_entrances()
 
     def init_banned_exits(self) -> None:
+        """
+        Initialize the list of banned exits for the randomizer.
+
+        Dungeon exits in banned dungeons should be prohibited from being randomized.
+        Additionally, if dungeon entrances are not randomized, we can now note which island holds these banned dungeons.
+        """
         options = self.world.options
 
         if options.required_bosses:
@@ -354,6 +389,12 @@ class EntranceRandomizer:
     def randomize_one_set_of_entrances(
         self, relevant_entrances: list[ZoneEntrance], relevant_exits: list[ZoneExit]
     ) -> None:
+        """
+        Randomize a single set of entrances and their corresponding exits.
+
+        :param relevant_entrances: A list of entrances to be randomized.
+        :param relevant_exits: A list of exits corresponding to the entrances.
+        """
         # Keep miniboss and boss entrances vanilla in non-required bosses' dungeons.
         for zone_entrance in relevant_entrances.copy():
             zone_exit = self.done_entrances_to_exits[zone_entrance]
@@ -393,6 +434,12 @@ class EntranceRandomizer:
         self.randomize_one_set_of_exits(remaining_entrances, remaining_exits, terminal_exits)
 
     def check_if_one_exit_is_progress(self, zone_exit: ZoneExit) -> bool:
+        """
+        Determine if the zone exit leads to progress locations in the world.
+
+        :param zone_exit: The zone exit to check.
+        :return: Whether the zone exit leads to progress locations.
+        """
         locs_for_exit = self.zone_exit_to_logically_dependent_item_locations[zone_exit]
         assert locs_for_exit, f"Could not find any item locations corresponding to zone exit: {zone_exit.unique_name}"
 
@@ -406,11 +453,15 @@ class EntranceRandomizer:
         self, relevant_entrances: list[ZoneEntrance], relevant_exits: list[ZoneExit]
     ) -> tuple[list[ZoneEntrance], list[ZoneExit]]:
         """
-        Splits the entrance and exit lists into two pairs: ones that should be considered nonprogress on this seed
-        (will never lead to any progress items) and ones that should be regarded as potentially required.
+        Splits the entrance and exit lists into two pairs: ones that should be considered nonprogress on this seed (will
+        never lead to any progress items) and ones that should be regarded as potentially required.
 
-        This is so that we can effectively randomize these two pairs separately without any convoluted logic to ensure
-        they don't connect.
+        This is so we can effectively randomize these two pairs separately without convoluted logic to ensure they don't
+        connect.
+
+        :param relevant_entrances: A list of entrances.
+        :param relevant_exits: A list of exits corresponding to the entrances.
+        :raises FillError: If the number of randomizable entrances does not equal the number of randomizable exits.
         """
         nonprogress_exits = [ex for ex in relevant_exits if not self.check_if_one_exit_is_progress(ex)]
         nonprogress_entrances = [
@@ -467,6 +518,14 @@ class EntranceRandomizer:
     def randomize_one_set_of_exits(
         self, relevant_entrances: list[ZoneEntrance], relevant_exits: list[ZoneExit], terminal_exits: list[ZoneExit]
     ) -> None:
+        """
+        Randomize a single set of entrances and their corresponding exits.
+
+        :param relevant_entrances: A list of entrances to be randomized.
+        :param relevant_exits: A list of exits corresponding to the entrances.
+        :param terminal_exits: A list of exits which do not contain any entrances.
+        :raises FillError: If there are no valid exits to assign to an entrance.
+        """
         options = self.world.options
 
         remaining_entrances = relevant_entrances.copy()
@@ -553,6 +612,12 @@ class EntranceRandomizer:
                     self.islands_with_a_banned_dungeon.add(outer_entrance.island_name)
 
     def finalize_all_randomized_sets_of_entrances(self) -> None:
+        """
+        Finalize all randomized entrance sets.
+
+        For all entrance-exit pairs, this function adds a connection with the appropriate access rule to the world.
+        """
+
         def get_access_rule(region: str) -> str:
             snake_case_region = region.lower().replace("'", "").replace(" ", "_")
             return f"can_access_{snake_case_region}"
@@ -579,6 +644,9 @@ class EntranceRandomizer:
             assert not banned_island_names & required_island_names
 
     def register_mappings_between_item_locations_and_zone_exits(self) -> None:
+        """
+        Map item locations to their corresponding zone exits.
+        """
         for loc_name in list(LOCATION_TABLE.keys()):
             zone_exit = self.get_zone_exit_for_item_location(loc_name)
             if zone_exit is not None:
@@ -596,6 +664,12 @@ class EntranceRandomizer:
     def get_all_entrance_sets_to_be_randomized(
         self,
     ) -> Generator[tuple[list[ZoneEntrance], list[ZoneExit]], None, None]:
+        """
+        Retrieve all entrance-exit pairs that need to be randomized.
+
+        :raises OptionError: If an invalid randomization option is set in the world's options.
+        :return: A generator that yields sets of entrances and exits to be randomized.
+        """
         options = self.world.options
 
         dungeons = bool(options.randomize_dungeon_entrances)
@@ -641,6 +715,17 @@ class EntranceRandomizer:
         inner_caves: bool = False,
         fountains: bool = False,
     ) -> tuple[list[ZoneEntrance], list[ZoneExit]]:
+        """
+        Retrieve a single set of entrance-exit pairs that need to be randomized.
+
+        :param dungeons: Whether to include dungeon entrances and exits. Defaults to `False`.
+        :param caves: Whether to include secret cave entrances and exits. Defaults to `False`.
+        :param minibosses: Whether to include miniboss entrances and exits. Defaults to `False`.
+        :param bosses: Whether to include boss entrances and exits. Defaults to `False`.
+        :param inner_caves: Whether to include inner cave entrances and exits. Defaults to `False`.
+        :param fountains: Whether to include fairy fountain entrances and exits. Defaults to `False`.
+        :return: A tuple of lists of entrances and exits that should be randomized together.
+        """
         relevant_entrances: list[ZoneEntrance] = []
         relevant_exits: list[ZoneExit] = []
         if dungeons:
@@ -664,12 +749,22 @@ class EntranceRandomizer:
         return relevant_entrances, relevant_exits
 
     def get_outermost_entrance_for_exit(self, zone_exit: ZoneExit) -> Optional[ZoneEntrance]:
-        """Unrecurses nested dungeons to determine the outermost (island) entrance for a given exit."""
+        """
+        Unrecurses nested dungeons to determine a given exit's outermost (island) entrance.
+
+        :param zone_exit: The given exit.
+        :return: The outermost (island) entrance for the exit, or `None` if entrances have yet to be randomized.
+        """
         zone_entrance = self.done_exits_to_entrances[zone_exit]
         return self.get_outermost_entrance_for_entrance(zone_entrance)
 
     def get_outermost_entrance_for_entrance(self, zone_entrance: ZoneEntrance) -> Optional[ZoneEntrance]:
-        """Unrecurses nested dungeons to determine the outermost (island) entrance for a given entrance."""
+        """
+        Unrecurses nested dungeons to determine a given entrance's outermost (island) entrance.
+
+        :param zone_exit: The given entrance.
+        :return: The outermost (island) entrance for the entrance, or `None` if entrances have yet to be randomized.
+        """
         seen_entrances = self.get_all_entrances_on_path_to_entrance(zone_entrance)
         if seen_entrances is None:
             # Undecided.
@@ -678,7 +773,12 @@ class EntranceRandomizer:
         return outermost_entrance
 
     def get_all_entrances_on_path_to_entrance(self, zone_entrance: ZoneEntrance) -> Optional[list[ZoneEntrance]]:
-        """Unrecurses nested dungeons to build a list of all entrances leading to a given entrance."""
+        """
+        Unrecurses nested dungeons to build a list of all entrances leading to a given entrance.
+
+        :param zone_exit: The given entrance.
+        :return: A list of entrances leading to the given entrance, or `None` if entrances have yet to be randomized.
+        """
         seen_entrances: list[ZoneEntrance] = []
         while zone_entrance.is_nested:
             if zone_entrance in seen_entrances:
@@ -693,6 +793,12 @@ class EntranceRandomizer:
         return seen_entrances
 
     def is_item_location_behind_randomizable_entrance(self, location_name: str) -> bool:
+        """
+        Determine if the location is behind a randomizable entrance.
+
+        :param location_name: The location to check.
+        :return: `True` if the location is behind a randomizable entrance, `False` otherwise.
+        """
         loc_zone_name, _ = split_location_name_by_zone(location_name)
         if loc_zone_name in ["Ganon's Tower", "Mailbox"]:
             # Ganon's Tower and the handful of Mailbox locations that depend on beating dungeon bosses are considered
@@ -720,6 +826,13 @@ class EntranceRandomizer:
         return False
 
     def get_zone_exit_for_item_location(self, location_name: str) -> Optional[ZoneExit]:
+        """
+        Retrieve the zone exit for a given location.
+
+        :param location_name: The name of the location.
+        :raises Exception: If a location exit override should be used instead.
+        :return: The zone exit for the location or `None` if the location is not behind a randomizable entrance.
+        """
         if not self.is_item_location_behind_randomizable_entrance(location_name):
             return None
 
@@ -740,6 +853,12 @@ class EntranceRandomizer:
             )
 
     def get_entrance_zone_for_boss(self, boss_name: str) -> str:
+        """
+        Retrieve the entrance zone for a given boss.
+
+        :param boss_name: The name of the boss.
+        :return: The name of the island on which the boss is located.
+        """
         boss_arena_name = f"{boss_name} Boss Arena"
         zone_exit = ZoneExit.all[boss_arena_name]
         outermost_entrance = self.get_outermost_entrance_for_exit(zone_exit)

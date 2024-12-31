@@ -40,6 +40,9 @@ VERSION: tuple[int, int, int] = (2, 6, 0)
 
 
 def run_client() -> None:
+    """
+    Launch the The Wind Waker client.
+    """
     print("Running The Wind Waker Client")
     from .TWWClient import main
 
@@ -54,6 +57,12 @@ components.append(
 
 
 class TWWWeb(WebWorld):
+    """
+    This class handles the web interface for The Wind Waker.
+
+    The web interface includes the setup guide and the options page for generating YAMLs.
+    """
+
     tutorials = [
         Tutorial(
             "Multiworld Setup Guide",
@@ -74,7 +83,8 @@ class TWWWorld(World):
     Legend has it that whenever evil has appeared, a hero named Link has arisen to defeat it. The legend continues on
     the surface of a vast and mysterious sea as Link sets sail in his most epic, awe-inspiring adventure yet. Aided by a
     magical conductor's baton called the Wind Waker, he will face unimaginable monsters, explore puzzling dungeons, and
-    meet a cast of unforgettable characters as he searches for his kidnapped sister."""
+    meet a cast of unforgettable characters as he searches for his kidnapped sister.
+    """
 
     options_dataclass = TWWOptions
     options: TWWOptions
@@ -119,6 +129,13 @@ class TWWWorld(World):
         self.boss_reqs = RequiredBossesRandomizer(self)
 
     def _determine_progress_and_nonprogress_locations(self) -> tuple[set[str], set[str]]:
+        """
+        Determine which locations are progress and nonprogress in the world based on the player's options.
+
+        :return: A tuple of two sets, the first containing the names of the progress locations and the second containing
+        the names of the nonprogress locations.
+        """
+
         def add_flag(option: Toggle, flag: TWWFlag) -> TWWFlag:
             return flag if option else TWWFlag.ALWAYS
 
@@ -159,6 +176,9 @@ class TWWWorld(World):
         return progress_locations, nonprogress_locations
 
     def generate_early(self) -> None:
+        """
+        Run before any general steps of the MultiWorld other than options.
+        """
         options = self.options
 
         # Determine which locations are progression and which are not from options.
@@ -178,6 +198,10 @@ class TWWWorld(World):
     create_dungeons = create_dungeons
 
     def setup_base_regions(self) -> None:
+        """
+        Create and connect all the necessary regions in the multiworld and establish the access rules for entrances.
+        """
+
         def get_access_rule(region: str) -> str:
             snake_case_region = region.lower().replace("'", "").replace(" ", "_")
             return f"can_access_{snake_case_region}"
@@ -219,6 +243,15 @@ class TWWWorld(World):
             )
 
     def create_regions(self) -> None:
+        """
+        Create and connect regions for the The Wind Waker world.
+
+        This method first randomizes the charts and picks the required bosses if these options are enabled.
+        It then loops through all the world's progress locations and creates the locations, assigning dungeon locations
+        to their respective dungeons.
+        Finally, the flags for sunken treasure locations are updated as appropriate, and the entrances are randomized
+        if that option is enabled.
+        """
         self.setup_base_regions()
 
         player = self.player
@@ -243,10 +276,6 @@ class TWWWorld(World):
 
             region = self.get_region(data.region)
             location = TWWLocation(player, location_name, region, data)
-
-            # Exclude randomized locations which are nonprogress.
-            if location_name in self.nonprogress_locations:
-                add_item_rule(location, lambda item: item.classification & IC.filler)
 
             # Additionally, assign dungeon locations to the appropriate dungeon.
             if region.name in self.dungeons:
@@ -273,6 +302,9 @@ class TWWWorld(World):
         self.entrances.randomize_entrances()
 
     def pre_fill(self) -> None:
+        """
+        Apply special fill rules before the fill stage.
+        """
         # Ban the Bait Bag slot from having bait.
         if "The Great Sea - Beedle's Shop Ship - 20 Rupee Item" in self.progress_locations:
             beedle_20 = self.get_location("The Great Sea - Beedle's Shop Ship - 20 Rupee Item")
@@ -303,11 +335,21 @@ class TWWWorld(World):
 
     @classmethod
     def stage_pre_fill(cls, world: MultiWorld) -> None:
+        """
+        Class method used to correctly place dungeon items for The Wind Waker worlds.
+
+        :param world: The MultiWorld.
+        """
         from .randomizers.Dungeons import fill_dungeons_restrictive
 
         fill_dungeons_restrictive(world)
 
     def generate_output(self, output_directory: str) -> None:
+        """
+        Create the output APTWW file that is used to randomize the ISO.
+
+        :param output_directory: The output directory for the APTWW file.
+        """
         multiworld = self.multiworld
         player = self.player
 
@@ -371,6 +413,12 @@ class TWWWorld(World):
             f.write(yaml.dump(output_data, sort_keys=False))
 
     def extend_hint_information(self, hint_data: dict[int, dict[int, str]]) -> None:
+        """
+        Fill in additional information text into locations, displayed when hinted.
+
+        :param hint_data: A dictionary of mapping a player ID to a dictionary mapping location IDs to the extra hint
+        information text. This dictionary should be modified as a side-effect of this method.
+        """
         # Create a mapping of island names to numbers for sunken treasure hints.
         island_name_to_number = {v: k for k, v in ISLAND_NUMBER_TO_NAME.items()}
 
@@ -392,6 +440,13 @@ class TWWWorld(World):
                     hint_data[self.player][location.address] = chart_name
 
     def determine_item_classification(self, name: str) -> IC | None:
+        """
+        Determine the adjusted classification of an item. The classification of an item may be affected by which options
+        are enabled or disabled.
+
+        :param name: The name of the item.
+        :return: The adjusted classification of the item. If there is no adjustment from the default, returns `None`.
+        """
         # TODO: Calculate nonprogress items dynamically
         adjusted_classification = None
         if not self.options.progression_big_octos_gunboats and name == "Progressive Quiver":
@@ -425,11 +480,22 @@ class TWWWorld(World):
         return adjusted_classification
 
     def create_item(self, name: str) -> TWWItem:
+        """
+        Create an item for this world type and player.
+
+        :param name: The name of the item to create.
+        :raises KeyError: If an invalid item name is provided.
+        """
         if name in ITEM_TABLE:
             return TWWItem(name, self.player, ITEM_TABLE[name], self.determine_item_classification(name))
         raise KeyError(f"Invalid item name: {name}")
 
     def get_filler_item_name(self) -> str:
+        """
+        This method is called when the item pool needs to be filled with additional items to match the location count.
+
+        :return: The name of a filler item from this world.
+        """
         # If there are still useful items to place, place those first.
         if len(self.useful_pool) > 0:
             return self.useful_pool.pop()
@@ -444,6 +510,12 @@ class TWWWorld(World):
         return self.multiworld.random.choices(filler_consumables, weights=filler_weights, k=1)[0]
 
     def get_pre_fill_items(self) -> list[Item]:
+        """
+        Return items that need to be collected when creating a fresh `all_state` but don't exist in the multiworld's
+        item pool.
+
+        :return: A list of pre-fill items.
+        """
         res = []
         if self.dungeon_local_item_names:
             for dungeon in self.dungeons.values():
@@ -453,6 +525,14 @@ class TWWWorld(World):
         return res
 
     def fill_slot_data(self) -> Mapping[str, Any]:
+        """
+        Return the `slot_data` field that will be in the `Connected` network package.
+
+        This is a way the generator can give custom data to the client.
+        The client will receive this as JSON in the `Connected` response.
+
+        :return: A dictionary to be sent to the client when it connects to the server.
+        """
         slot_data = {
             "progression_dungeons": self.options.progression_dungeons.value,
             "progression_tingle_chests": self.options.progression_tingle_chests.value,

@@ -90,21 +90,47 @@ AP_VISITED_STAGE_NAMES_KEY_FORMAT = "tww_visited_stages_%i"
 
 
 class TWWCommandProcessor(ClientCommandProcessor):
-    def __init__(self, ctx: CommonContext) -> None:
+    """
+    Command Processor for The Wind Waker client commands.
+
+    This class handles commands specific to The Wind Waker.
+    """
+
+    def __init__(self, ctx: CommonContext):
+        """
+        Initialize the command processor with the provided context.
+
+        :param ctx: Context for the client.
+        """
         super().__init__(ctx)
 
     def _cmd_dolphin(self) -> None:
-        """Prints the current Dolphin status to the client."""
+        """
+        Display the current Dolphin emulator connection status.
+        """
         if isinstance(self.ctx, TWWContext):
             logger.info(f"Dolphin Status: {self.ctx.dolphin_status}")
 
 
 class TWWContext(CommonContext):
+    """
+    The context for The Wind Waker client.
+
+    This class manages all interactions with the Dolphin emulator and the Archipelago server for The Wind Waker.
+    """
+
     command_processor = TWWCommandProcessor
     game: str = "The Wind Waker"
     items_handling: int = 0b111
 
     def __init__(self, server_address: Optional[str], password: Optional[str]) -> None:
+        """
+        Initialize the TWW context.
+
+        :param server_address: Address of the Archipelago server.
+        :param password: Password for server authentication.
+        """
+
         super().__init__(server_address, password)
         self.items_received_2: list[tuple[NetworkItem, int]] = []
         self.dolphin_sync_task: Optional[asyncio.Task[None]] = None
@@ -143,6 +169,12 @@ class TWWContext(CommonContext):
         self.len_give_item_array: int = 0x10
 
     async def disconnect(self, allow_autoreconnect: bool = False) -> None:
+        """
+        Disconnect the client from the server and reset game state variables.
+
+        :param allow_autoreconnect: Allow the client to auto-reconnect to the server. Defaults to `False`.
+
+        """
         self.auth = None
         self.salvage_locations_map = {}
         self.current_stage_name = ""
@@ -150,6 +182,11 @@ class TWWContext(CommonContext):
         await super().disconnect(allow_autoreconnect)
 
     async def server_auth(self, password_requested: bool = False) -> None:
+        """
+        Authenticate with the Archipelago server.
+
+        :param password_requested: Whether the server requires a password. Defaults to `False`.
+        """
         if password_requested and not self.password:
             await super(TWWContext, self).server_auth(password_requested)
         if not self.auth:
@@ -161,6 +198,12 @@ class TWWContext(CommonContext):
         await self.send_connect()
 
     def on_package(self, cmd: str, args: dict[str, Any]) -> None:
+        """
+        Handle incoming packages from the server.
+
+        :param cmd: The command received from the server.
+        :param args: The command arguments.
+        """
         if cmd == "Connected":
             self.items_received_2 = []
             self.last_rcvd_index = -1
@@ -195,10 +238,20 @@ class TWWContext(CommonContext):
                     self.visited_stage_names = visited_stage_names
 
     def on_deathlink(self, data: dict[str, Any]) -> None:
+        """
+        Handle a DeathLink event.
+
+        :param data: The data associated with the DeathLink event.
+        """
         super().on_deathlink(data)
         _give_death(self)
 
     def make_gui(self) -> type["kvui.GameManager"]:
+        """
+        Initialize the GUI for The Wind Waker client.
+
+        :return: The client's GUI.
+        """
         ui = super().make_gui()
         ui.base_title = "Archipelago The Wind Waker Client"
         return ui
@@ -206,6 +259,8 @@ class TWWContext(CommonContext):
     async def update_visited_stages(self, newly_visited_stage_name: str) -> None:
         """
         Update the server's data storage of the visited stage names to include the newly visited stage name.
+
+        :param newly_visited_stage_name: The name of the stage recently visited.
         """
         if self.slot is not None:
             visited_stages_key = AP_VISITED_STAGE_NAMES_KEY_FORMAT % self.slot
@@ -222,6 +277,11 @@ class TWWContext(CommonContext):
             )
 
     def update_salvage_locations_map(self) -> None:
+        """
+        Update the client's mapping of salvage locations to their bitfield bit.
+
+        This is necessary for the client to handle randomized charts correctly.
+        """
         self.salvage_locations_map = {}
         for offset in range(49):
             island_name = ISLAND_NUMBER_TO_NAME[offset + 1]
@@ -235,18 +295,42 @@ class TWWContext(CommonContext):
 
 
 def read_short(console_address: int) -> int:
+    """
+    Read a 2-byte short from Dolphin memory.
+
+    :param console_address: Address to read from.
+    :return: The value read from memory.
+    """
     return int.from_bytes(dolphin_memory_engine.read_bytes(console_address, 2), byteorder="big")
 
 
 def write_short(console_address: int, value: int) -> None:
+    """
+    Write a 2-byte short to Dolphin memory.
+
+    :param console_address: Address to write to.
+    :param value: Value to write.
+    """
     dolphin_memory_engine.write_bytes(console_address, value.to_bytes(2, byteorder="big"))
 
 
 def read_string(console_address: int, strlen: int) -> str:
+    """
+    Read a string from Dolphin memory.
+
+    :param console_address: Address to start reading from.
+    :param strlen: Length of the string to read.
+    :return: The string.
+    """
     return dolphin_memory_engine.read_bytes(console_address, strlen).split(b"\0", 1)[0].decode()
 
 
 def _give_death(ctx: TWWContext) -> None:
+    """
+    Trigger the player's death in-game by setting their current health to zero.
+
+    :param ctx: The Wind Waker client context.
+    """
     if (
         ctx.slot is not None
         and dolphin_memory_engine.is_hooked()
@@ -258,6 +342,13 @@ def _give_death(ctx: TWWContext) -> None:
 
 
 def _give_item(ctx: TWWContext, item_name: str) -> bool:
+    """
+    Give an item to the player in-game.
+
+    :param ctx: The Wind Waker client context.
+    :param item_name: Name of the item to give.
+    :return: Whether the item was successfully given.
+    """
     if not check_ingame() or dolphin_memory_engine.read_byte(CURR_STAGE_ID_ADDR) == 0xFF:
         return False
 
@@ -281,6 +372,11 @@ def _give_item(ctx: TWWContext, item_name: str) -> bool:
 
 
 async def give_items(ctx: TWWContext) -> None:
+    """
+    Give the player all outstanding items they have yet to receive.
+
+    :param ctx: The Wind Waker client context.
+    """
     if check_ingame() and dolphin_memory_engine.read_byte(CURR_STAGE_ID_ADDR) != 0xFF:
         # Read the expected index of the player, which is the index of the latest item they've received.
         expected_idx = read_short(EXPECTED_INDEX_ADDR)
@@ -298,6 +394,14 @@ async def give_items(ctx: TWWContext) -> None:
 
 
 def check_special_location(location_name: str, data: TWWLocationData) -> bool:
+    """
+    Check that the player has checked a given location.
+    This function handles locations that require special logic.
+
+    :param location_name: The name of the location.
+    :param data: The data associated with the location.
+    :raises NotImplementedError: If an unknown location name is provided.
+    """
     checked = False
 
     # For "Windfall Island - Lenzo's House - Become Lenzo's Assistant"
@@ -346,6 +450,18 @@ def check_special_location(location_name: str, data: TWWLocationData) -> bool:
 
 
 def check_regular_location(ctx: TWWContext, curr_stage_id: int, data: TWWLocationData) -> bool:
+    """
+    Check that the player has checked a given location.
+    This function handles locations that only require checking that a particular bit is set.
+
+    The check looks at the saved data for the stage at which the location is located and the data for the current stage.
+    In the latter case, this data includes data that has not yet been written to the saved data.
+
+    :param ctx: The Wind Waker client context.
+    :param curr_stage_id: The current stage at which the player is.
+    :param data: The data associated with the location.
+    :raises NotImplementedError: If a location with an unknown type is provided.
+    """
     checked = False
 
     # Check the saved bitfields for the stage.
@@ -373,6 +489,14 @@ def check_regular_location(ctx: TWWContext, curr_stage_id: int, data: TWWLocatio
 
 
 async def check_locations(ctx: TWWContext) -> None:
+    """
+    Iterate through all locations and check whether the player has checked each location.
+
+    Update the server with all newly checked locations since the last update. If the player has completed the goal,
+    notify the server.
+
+    :param ctx: The Wind Waker client context.
+    """
     # Read the bitfield for sunken treasure locations.
     ctx.charts_bitfield = int.from_bytes(dolphin_memory_engine.read_bytes(CHARTS_BITFLD_ADDR, 8), byteorder="big")
 
@@ -432,6 +556,13 @@ async def check_locations(ctx: TWWContext) -> None:
 
 
 async def check_current_stage_changed(ctx: TWWContext) -> None:
+    """
+    Check if the player has moved to a new stage.
+    If so, update all trackers with the new stage name.
+    If the stage has never been visited, additionally update the server.
+
+    :param ctx: The Wind Waker client context.
+    """
     new_stage_name = read_string(CURR_STAGE_NAME_ADDR, 8)
 
     # Special handling is required for the Cliff Plateau Isles Inner Cave exit, which exits out onto the sea stage
@@ -464,11 +595,22 @@ async def check_current_stage_changed(ctx: TWWContext) -> None:
 
 
 async def check_alive() -> bool:
+    """
+    Check if the player is currently alive in-game.
+
+    :return: `True` if the player is alive, otherwise `False`.
+    """
     cur_health = read_short(CURR_HEALTH_ADDR)
     return cur_health > 0
 
 
 async def check_death(ctx: TWWContext) -> None:
+    """
+    Check if the player is currently dead in-game.
+    If DeathLink is on, notify the server of the player's death.
+
+    :return: `True` if the player is dead, otherwise `False`.
+    """
     if ctx.slot is not None and check_ingame():
         cur_health = read_short(CURR_HEALTH_ADDR)
         if cur_health <= 0:
@@ -480,10 +622,22 @@ async def check_death(ctx: TWWContext) -> None:
 
 
 def check_ingame() -> bool:
+    """
+    Check if the player is currently in-game.
+
+    :return: `True` if the player is in-game, otherwise `False`.
+    """
     return read_string(CURR_STAGE_NAME_ADDR, 8) not in ["", "sea_T", "Name"]
 
 
 async def dolphin_sync_task(ctx: TWWContext) -> None:
+    """
+    The task loop for managing the connection to Dolphin.
+
+    While connected, read the emulator's memory to look for any relevant changes made by the player in the game.
+
+    :param ctx: The Wind Waker client context.
+    """
     logger.info("Starting Dolphin connector. Use /dolphin for status information.")
     while not ctx.exit_event.is_set():
         try:
@@ -538,6 +692,12 @@ async def dolphin_sync_task(ctx: TWWContext) -> None:
 
 
 def main(connect: Optional[str] = None, password: Optional[str] = None) -> None:
+    """
+    Run the main async loop for the Wind Waker client.
+
+    :param connect: Address of the Archipelago server.
+    :param password: Password for server authentication.
+    """
     Utils.init_logging("The Wind Waker Client")
 
     async def _main(connect: Optional[str], password: Optional[str]) -> None:

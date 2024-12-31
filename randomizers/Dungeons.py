@@ -10,6 +10,16 @@ if TYPE_CHECKING:
 
 
 class Dungeon:
+    """
+    This class represents a dungeon in The Wind Waker, including its dungeon items.
+
+    :param name: The name of the dungeon.
+    :param big_key: The big key item for the dungeon.
+    :param small_keys: A list of small key items for the dungeon.
+    :param dungeon_items: A list of other items specific to the dungeon.
+    :param player: The ID of the player associated with the dungeon.
+    """
+
     def __init__(
         self,
         name: str,
@@ -26,25 +36,56 @@ class Dungeon:
 
     @property
     def keys(self) -> list[Item]:
+        """
+        Retrieve all the keys for the dungeon.
+
+        :return: A list of Small Keys and the Big Key (if it exists).
+        """
         return self.small_keys + ([self.big_key] if self.big_key else [])
 
     @property
     def all_items(self) -> list[Item]:
+        """
+        Retrieve all items associated with the dungeon.
+
+        :return: A list of all items associated with the dungeon.
+        """
         return self.dungeon_items + self.keys
 
     def __eq__(self, other: Any) -> bool:
+        """
+        Check equality between this dungeon and another object.
+
+        :param other: The object to compare.
+        :return: `True` if the other object is a Dungeon with the same name and player, `False` otherwise.
+        """
         if isinstance(other, Dungeon):
             return self.name == other.name and self.player == other.player
         return False
 
     def __repr__(self) -> str:
+        """
+        Provide a string representation of the dungeon.
+
+        :return: A string representing the dungeon.
+        """
         return self.__str__()
 
     def __str__(self) -> str:
+        """
+        Convert the dungeon to a human-readable string.
+
+        :return: A string in the format "<name> (Player <player>)".
+        """
         return f"{self.name} (Player {self.player})"
 
 
 def create_dungeons(world: "TWWWorld") -> None:
+    """
+    Create and assign dungeons to the given world based on game options.
+
+    :param world: The Wind Waker game world.
+    """
     player = world.player
     options = world.options
 
@@ -105,16 +146,34 @@ def create_dungeons(world: "TWWWorld") -> None:
 
 
 def get_dungeon_item_pool(multiworld: MultiWorld) -> list[Item]:
+    """
+    Retrieve the item pool for all The Wind Waker dungeons in the multiworld.
+
+    :param multiworld: The MultiWorld instance.
+    :return: List of dungeon items across all The Wind Waker dungeons.
+    """
     return [
         item for world in multiworld.get_game_worlds("The Wind Waker") for item in get_dungeon_item_pool_player(world)
     ]
 
 
 def get_dungeon_item_pool_player(world: "TWWWorld") -> list[Item]:
+    """
+    Retrieve the item pool for all dungeons specific to a player.
+
+    :param world: The Wind Waker game world.
+    :return: List of items in the player's dungeons.
+    """
     return [item for dungeon in world.dungeons.values() for item in dungeon.all_items]
 
 
 def get_unfilled_dungeon_locations(multiworld: MultiWorld) -> list[Location]:
+    """
+    Retrieve all unfilled The Wind Waker dungeon locations in the multiworld.
+
+    :param multiworld: The MultiWorld instance.
+    :return: List of unfilled The Wind Waker dungeon locations.
+    """
     return [
         location
         for world in multiworld.get_game_worlds("The Wind Waker")
@@ -124,6 +183,12 @@ def get_unfilled_dungeon_locations(multiworld: MultiWorld) -> list[Location]:
 
 
 def modify_dungeon_location_rules(locations: list[Location], dungeon_specific: set[tuple[int, str]]) -> None:
+    """
+    Modify the rules for The Wind Waker dungeon locations based on specific player-requested constraints.
+
+    :param locations: List of dungeon locations to modify.
+    :param dungeon_specific: Set of dungeon-specific item constraints.
+    """
     for location in locations:
         orig_rule = location.item_rule
         if dungeon_specific:
@@ -141,6 +206,11 @@ def modify_dungeon_location_rules(locations: list[Location], dungeon_specific: s
 
 
 def fill_dungeons_restrictive(multiworld: MultiWorld) -> None:
+    """
+    Correctly fill The Wind Waker dungeons in the multiworld.
+
+    :param multiworld: The MultiWorld instance.
+    """
     localized: set[tuple[int, str]] = set()
     dungeon_specific: set[tuple[int, str]] = set()
     for subworld in multiworld.get_game_worlds("The Wind Waker"):

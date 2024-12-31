@@ -8,6 +8,11 @@ if TYPE_CHECKING:
 
 
 class TWWFlag(Flag):
+    """
+    This class represents flags used for categorizing game locations.
+    Flags are used to group locations by their specific gameplay or logic attributes.
+    """
+
     ALWAYS = auto()
     DUNGEON = auto()
     TNGL_CT = auto()
@@ -37,6 +42,10 @@ class TWWFlag(Flag):
 
 
 class TWWLocationType(Enum):
+    """
+    This class defines constants for various types of locations in The Wind Waker.
+    """
+
     CHART = auto()
     BOCTO = auto()
     CHEST = auto()
@@ -47,6 +56,21 @@ class TWWLocationType(Enum):
 
 
 class TWWLocationData(NamedTuple):
+    """
+    This class represents the data for a location in The Wind Waker.
+
+    :param code: The unique code identifier for the location.
+    :param flags: The flags that categorize the location.
+    :param region: The name of the region where the location resides.
+    :param stage_id: The ID of the stage where the location resides.
+    :param type: The type of the location.
+    :param bit: The bit in memory that is associated with the location. This is combined with other location data to
+    determine where in memory to determine whether the location has been checked. If the location is a special type,
+    this bit is ignored.
+    :param address: For certain location types, this variable contains the address of the byte with the check bit for
+    that location. Defaults to `None`.
+    """
+
     code: Optional[int]
     flags: TWWFlag
     region: str
@@ -57,6 +81,15 @@ class TWWLocationData(NamedTuple):
 
 
 class TWWLocation(Location):
+    """
+    This class represents a location in The Wind Waker.
+
+    :param player: The ID of the player whose world the location is in.
+    :param name: The name of the location.
+    :param parent: The location's parent region.
+    :param data: The data associated with this location.
+    """
+
     game: str = "The Wind Waker"
     dungeon: Optional["Dungeon"] = None
 
@@ -74,6 +107,12 @@ class TWWLocation(Location):
 
     @staticmethod
     def get_apid(code: int) -> int:
+        """
+        Compute the Archipelago ID for the given location code.
+
+        :param code: The unique code for the location.
+        :return: The computed Archipelago ID.
+        """
         base_id: int = 2326528
         return base_id + code
 
@@ -1219,6 +1258,12 @@ ISLAND_NAME_TO_SALVAGE_BIT: dict[str, int] = {
 
 
 def split_location_name_by_zone(location_name: str) -> tuple[str, str]:
+    """
+    Split a location name into its zone name and specific name.
+
+    :param location_name: The full name of the location.
+    :return: A tuple containing the zone and specific name.
+    """
     if " - " in location_name:
         zone_name, specific_location_name = location_name.split(" - ", 1)
     else:

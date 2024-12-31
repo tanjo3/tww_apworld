@@ -3,7 +3,7 @@
 from collections.abc import Callable
 from typing import TYPE_CHECKING
 
-import BaseClasses
+from BaseClasses import MultiWorld
 from worlds.AutoWorld import LogicMixin
 from worlds.generic.Rules import set_rule
 
@@ -14,6 +14,15 @@ if TYPE_CHECKING:
 
 
 class TWWLogic(LogicMixin):
+    """
+    This class implements some of the game logic for The Wind Waker.
+
+    This class's methods reference the world's options. All methods defined in this class should be prefixed with
+    "_tww."
+    """
+
+    multiworld: MultiWorld
+
     def _tww_has_chart_for_island(self, player: int, island_number: int) -> bool:
         chart_item_name = self.multiworld.worlds[player].charts.island_number_to_chart_name[island_number]
 
@@ -78,7 +87,14 @@ class TWWLogic(LogicMixin):
 
 
 def set_rules(world: "TWWWorld") -> None:  # noqa: F405
-    def set_rule_if_exists(location_name: str, rule: Callable[[BaseClasses.CollectionState], bool]) -> None:
+    """
+    Define the logic rules for locations in The Wind Waker.
+    Rules are only set for locations if they are present in the world.
+
+    :param world: The Wind Waker game world.
+    """
+
+    def set_rule_if_exists(location_name: str, rule: Callable[[CollectionState], bool]) -> None:
         if location_name in world.progress_locations:
             set_rule(world.get_location(location_name), rule)
 

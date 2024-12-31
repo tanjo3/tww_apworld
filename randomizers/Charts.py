@@ -61,14 +61,24 @@ ISLAND_NUMBER_TO_NAME: dict[int, str] = {
 
 
 class ChartRandomizer:
+    """
+    This class handles the randomization of charts.
+    Each chart points to a specific island on the map, and this randomizer shuffles these mappings.
 
-    def __init__(self, world: "TWWWorld"):
+    :param world: The Wind Waker game world.
+    """
+
+    def __init__(self, world: "TWWWorld") -> None:
         self.world = world
         self.multiworld = world.multiworld
 
         self.island_number_to_chart_name = copy.deepcopy(ISLAND_NUMBER_TO_CHART_NAME)
 
     def randomize_charts(self) -> None:
+        """
+        Randomize the charts to point to different islands.
+        Update locations as progression and non-progression appropriately.
+        """
         options = self.world.options
 
         original_item_names = list(self.island_number_to_chart_name.values())
@@ -99,8 +109,10 @@ class ChartRandomizer:
                 self.world.nonprogress_locations.add(island_location)
 
     def update_chart_location_flags(self) -> None:
+        """
+        Update the flags for sunken treasure locations based on the current chart mappings.
+        """
         for shuffled_island_number, item_name in self.island_number_to_chart_name.items():
-            # Properly adjust the flags for sunken treasure locations.
             island_name = ISLAND_NUMBER_TO_NAME[shuffled_island_number]
             island_location_str = f"{island_name} - Sunken Treasure"
 

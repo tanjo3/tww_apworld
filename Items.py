@@ -9,8 +9,17 @@ if TYPE_CHECKING:
     from .randomizers.Dungeons import Dungeon
 
 
-def item_factory(items: str | Iterable[str], world: World) -> Item | Iterable[Item]:
-    ret = []
+def item_factory(items: str | Iterable[str], world: World) -> Item | list[Item]:
+    """
+    Create items based on their names.
+    Depending on the input, this function can return a single item or a list of items.
+
+    :param items: The name or names of the items to create.
+    :param world: The game world.
+    :raises KeyError: If an unknown item name is provided.
+    :return: A single item or a list of items.
+    """
+    ret: list[Item] = []
     singleton = False
     if isinstance(items, str):
         items = [items]
@@ -21,12 +30,20 @@ def item_factory(items: str | Iterable[str], world: World) -> Item | Iterable[It
         else:
             raise KeyError(f"Unknown item {item}")
 
-    if singleton:
-        return ret[0]
-    return ret
+    return ret[0] if singleton else ret
 
 
 class TWWItemData(NamedTuple):
+    """
+    This class represents the data for an item in The Wind Waker.
+
+    :param type: The type of the item (e.g., "Item", "Dungeon Item").
+    :param classification: The item's classification (progression, useful, filler).
+    :param code: The unique code identifier for the item.
+    :param quantity: The number of this item available.
+    :param item_id: The ID used to represent the item in-game.
+    """
+
     type: str
     classification: IC
     code: Optional[int]
@@ -35,12 +52,21 @@ class TWWItemData(NamedTuple):
 
 
 class TWWItem(Item):
+    """
+    This class represents an item in The Wind Waker.
+
+    :param name: The item's name.
+    :param player: The ID of the player who owns the item.
+    :param data: The data associated with this item.
+    :param classification: Optional classification to override the default.
+    """
+
     game: str = "The Wind Waker"
     type: Optional[str]
     dungeon: Optional["Dungeon"] = None
 
-    def __init__(self, name: str, player: int, data: TWWItemData, classification: Optional[IC] = None):
-        super(TWWItem, self).__init__(
+    def __init__(self, name: str, player: int, data: TWWItemData, classification: Optional[IC] = None) -> None:
+        super().__init__(
             name,
             data.classification if classification is None else classification,
             None if data.code is None else TWWItem.get_apid(data.code),
@@ -52,11 +78,22 @@ class TWWItem(Item):
 
     @staticmethod
     def get_apid(code: int) -> int:
+        """
+        Compute the Archipelago ID for the given item code.
+
+        :param code: The unique code for the item.
+        :return: The computed Archipelago ID.
+        """
         base_id: int = 2322432
         return base_id + code
 
     @property
     def dungeon_item(self) -> Optional[str]:
+        """
+        Determine if the item is a dungeon item and, if so, returns its type.
+
+        :return: The type of dungeon item, or `None` if it is not a dungeon item.
+        """
         if self.type in ("Small Key", "Big Key", "Map", "Compass"):
             return self.type
         return None

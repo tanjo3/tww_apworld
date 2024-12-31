@@ -10,6 +10,15 @@ if TYPE_CHECKING:
 
 
 class RequiredBossesRandomizer:
+    """
+    This class handles the randomization of the required bosses in The Wind Waker game based on user options.
+
+    If the option is on, the required bosses must be defeated as part of the unlock condition of Puppet Ganon's door.
+    The quadrants in which the bosses are located are marked on the player's Sea Chart.
+
+    :param world: The Wind Waker game world.
+    """
+
     def __init__(self, world: "TWWWorld"):
         self.world = world
         self.multiworld = world.multiworld
@@ -22,6 +31,12 @@ class RequiredBossesRandomizer:
         self.banned_bosses: list[str] = []
 
     def validate_boss_options(self, options: TWWOptions) -> None:
+        """
+        Validate the user-defined boss options to ensure logical consistency.
+
+        :param options: The game options set by the user.
+        :raises OptionError: If the boss options are inconsistent.
+        """
         if not options.progression_dungeons:
             raise OptionError("You cannot make bosses required when progression dungeons are disabled.")
 
@@ -31,6 +46,11 @@ class RequiredBossesRandomizer:
             )
 
     def randomize_required_bosses(self) -> None:
+        """
+        Randomize the required bosses based on user-defined constraints and options.
+
+        :raises OptionError: If the randomization fails to meet user-defined constraints.
+        """
         options = self.world.options
 
         # Validate constraints on required bosses options.
