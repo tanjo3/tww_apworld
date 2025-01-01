@@ -270,7 +270,8 @@ class TWWWorld(World):
         self.create_dungeons()
 
         # Assign each location to their region.
-        for location_name in self.progress_locations:
+        # Progress locations are sorted for deterministic results.
+        for location_name in sorted(self.progress_locations):
             data = LOCATION_TABLE[location_name]
 
             region = self.get_region(data.region)
@@ -315,7 +316,7 @@ class TWWWorld(World):
 
             for i in range(len(rock_spire_shop_ship_locations)):
                 curr_loc = rock_spire_shop_ship_locations[i]
-                other_locs = rock_spire_shop_ship_locations[:i] + rock_spire_shop_ship_locations[i + 1 :]
+                other_locs = rock_spire_shop_ship_locations[:i] + rock_spire_shop_ship_locations[i + 1:]
 
                 add_item_rule(
                     curr_loc,
