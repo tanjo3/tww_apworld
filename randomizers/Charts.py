@@ -74,21 +74,22 @@ class ChartRandomizer:
 
         self.island_number_to_chart_name = copy.deepcopy(ISLAND_NUMBER_TO_CHART_NAME)
 
-    def randomize_charts(self) -> None:
+    def setup_progress_sunken_treasure_locations(self) -> None:
         """
-        Randomize the charts to point to different islands.
-        Update locations as progression and non-progression appropriately.
+        Create the locations for sunken treasure locations and update them as progression and non-progression
+        appropriately. If the option is enabled, randomize which charts point to which sector.
         """
         options = self.world.options
 
         original_item_names = list(self.island_number_to_chart_name.values())
 
-        # Shuffles the list of island numbers.
+        # Shuffles the list of island numbers if charts are randomized.
         # The shuffled island numbers determine which sector each chart points to.
         shuffled_island_numbers = list(self.island_number_to_chart_name.keys())
-        self.multiworld.random.shuffle(shuffled_island_numbers)
+        if options.randomize_charts:
+            self.multiworld.random.shuffle(shuffled_island_numbers)
 
-        for original_item_name in original_item_names:
+        for original_item_name in reversed(original_item_names):
             # Assign each chart to its new island.
             shuffled_island_number = shuffled_island_numbers.pop()
             self.island_number_to_chart_name[shuffled_island_number] = original_item_name

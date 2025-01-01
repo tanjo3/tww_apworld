@@ -36,7 +36,7 @@ from .randomizers.ItemPool import generate_itempool
 from .randomizers.RequiredBosses import RequiredBossesRandomizer
 from .Rules import set_rules
 
-VERSION: tuple[int, int, int] = (2, 6, 0)
+VERSION: tuple[int, int, int] = (2, 6, 1)
 
 
 def run_client() -> None:
@@ -257,9 +257,8 @@ class TWWWorld(World):
         player = self.player
         options = self.options
 
-        # Randomize which chart points to each sector if the option is enabled.
-        if options.randomize_charts:
-            self.charts.randomize_charts()
+        # Set up sunken treasure locations, randomizing the charts if necessary.
+        self.charts.setup_progress_sunken_treasure_locations()
 
         # Select required bosses.
         if options.required_bosses:
@@ -295,8 +294,7 @@ class TWWWorld(World):
             region.locations.append(location)
 
         # Correct the flags of the sunken treasure locations if the charts are randomized.
-        if options.randomize_charts:
-            self.charts.update_chart_location_flags()
+        self.charts.update_chart_location_flags()
 
         # Connect the regions in the multiworld. Randomize entrances to exits if the option is set.
         self.entrances.randomize_entrances()
@@ -317,7 +315,7 @@ class TWWWorld(World):
 
             for i in range(len(rock_spire_shop_ship_locations)):
                 curr_loc = rock_spire_shop_ship_locations[i]
-                other_locs = rock_spire_shop_ship_locations[:i] + rock_spire_shop_ship_locations[i + 1:]
+                other_locs = rock_spire_shop_ship_locations[:i] + rock_spire_shop_ship_locations[i + 1 :]
 
                 add_item_rule(
                     curr_loc,
