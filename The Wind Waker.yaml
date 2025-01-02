@@ -466,6 +466,14 @@ The Wind Waker:
 
   start_inventory_from_pool:
     # Start with these items and don't place them in the world.
-    # 
+    #
     # The game decides what the replacement items will be.
-    {}
+    {
+      "Wind Waker": 1,
+      "Wind's Requiem": 1,
+      "Ballad of Gales": 1,
+      "Song of Passing": 1,
+      "Progressive Magic Meter": 1,
+      "Progressive Shield": 1,
+      "Telescope": 1,
+    }
