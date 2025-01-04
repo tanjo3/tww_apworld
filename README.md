@@ -48,10 +48,10 @@ can do. Suggestions for improvements are also welcome.
 ## Planned Features
 
 - Dynamic CTMC based on enabled options
-- Properly excluding locations based on options
 - Hint implementation from base randomizer (hint placement options and hint types)
 - Integration with Archipelago's hint system (e.g., auction hints)
 - EnergyLink support
+- Swift Sail logic as an option
 - Continued bugfixes
 
 ## Running from source
