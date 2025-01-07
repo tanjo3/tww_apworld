@@ -15,9 +15,8 @@ quality-of-life features such as a fully opened world, removing many cutscenes, 
 
 ## Which locations get shuffled?
 
-All randomizable locations will have their items shuffled each seed. However, the randomizer is designed so that only
-certain groups of locations can contain progression items. The remaining locations will only include items unnecessary
-to beat the game, such as rupees or Heart Pieces.
+Only locations put into logic by the world's settings will be randomized. The remaining locations in the game will have
+a yellow Rupee, which includes a message that the location is not randomized.
 
 ## What is the goal of The Wind Waker?
 
@@ -87,10 +86,10 @@ pyenv global 3.12
 
 This randomizer would not be possible without the help from:
 
-- Celeste (Tia): (logic and typo fixes, additional programming)
+- Celeste (Maëlle): (logic and typo fixes, additional programming)
 - CrainWWR: (multiworld and Dolphin memory assistance, additional programming)
-- Cyb3RGER: (reference for `TWWClient`)
-- DaemonHunter: (additional programming)
+- Cyb3R: (reference for `TWWClient`)
+- DeamonHunter: (additional programming)
 - Dev5ter: (initial TWW AP implmentation)
 - Gamma / SageOfMirrors: (additional programming)
 - LagoLunatic: (base randomizer, additional assistance)
