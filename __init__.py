@@ -112,7 +112,7 @@ class TWWWorld(World):
     set_rules = set_rules
 
     def __init__(self, *args, **kwargs):
-        super(TWWWorld, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.progress_locations: set[str] = set()
         self.nonprogress_locations: set[str] = set()

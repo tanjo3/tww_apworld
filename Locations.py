@@ -95,7 +95,7 @@ class TWWLocation(Location):
 
     def __init__(self, player: int, name: str, parent: Region, data: TWWLocationData):
         address = None if data.code is None else TWWLocation.get_apid(data.code)
-        super(TWWLocation, self).__init__(player, name, address=address, parent=parent)
+        super().__init__(player, name, address=address, parent=parent)
 
         self.code = data.code
         self.flags = data.flags

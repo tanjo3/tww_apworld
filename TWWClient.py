@@ -188,7 +188,7 @@ class TWWContext(CommonContext):
         :param password_requested: Whether the server requires a password. Defaults to `False`.
         """
         if password_requested and not self.password:
-            await super(TWWContext, self).server_auth(password_requested)
+            await super().server_auth(password_requested)
         if not self.auth:
             if self.awaiting_rom:
                 return
