@@ -1,4 +1,5 @@
 import os
+from base64 import b64encode
 from collections.abc import Mapping
 from dataclasses import fields
 from typing import Any, ClassVar
@@ -408,8 +409,8 @@ class TWWWorld(World):
 
         # Output the plando details to file.
         file_path = os.path.join(output_directory, f"{multiworld.get_out_file_name_base(player)}.aptww")
-        with open(file_path, "w") as f:
-            f.write(yaml.dump(output_data, sort_keys=False))
+        with open(file_path, "wb") as f:
+            f.write(b64encode(bytes(yaml.dump(output_data, sort_keys=False), "utf-8")))
 
     def extend_hint_information(self, hint_data: dict[int, dict[int, str]]) -> None:
         """
