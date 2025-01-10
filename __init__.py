@@ -463,8 +463,7 @@ class TWWWorld(World):
         if not self.options.progression_short_sidequests and name in ("Maggie's Letter", "Moblin's Letter"):
             adjusted_classification = IC.filler
         if (
-            not self.options.progression_short_sidequests
-            and self.options.progression_long_sidequests
+            not (self.options.progression_short_sidequests or self.options.progression_long_sidequests)
             and name == "Progressive Picto Box"
         ):
             adjusted_classification = IC.filler
