@@ -38,9 +38,6 @@ class DungeonSecrets(Toggle):
 
     The items are relatively well-hidden (they aren't in chests), so don't select this option unless you're prepared to
     search each dungeon high and low!
-
-    For a list of the dungeon secrets, refer to this Google doc:
-    https://docs.google.com/document/d/1LrjGr6W9970XEA-pzl8OhwnqMqTbQaxCX--M-kdsLos/edit
     """
 
     display_name = "Dungeon Secrets"
