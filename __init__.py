@@ -410,7 +410,7 @@ class TWWWorld(World):
         # Output the plando details to file.
         file_path = os.path.join(output_directory, f"{multiworld.get_out_file_name_base(player)}.aptww")
         with open(file_path, "wb") as f:
-            f.write(b64encode(bytes(yaml.dump(output_data, sort_keys=False), "utf-8")))
+            f.write(b64encode(bytes(yaml.safe_dump(output_data, sort_keys=False), "utf-8")))
 
     def extend_hint_information(self, hint_data: dict[int, dict[int, str]]) -> None:
         """
