@@ -11,13 +11,16 @@ Unfortunately, Mac OS is not officially supported at this time.
 You'll need the following components to be able to play/generate with The Wind Waker:
 * Install [Archipelago](https://github.com/ArchipelagoMW/Archipelago/releases) v0.5.1 or higher.  
     **Make sure to install the Generator if you intend to generate multiworlds.**
-* The latest version of the [TWW APWorld](https://github.com/tanjo3/tww_apworld/releases/latest).
 
 If you're playing The Wind Waker, you'll also need:
-* Install [Dolphin Emulator](https://dolphin-emu.org/download/).  
-    **We recommend using the latest release.**
-* The latest version of the [TWW AP Randomizer Build](https://github.com/tanjo3/wwrando/releases/latest).
+* Install [Dolphin Emulator](https://dolphin-emu.org/download/). **We recommend using the latest release.**
+* The 2.4.0 version of the [TWW AP Randomizer Build](https://github.com/tanjo3/wwrando/releases/tag/ap_2.4.0).
 * A The Wind Waker ISO (North American version), probably named "Legend of Zelda, The - The Wind Waker (USA).iso".
+
+Optionally, you can also download:
+* [Wind Waker Tracker](https://github.com/Mysteryem/ww-poptracker/releases/latest)
+  * Requires [PopTracker](https://github.com/black-sliver/PopTracker/releases)
+* [Custom Wind Waker Player Models](https://github.com/Sage-of-Mirrors/Custom-Wind-Waker-Player-Models)
 
 If you intend to play under Linux, you will need to consider the following information.
 * Grab the `tar.gz` version of Archipelago, not the `AppImage`. The file name should be similar to the following on the
@@ -33,8 +36,9 @@ All users should follow these steps:
 little dialog window telling you it has been installed successfully.
     * Alternatively, copy the `tww.apworld` to your Archipelago installation's `custom_worlds` folder (Windows default
     to: `%programdata%/Archipelago`).
-3. Copy the contents of the `lib` folder in the downloaded TWW APWorld zip file to your Archipelago installation's `lib`
-folder.
+3. Copy the `dolphin_memory_engine` folder in the downloaded TWW APWorld zip file to your Archipelago installation's
+`lib` folder.
+    * **Important:** Copy the entire folder, not just the individual files inside the folder!
 
 If you're playing The Wind Waker, you must also unzip the TWW AP Randomizer Build downloaded from the release page.
 
@@ -106,16 +110,18 @@ name automatically when you start a new save file.
 
 * Ensure that you are running version v0.5.1 or higher of Archipelago.
 * If you do not see the client in the launcher, ensure the `tww.apworld` file is in the correct folder (the
-`custom_worlds` folder of your Archipelago installation). Additionally, ensure you have copied the contents of the `lib`
-folder in the downloaded TWW APWorld zip file to your Archipelago installation's `lib` folder.
+`custom_worlds` folder of your Archipelago installation).
 * If the client is not working, double-check that you have the most recent release of the `tww.apworld` file.
 Additionally, ensure no `ww.apworld`/`tww.apworld` files or `ww`/`tww` folders are in your `lib/worlds` folder. If those
-exist, delete them. Finally, ensure that the content of the `lib` folder from the release download has been placed in
-your Archipelago installation's `lib` folder.
-* If you press Randomize in the build and nothing happens, ensure that you are using the correct version of the build
-for the `aptww` file you are using.
-    * v2.5.x APWorlds should use the 2.3.0 build, v2.4.0 APWorlds should use the 2.2.0 build, v2.3.x APWorlds should use
-    the 2.1.0 build, and older APWorlds should use 2.0.0.
+exist, delete them. Finally, ensure you have copied the `dolphin_memory_engine` folder in the downloaded TWW APWorld zip
+file to your Archipelago installation's `lib` folder.
+* If you press Randomize in the build and nothing happens, or if the client throws an error when attempting to connect
+to Dolphin, ensure that you are using the correct version of the build for the `aptww` file you are using.
+    * v2.6.x APWorlds should use the 2.4.0 build
+    * v2.5.x APWorlds should use the 2.3.0 build
+    * v2.4.0 APWorlds should use the 2.2.0 build
+    * v2.3.x APWorlds should use the 2.1.0 build
+    * APWorlds older than v2.3.x should use the 2.0.0 build
     * Remember that you should use the same APWorld version with which the `aptww` file was generated; ask the
     multiworld generator if you're unsure which version was used.
 * Ensure that you do not have any Dolphin cheats or codes enabled. Some cheats or codes can unexpectedly interfere with
